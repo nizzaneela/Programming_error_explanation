@@ -16,7 +16,7 @@ A published correction may be necessary.
 There are other deficiencies. In particular, the different hypotheses are tested against different evidence (more specifically, against different conditions derived from the evidence), so that the Bayes factors are heavily biased in favour of the multiple spillover hypothesis. This issue will be addressed in a separate comment.
 
 ## Explanation
-The Bayes factor calculations require likelihoods of the different hypotheses (single introduction or multiple introductions) producing the observed data. For the single introduction hypothesis, this is evaluated by generating 1100 simulated viral phylogenies and counting those with topologies that are deemed compatible with the observed data. The compatible topologies are denoted `CC` and `AB` and correspond, respectively, to the center and right topologies in Figure 2 (reproduced below).
+The Bayes factor calculations require likelihoods of the different hypotheses (single introduction or multiple introductions) producing the observed data. For the single introduction hypothesis, this is evaluated by generating 1100 simulated viral phylogenies and counting those with topologies that are deemed compatible with the observed data. The compatible topologies are denoted `CC` and `AB` and correspond, respectively, to the center and right topologies in [Figure 2](https://www.science.org/doi/10.1126/science.abp8337#F2 ) of the paper (reproduced below).
 
 ![Figure 2 of Pekar et al. 2022](science.abp8337-f2.jpg)  
 
