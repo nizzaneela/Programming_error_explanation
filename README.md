@@ -1,11 +1,11 @@
 # Key results are inflated by an error in the code
 The authors find that the SARS-CoV-2 lineages "A" and "B" are the result of at least two separate cross-species transmission events into humans. This finding is based on Bayes factors calculated in the Jupyter notebook [cladeAnalysis.ipynb](https://github.com/sars-cov-2-origins/multi-introduction/blob/71ed420fe11ecdbe589568255ec90ca56d6e221c/notebooks/cladeAnalysis.ipynb). In this notebook, a bug in the function `clade_analysis_updated` causes the main analysis to output:
 
-![Screenshot of main analysis output before bugfix](https://github.com/nizzaneela/Drafting/blob/afeaa3058f8185152451b8751a843924b7f93ef6/main_result_original.png)
+![Screenshot of main analysis output before bugfix](main_result_original.png)
 
 After fixing the bug, this output becomes:
 
-![Screenshot of main analysis output after bugfix](https://github.com/nizzaneela/Drafting/blob/abbf139cce753e0cbc5988b1a144761272c4a367/main_result_fixed.png)
+![Screenshot of main analysis output after bugfix](main_result_fixed.png)
 
 Thus, after re-running the main analysis without the bug, the Bayes factors are reduced by a factor of six. This significantly reduces confidence in the authors' findings.
 
@@ -18,20 +18,16 @@ There are other deficiencies. In particular, the different hypotheses are tested
 ## Explanation
 The Bayes factor calculations require likelihoods of the different hypotheses (single introduction or multiple introductions) producing the observed data. For the single introduction hypothesis, this is evaluated by generating 1100 simulated viral phylogenies and counting those with topologies that are deemed compatible with the observed data. The compatible topologies are denoted `CC` and `AB` and correspond, respectively, to the center and right topologies in Figure 2 (reproduced below).
 
-![Figure 2 of Pekar et al. 2022](https://github.com/nizzaneela/Drafting/blob/a0ca501f04b8937370334bcacde35d906abd5288/science.abp8337-f2.jpg)  
+![Figure 2 of Pekar et al. 2022](science.abp8337-f2.jpg)  
 
-As shown in Figure 2, the `CC` topology has two clades on branches with one mutation from the MRCA ('one-mutation clades'). The `AB` topology has a clade on a branch with two mutations from the MRCA (a "two-mutation" clade). 
+As shown in Figure 2, the `CC` topology has two clades on branches with one mutation from the MRCA ('one-mutation clades'). The `AB` topology has a clade on a branch with two mutations from the MRCA (a "two-mutation" clade). For each run, the function `clade_analysis_updated` stores details of the one- and two-mutation clades:
+- for each one-mutation clade, `clade_analysis_CC_d[run]` stores that one-mutation clade's size in a list labelled `'clade_sizes'` and stores a sublist with the sizes of that one-mutation clade's subclades in another list labelled `subclade_sizes`; and
+- for each two-mutation clade, `clade_analysis_AB_d[run]` stores that two-mutation clade's size in a list labelled `'clade_sizes'` and stores a sublist with the sizes of that one-mutation clade's subclades in another list labelled `subclade_sizes`. 
 
 The bug lies in how the `AB` topologies are counted. The `AB` topology also requires:
 - a specific size - the number of taxa in the two-mutation clade must be between 30% and 70% of the total number of taxa in the whole phylogeny;
 - a basal polytomy - at least 100 clades must descend directly from the MRCA; and 
 - a polytomy at the two-mutation clade - at least 100 subclades must descend directly from the two-mutation clade root.
-
-For each run, the function `clade_analysis_updated` stores details of the one- and two-mutation clades:
-- for each one-mutation clade, `clade_analysis_CC_d[run]` stores that one-mutation clade's size in a list labelled `'clade_sizes'` and stores a sublist with the sizes of that one-mutation clade's subclades in another list labelled `subclade_sizes`; and
-- for each two-mutation clade, `clade_analysis_AB_d[run]` stores that two-mutation clade's size in a list labelled `'clade_sizes'` and stores a sublist with the sizes of that one-mutation clade's subclades in another list labelled `subclade_sizes`. 
-
-Then, under the comment `# A/B analysis`, each phylogeny is tested as follows. 
 
 For the size requirement:
 ```
@@ -110,7 +106,7 @@ clade_analyses_AB_dir = 'clade_analyses_AB/'
 Delete the seventh and eighth code cells, because they require data that has not been published (or just ignore them when they throw errors).
 
 Run the notebook to reproduce the published results of the main analysis.
-![Screenshot of main analysis output before bugfix](https://github.com/nizzaneela/Drafting/blob/afeaa3058f8185152451b8751a843924b7f93ef6/main_result_original.png)
+![Screenshot of main analysis output before bugfix](main_result_original.png)
 
 To test the bug, modify the A/B analysis by adding a list `subclade_sizes_correct` that takes the lists of subclade sizes for the two-mutation clades.
 ```
@@ -142,11 +138,11 @@ elif len(subclade_sizes_correct[max2mutCladeLoc]) >= min_polytomy_size:
     print(len(subclade_sizes_correct[max2mutCladeLoc]))
     ab_count_30perc_twoPolytomies += 1
 ```
-Re-run the notebook to print sizes of the two-mutation polytomies that were being wronjgly rejected.
+Re-run the notebook to print sizes of the two-mutation polytomies that were being wronjgly rejected...
 
-![Output printing sizes of two-mutation polytomies that were rejected](https://github.com/nizzaneela/Drafting/blob/57d6769b4d8e63ec59565706a92694197ac29b88/main_result_with_rejected_polytomies.png)
+![Output printing sizes of two-mutation polytomies that were rejected](main_result_with_rejected_polytomies.png)
 
-And to get the corrected Bayes factors, which have been reduced by a factor of six.
+... to get the corrected Bayes factors, which have been reduced by a factor of six.
 
-![Output including the corrected Bayes factors](https://github.com/nizzaneela/Drafting/blob/f001930392bd187cd5259b14c6ec0d40b1958122/main_result_with_rejected_polytomies_and_results.png)
+![Output including the corrected Bayes factors](main_result_with_rejected_polytomies_and_results.png)
 
