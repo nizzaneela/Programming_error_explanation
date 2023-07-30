@@ -20,7 +20,9 @@ The Bayes factor calculations require likelihoods of the different hypotheses (s
 
 ![Figure 2 of Pekar et al. 2022](https://github.com/nizzaneela/Drafting/blob/a0ca501f04b8937370334bcacde35d906abd5288/science.abp8337-f2.jpg)  
 
-As shown in Figure 2, the `CC` topology has two clades on branches with one mutation from the MRCA ('one-mutation clades'). The `AB` topology has a clade on a branch with two mutations from the MRCA (a "two-mutation" clade). The `AB` topology also requires:
+As shown in Figure 2, the `CC` topology has two clades on branches with one mutation from the MRCA ('one-mutation clades'). The `AB` topology has a clade on a branch with two mutations from the MRCA (a "two-mutation" clade). 
+
+The bug lies in how the `AB` topologies are counted. The `AB` topology also requires:
 - a specific size - the number of taxa in the two-mutation clade must be between 30% and 70% of the total number of taxa in the whole phylogeny;
 - a basal polytomy - at least 100 clades must descend directly from the MRCA; and 
 - a polytomy at the two-mutation clade - at least 100 subclades must descend directly from the two-mutation clade root.
