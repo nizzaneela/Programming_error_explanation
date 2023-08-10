@@ -10,7 +10,7 @@ pr_3_topos = np.array(simulation_results)/sum(simulation_results)
 ```
 This would be an appropriate way to derive the probabilities for the three topologies, were the three topologies the only possibilities and the values their counts from the simulations.
 
-Unfortunately, the three topologies are only a subset of the possible topologies, and the values are the probabilities for the three topologies, already computed in `clade_analysis_update`:
+Unfortunately, the three topologies are only a subset of the possible topologies, and the values are in fact the probabilities for the three topologies, already computed in `clade_analysis_update`:
 ```
 polytomy_result = count_atLeastMinDescendants/1100
 …
