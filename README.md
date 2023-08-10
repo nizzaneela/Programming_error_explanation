@@ -8,7 +8,7 @@ def calculate_bf(asr_results, simulation_results):
 # the 3 trees are in the order (t_p, t_1C, t_2C)
 pr_3_topos = np.array(simulation_results)/sum(simulation_results)
 ```
-This would be an appropriate way to derive the probabilities for the three topologies, were the three topologies the only possibilities and the values their counts from the simulations.
+This would be an appropriate way to derive the probabilities for the three topologies, were the three topologies the only possibilities and the values the counts of the three topologies in the simulations.
 
 Unfortunately, the three topologies are only a subset of the possible topologies, and the values are in fact the probabilities for the three topologies, already computed in `clade_analysis_update`:
 ```
