@@ -1,4 +1,4 @@
-I’m afraid there is another bug in the notebook cladeAnalysis.ipynb. 
+I’m afraid there is another bug in the notebook [cladeAnalysis.ipynb](https://github.com/sars-cov-2-origins/multi-introduction/blob/71ed420fe11ecdbe589568255ec90ca56d6e221c/notebooks/cladeAnalysis.ipynb). 
 
 The function `calculate_bf` takes an array of values as `simulation_results` and divides them by their sum to produce an array `pr_3_topos`, i.e.:
 ```
