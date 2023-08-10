@@ -23,7 +23,7 @@ simulation_results = [polytomy_result, ab_result, cc_result]
 bf_unconstrained = calculate_bf(unconstrained_results, simulation_results)
 bf_recCA = calculate_bf(recCA_results, simulation_results)
 ```
-In other words, they are the likelihoods for the subset of topologies shown in Figure 2:
+More specifically, they are the likelihoods for the subset of topologies shown in Figure 2:
 
 ![Figure 2 of Pekar et al. 2022](science.abp8337-f2.jpg)
 
