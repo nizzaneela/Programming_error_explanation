@@ -8,9 +8,9 @@ def calculate_bf(asr_results, simulation_results):
 # the 3 trees are in the order (t_p, t_1C, t_2C)
 pr_3_topos = np.array(simulation_results)/sum(simulation_results)
 ```
-This would be an appropriate way to derive the probabilities for the three topologies, were the three topologies the only possibilities and the values the counts of the three topologies in the simulations.
+This would be an appropriate way to derive the probabilities for the three topologies, were the values the numbers of simulations conforming to the three topologies and their sum equal to the total number of simulations.
 
-Unfortunately, the three topologies are only a subset of the possible topologies and the values are in fact the probabilities for the three topologies, already computed in `clade_analysis_update` (note that there were a total of 1100 simulations):
+Unfortunately, the values are in fact the probabilities for the three topologies, already computed in `clade_analysis_update` (note that there were a total of 1100 simulations):
 ```
 polytomy_result = count_atLeastMinDescendants/1100
 …
@@ -22,7 +22,7 @@ simulation_results = [polytomy_result, ab_result, cc_result]
 bf_unconstrained = calculate_bf(unconstrained_results, simulation_results)
 bf_recCA = calculate_bf(recCA_results, simulation_results)
 ```
-More specifically, the values are the probabilities for the subset of topologies shown in Figure 2:
+And the sum of the values is not equal or proportional to the total number of simulations, because only a fraction of the simulations conform to the three topologies. As can be seen in Figure 2:
 
 ![Figure 2 of Pekar et al. 2022](science.abp8337-f2.jpg)
 
