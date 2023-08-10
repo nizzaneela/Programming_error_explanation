@@ -1,6 +1,6 @@
 I’m afraid there is another bug in the notebook [cladeAnalysis.ipynb](https://github.com/sars-cov-2-origins/multi-introduction/blob/71ed420fe11ecdbe589568255ec90ca56d6e221c/notebooks/cladeAnalysis.ipynb). 
 
-The function `calculate_bf` takes an array of values as `simulation_results` and divides them by their sum to produce an array `pr_3_topos` - the probabilities for three topologies given a single introduction:
+The function `calculate_bf` takes an array of values as `simulation_results` and divides them by their sum to produce `pr_3_topos` - an array of probabilities for three topologies, given a single introduction:
 ```
 def calculate_bf(asr_results, simulation_results):
 ...
