@@ -13,15 +13,15 @@ This would be an appropriate way to derive likelihoods for producing the differe
 Unfortunately, the array is of the likelihoods for a subset of the topologies, as can be seen in “clade_analysis_updated”:
 
 '''
-> polytomy_result = count_atLeastMinDescendants/1100
->  …
-> cc_result = cc_count_30perc_twoPolytomies/1100
-> ab_result = ab_count_30perc_twoPolytomies/1100
-> …
-> simulation_results = [polytomy_result, ab_result, cc_result]
-> …
-> bf_unconstrained = calculate_bf(unconstrained_results, simulation_results)
-> bf_recCA = calculate_bf(recCA_results, simulation_results)
+polytomy_result = count_atLeastMinDescendants/1100
+…
+cc_result = cc_count_30perc_twoPolytomies/1100
+ab_result = ab_count_30perc_twoPolytomies/1100
+…
+simulation_results = [polytomy_result, ab_result, cc_result]
+…
+bf_unconstrained = calculate_bf(unconstrained_results, simulation_results)
+bf_recCA = calculate_bf(recCA_results, simulation_results)
 '''
 In other words, they are the likelihoods shown in Figure 2, and “calculate_bf” increases them in inverse proportion to their sum. This increase is applied twice in the topology likelihoods for the multiple introductions, because they are based on the single introduction likelihoods squared. For example, in the main analysis the likelihoods for the single introduction double from [0.475, 0.03, 0] to [0.94, 0.06, 0], while the likelihoods for the multiple introductions quadruple from [0.226, 0.001, 0] to [0.885, 0.004, 0]. The net result is doubling of the Bayes factors.
 
