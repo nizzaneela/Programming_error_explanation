@@ -22,7 +22,7 @@ simulation_results = [polytomy_result, ab_result, cc_result]
 bf_unconstrained = calculate_bf(unconstrained_results, simulation_results)
 bf_recCA = calculate_bf(recCA_results, simulation_results)
 ```
-And the sum of the values is not equal or proportional to the total number of simulations, because only a fraction of the simulations conform to the three topologies. As can be seen in Figure 2:
+The sum of the values is the proportion of simulations that conform to one if the three topologies, which is generally significantly less than one. For example, for the main analysis prior to the bugfix in #1, the sum of the values (shown in Figure 2) was 0.475 + 0.005 + 0 = 0.48. Not that the arrangement of the topologies in Figure 2 differs from their order in the array:
 
 ![Figure 2 of Pekar et al. 2022](science.abp8337-f2.jpg)
 
