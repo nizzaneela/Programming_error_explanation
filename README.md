@@ -31,6 +31,6 @@ By dividing these likelihoods by their sum, `calculate_bf` increases them accord
 
 This is obviously wrong. The correct calculation, as described on page 13 of the supplementary materials, does not include this increase. 
 
-![Excerpt from page 13 of the supplementary materials](Excerpt from page 13 of the supplementary materials.png)
+![Excerpt from page 13 of the supplementary materials](p13.png)
 
 This mistake might have been caused by miscommunication between the programmers of the different functions.
