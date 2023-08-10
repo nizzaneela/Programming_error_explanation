@@ -23,7 +23,9 @@ simulation_results = [polytomy_result, ab_result, cc_result]
 bf_unconstrained = calculate_bf(unconstrained_results, simulation_results)
 bf_recCA = calculate_bf(recCA_results, simulation_results)
 ```
-In other words, they are the likelihoods for the subset of topologies shown in Figure 2, and `calculate_bf` increases them in proportion to the number of simulations that do not have a topology in this subset. This increase is applied twice in the likelihoods for the multiple introductions, because they are based on the single introduction likelihoods squared. For example, in the main analysis the likelihoods for the single introduction double from [0.475, 0.03, 0] to [0.94, 0.06, 0], while the likelihoods for the multiple introductions quadruple from [0.226, 0.001, 0] to [0.885, 0.004, 0]. The net result is doubling of the Bayes factors.
+In other words, they are the likelihoods for the subset of topologies shown in Figure 2:
+[Figure 2 of Pekar et al.](science.abp8337-f2.jpg):
+and `calculate_bf` increases them in proportion to the number of simulations that do not have a topology in this subset. This increase is applied twice in the likelihoods for the multiple introductions, because they are based on the single introduction likelihoods squared. For example, in the main analysis the likelihoods for the single introduction double from [0.475, 0.03, 0] to [0.94, 0.06, 0], while the likelihoods for the multiple introductions quadruple from [0.226, 0.001, 0] to [0.885, 0.004, 0]. The net result is doubling of the Bayes factors.
 
 This is obviously wrong. The correct calculation, as described on page 13 of the supplementary materials, does not include this increase. 
 
