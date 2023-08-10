@@ -8,9 +8,9 @@ def calculate_bf(asr_results, simulation_results):
 # the 3 trees are in the order (t_p, t_1C, t_2C)
 pr_3_topos = np.array(simulation_results)/sum(simulation_results)
 ```
-This would be an appropriate way to derive the probabilities for the three topologies, were the values the numbers of simulations conforming to the three topologies and their sum equal to the total number of simulations.
+This would be an appropriate way to compute the probabilities for the three topologies, were the values the numbers of simulations conforming to the three topologies and their sum equal to the total number of simulations.
 
-Unfortunately, the values are in fact the probabilities for the three topologies, already computed in `clade_analysis_update` (note that the total of simulations was 1100):
+Unfortunately, the values are in fact the probabilities for the three topologies, already computed in `clade_analysis_update` (note that the total number of simulations was 1100):
 ```
 polytomy_result = count_atLeastMinDescendants/1100
 …
@@ -22,7 +22,7 @@ simulation_results = [polytomy_result, ab_result, cc_result]
 bf_unconstrained = calculate_bf(unconstrained_results, simulation_results)
 bf_recCA = calculate_bf(recCA_results, simulation_results)
 ```
-The sum of these probabilities is significantly less than one, because many simulations do not conform to any of the three topologies. For example, for the main analysis prior to the bugfix in #1, the sum of the probabilities (shown in Figure 2) was 0.475 + 0.005 + 0 = 0.48. (Note that the arrangement of the topologies in Figure 2 differs from their order in the array:
+The sum of these probabilities is significantly less than one, because many simulations do not conform to any of the three topologies. For the main analysis prior to the bugfix in #1, the sum of the probabilities (shown in Figure 2) was 0.475 + 0.005 + 0 = 0.48. (Note that the values [t_p, t_1C, t_2C] in the array `simulation_results` are, respectively, the probabilities for the topologies A, C and B in Figure 2):
 
 ![Figure 2 of Pekar et al. 2022](science.abp8337-f2.jpg)
 
