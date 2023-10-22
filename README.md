@@ -72,7 +72,7 @@ It is the tMRCA from the end of the simulation that is used as the stable coales
     subtree_sc = tree.extract_tree_with(subtree_sc_leaves)
 ```
 
-Thus, the code ignores basal branches that do not have active sampled infections at the end of simulation, even if the branches do have active sampled infections at the end of sampling period. This behaviour is unjustifiable and contrary to the method defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
+Thus, the code ignores basal branches that do not have active sampled infections at the end of simulation (day 100), even if the branches do have active sampled infections at the end of sampling period (infection 50,000). This behaviour is unjustifiable and contrary to the method defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
 
 This error might be corrected by breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, e.g.:
 ```
