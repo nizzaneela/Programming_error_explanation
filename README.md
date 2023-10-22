@@ -19,7 +19,7 @@ The stable coalescence is the tMRCA of sampled infections that are active on the
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
 
 
-Contrary to this definition, the function `coalescent_timing` in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) does not stop the tMRCA calculations when 50,000 individuals had been infected; the calculations always continue until the hundredth day of the simulation.
+Contrary to this definition, the function `coalescent_timing` in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) does not stop the tMRCA calculations when 50,000 individuals have been infected; the calculations always continue until the hundredth day of the simulation.
 
 ```
 def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num_days=100):
@@ -37,10 +37,13 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
             subtree = tree.extract_tree_with(labels)
             height_subtree = distance_from_zero_dict[subtree.root.label]
             heights.append(height_subtree)
+    ...
+    coalescent_timing_results = [used_times, heights, total_inf, current_inf, current_samples]
+    return coalescent_timing_results
 ```
 
 This can be confirmed by inspecting the content of `coalData_parameterized.txt` for each simulation in the data stored on Zenodo [here](https://zenodo.org/records/6899613) (and reproduced [here]() for convenience). For example, the first simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA is 0.000333 years (~3 hours), but the calculations continue until the end of the simulation 61 days later, when the tMRCA is 0.016277 years (~6 days).
-'''
+```
 time	coalescence time	total infected	currently infected	current samples
 ...
 38	0.000333	45444	33079	5731
@@ -48,9 +51,46 @@ time	coalescence time	total infected	currently infected	current samples
 ...
 99	0.016277	1363477	149166	743
 100	0.016277	1371985	144107	710
-'''
+```
 
-The analysis uses the tMRCA at tthe 
+The tMRCA at the end of the simulation is used as the stable coalescence in the `main` function of [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) to determine which basal branches are pruned.
+```
+# main function
+    ...
+    coal_timing = coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, subtree, args.num_days)
+
+    # prepare for clade analysis; get the subtree with the stable coalescence (MRCA) root
+    eps = 1e-8
+    stable_coalescence = coal_timing[1][-1]
+    subtree_sc_leaves = []
+    for n in subtree.distances_from_root():
+        if abs(n[1] - stable_coalescence) < eps:
+            # print(n[0].label)
+            subtree_sc_leaves += [n.label for n in subtree.extract_subtree(n[0]).traverse_leaves()]
+    subtree_sc_leaves = set(subtree_sc_leaves)
+    subtree_sc = tree.extract_tree_with(subtree_sc_leaves)
+```
+
+Thus, the code ignores branches that do have active sampled infections at the end of the sampling period, contrary to the method defined in the Supplementary Materials.
+
+This error might be corrected by breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, e.g.:
+```
+def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num_days=100):
+    ...
+    for index, time in enumerate(times):
+        if time > num_days: # sometimes gemf goes past the limit but we don't always know when
+            break
+        ### added break condition ###
+        elif total_inf_dict[time-1]>50000: # stop after the day of 50000 total infections
+            break
+        ...
+```
+# Verification
+
+
+
+
+the root of the is used ion the analysis, e.g. when determining the root of the tree for the phylodynamic  analysis uses the tMRCA at tthe 
 
 stable coalescence times recorded in 
 
