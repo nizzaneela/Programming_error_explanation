@@ -42,7 +42,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
     return coalescent_timing_results
 ```
 
-This can be confirmed by inspecting the content of `coalData_parameterized.txt` for each simulation in the data stored on Zenodo [here](https://zenodo.org/records/6899613) (and reproduced [here]() for convenience). For example, the first simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA is 0.000333 years (~3 hours), but the calculations continue until the end of the simulation 61 days later, when the tMRCA is 0.016277 years (~6 days).
+This can be confirmed by inspecting the content of `coalData_parameterized.txt` for each simulation in the data stored on Zenodo [here](https://zenodo.org/records/6899613) (and collected [here](https://github.com/nizzaneela/multi-introduction/blob/6c4c02e1a614d3cf482da76a188729f9c6e1933c/notebooks/0.28TF/simulations.zip) for convenience). For example, the first simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA is 0.000333 years (~3 hours), but the calculations continue until the end of the simulation 61 days later, when the tMRCA is 0.016277 years (~6 days).
 
 ```
 time	coalescence time	total infected	currently infected	current samples
@@ -87,3 +87,15 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
         ...
 ```
 # Verification
+
+The stable coalescents that were used in the analysis can be extracted from the `coalData_parameterized.txt` files for each simulation collected at [this repository](https://github.com/nizzaneela/multi-introduction/blob/6c4c02e1a614d3cf482da76a188729f9c6e1933c/notebooks/0.28TF/simulations.zip), or from the summary stored [here](FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip):
+```
+wget https://github.com/nizzaneela/multi-introduction/blob/6c4c02e1a614d3cf482da76a188729f9c6e1933c/notebooks/0.28TF/simulations.zip
+wget FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip
+unzip simulations.zip
+unzip FAVITES_results.zip
+```
+
+
+The code simulates mutations through the subtree, starting from the stable coalescence. As the randomw number generator used to simulate the mutations did not have a seed, the simulated mutations cannot be replicated. However, the effect of the correction can s 
+
