@@ -6,7 +6,7 @@ For the primary analysis, correcting this error shifts 13% of the tMRCAs back in
 
 # Explanation
 
-The stable coalescence was introduced in [Timing the SARS-CoV-2 index case in Hubei province](https://www.science.org/doi/10.1126/science.abf8003), where tMRCAs inferred from observations were matched to tMRCAs from simulations. The authors noted that "coalescent processes can prune basal viral lineages before they have the opportunity to be sampled, potentially pushing SARS-CoV-2 tMRCA estimates forward in time". As a result, the tMRCAs inferred from observations do not account for basal lineages that went extinct before they could be sampled. The stable coalescence is a tMRCA that reproduces a slightly different effect in the simulations - it ignores basal lineages that went extinct before the end of the sampling period. The effect is shown in [Fig. 2](https://www.science.org/cms/10.1126/science.abf8003/asset/7e12255a-8ddf-4d55-bc59-6644bc8de6e6/assets/graphic/372_412_f2.jpeg) of that paper, reproduced below.
+The stable coalescence was introduced in Pekar et al.'s [Timing the SARS-CoV-2 index case in Hubei province](https://www.science.org/doi/10.1126/science.abf8003), where tMRCAs inferred from observations were matched to tMRCAs from simulations. The authors noted that "coalescent processes can prune basal viral lineages before they have the opportunity to be sampled, potentially pushing SARS-CoV-2 tMRCA estimates forward in time". In other words, the tMRCAs inferred from observations might not account for basal lineages that went extinct before they could be sampled. The stable coalescence is a tMRCA that reproduces a slightly different effect in the simulations - it ignores basal lineages that went extinct before the end of the sampling period. The effect is shown in [Fig. 2](https://www.science.org/cms/10.1126/science.abf8003/asset/7e12255a-8ddf-4d55-bc59-6644bc8de6e6/assets/graphic/372_412_f2.jpeg) of that paper, reproduced below.
 
 ![Fig. 2 of "Timing the index case...](https://github.com/nizzaneela/Programming_error_explanation/blob/dae78dd3e2658b59473d68ce5da2a5c9d2284f8b/timing_f2.jpeg)
 
@@ -43,6 +43,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
 ```
 
 This can be confirmed by inspecting the content of `coalData_parameterized.txt` for each simulation in the data stored on Zenodo [here](https://zenodo.org/records/6899613) (and reproduced [here]() for convenience). For example, the first simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA is 0.000333 years (~3 hours), but the calculations continue until the end of the simulation 61 days later, when the tMRCA is 0.016277 years (~6 days).
+
 ```
 time	coalescence time	total infected	currently infected	current samples
 ...
