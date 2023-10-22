@@ -54,7 +54,7 @@ time	coalescence time	total infected	currently infected	current samples
 100	0.016277	1371985	144107	710
 ```
 
-It is the tMRCA from the end of the simulation that is used as the stable coalescence. In particular, the `main` function of [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) extracts the subtree rooted at the tMRCA from the end of the simulation for the subsequent clade analysis.
+It is the tMRCA from the end of the simulation that is used as the stable coalescence. In particular, the `main` function of [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) extracts the subtree rooted at the tMRCA from the end of the simulation, and uses the extracted subtree for the subsequent analysis.
 ```
 # main function
     ...
