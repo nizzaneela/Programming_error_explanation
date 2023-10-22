@@ -88,13 +88,15 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
 ```
 # Verification
 
-The stable coalescents that were used in the analysis can be extracted from the `coalData_parameterized.txt` files for each simulation collected at [this repository](https://github.com/nizzaneela/multi-introduction/blob/6c4c02e1a614d3cf482da76a188729f9c6e1933c/notebooks/0.28TF/simulations.zip), or from the summary stored [here](FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip):
+The stable coalescents can be extracted from the `coalData_parameterized.txt` files for each simulation collected at [this repository](https://github.com/nizzaneela/multi-introduction/blob/6c4c02e1a614d3cf482da76a188729f9c6e1933c/notebooks/0.28TF/simulations.zip), or from the summary stored `FAVITES_results` [here](FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip):
 ```
 wget https://github.com/nizzaneela/multi-introduction/blob/6c4c02e1a614d3cf482da76a188729f9c6e1933c/notebooks/0.28TF/simulations.zip
 wget FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip
 unzip simulations.zip
 unzip FAVITES_results.zip
 ```
+The stable coalescents stored in `FAVITES_results` can be checked against the voorrect and incorrect values derivable from the `coalData_parameterized.txt` files:
+
 
 
 The code simulates mutations through the subtree, starting from the stable coalescence. As the randomw number generator used to simulate the mutations did not have a seed, the simulated mutations cannot be replicated. However, the effect of the correction can s 
