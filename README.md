@@ -1,4 +1,16 @@
-I’m afraid there is another bug in the notebook [cladeAnalysis.ipynb](https://github.com/sars-cov-2-origins/multi-introduction/blob/71ed420fe11ecdbe589568255ec90ca56d6e221c/notebooks/cladeAnalysis.ipynb). 
+The Bayes factors are further inflated by another error in the code.
+
+The analysis uses a stable coalescence that is defined in the [Supplementary Material](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf) as a tMRCA that ignores basal lineages that do not survive the sampling period. An error in the implementation (`coalescent_timing` in [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py)) causes the analysis to ignore basal lineages that do survive the sampling period.
+
+For the primary analysis, correcting this error reduces the Bayes factors to 3. 9 and 4.0, and shifts 13% of the tMRCAs back in time by an average of 5.5 days. 
+
+# Explanation
+
+
+
+This prunes largerfails to implement the stable coalescent correctly. As a result, basal lineages that do survive the sampling period are ignored as well.
+
+in the code  . A mistake in the implementation negcauses basal lineages that do survive the sampling period to be ignored as well.
 
 The function `calculate_bf` takes an array of values as `simulation_results` and divides them by their sum to produce `pr_3_topos` - an array of probabilities for three topologies:
 ```python
