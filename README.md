@@ -1,6 +1,6 @@
 Another programming error inflates the Bayes factors.
 
-The simulated phylogenies are pruned to a stable coalescence. The stable coalescence is defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf) as a tMRCA that ignores basal lineages that do not survive the sampling period. The implementation in [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) ignores basal lineages that do survive the sampling period. 
+The simulated phylogenies are pruned to remove lineages basal to a stable coalescence. The stable coalescence is defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf) as a tMRCA that ignores basal lineages that do not survive the sampling period. The implementation in [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) ignores basal lineages that do survive the sampling period. 
 
 The code removes basal lineages that, according to the text, should be retained.
 
@@ -74,7 +74,7 @@ It is the tMRCA from the end of the simulation that is used as the stable coales
     subtree_sc = tree.extract_tree_with(subtree_sc_leaves)
 ```
 
-Thus, the code ignores basal branches that do not have active sampled infections at the end of simulation (day 100), even if the branches do have active sampled infections at the end of sampling period (infection 50,000). Thus, the code does not implement the method defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
+Thus, the code ignores basal lineages that do not have active sampled infections at the end of simulation (day 100), even if the lineages do have active sampled infections at the end of sampling period (infection 50,000). Thus, the code does not implement the method defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
 
 This error might be corrected by breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, e.g.:
 ```
