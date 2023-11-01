@@ -1,16 +1,18 @@
-Another error in the code inflates the Bayes factors.
+Another programming error inflates the Bayes factors.
 
-The simulated phylogenies are pruned to remove lineages basal to a "stable coalescence" - the "stable coalescence" being defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf) as a tMRCA that ignores basal lineages that do not survive the sampling period. The implementation in [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) ignores basal lineages that do survive the sampling period. The code removes basal lineages that, according to the text, should be retained.
+The simulated phylogenies are pruned to a stable coalescence. The stable coalescence is defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf) as a tMRCA that ignores basal lineages that do not survive the sampling period. The implementation in [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) ignores basal lineages that do survive the sampling period. 
 
-For the primary analysis, correcting this error shifts 13% of the tMRCAs back in time by an average of 5.5 days, and reduces the Bayes factors by ~6%. 
+The code removes basal lineages that, according to the text, should be retained.
+
+For the primary analysis, correcting this error shifts 13% of the tMRCAs back in time by an average of 5.5 days, and reduces the Bayes factors to 3.9 and 4.0. 
 
 # Explanation
 
-The stable coalescence was introduced in an earlier work ([Timing the SARS-CoV-2 index case in Hubei province](https://www.science.org/doi/10.1126/science.abf8003)), where tMRCAs inferred from observations were aligned with qtMRCAs from simulations. The authors noted that "coalescent processes can prune basal viral lineages before they have the opportunity to be sampled, potentially pushing SARS-CoV-2 tMRCA estimates forward in time". In other words, the tMRCAs inferred from observations might not account for basal lineages that went extinct before they could be sampled. The stable coalescence is a tMRCA that produces a similar but slightly different effect with the simulations - it ignores simulated basal lineages that went extinct before the end of the sampling period. The effect is shown in [Fig. 2](https://www.science.org/cms/10.1126/science.abf8003/asset/7e12255a-8ddf-4d55-bc59-6644bc8de6e6/assets/graphic/372_412_f2.jpeg) of that paper, reproduced below.
+The stable coalescent was introduced in [Timing the SARS-CoV-2 index case in Hubei province](https://www.science.org/doi/10.1126/science.abf8003), where a tMRCA inferred from observations was aligned with tMRCAs from simulations. The tMRCA inferred from the observations might have been pushed forward in time by the relatively late and sparse observations failing to detect short-lived basal lineages. The stable coalescence produces a similar effect with the tMRCAs from the simulations by ignoring basal lineages that do not live to the end of the sampling period. The effect is shown in [Fig. 2](https://www.science.org/cms/10.1126/science.abf8003/asset/7e12255a-8ddf-4d55-bc59-6644bc8de6e6/assets/graphic/372_412_f2.jpeg), reproduced below.
 
 ![Fig. 2 of "Timing the index case...](https://github.com/nizzaneela/Programming_error_explanation/blob/dae78dd3e2658b59473d68ce5da2a5c9d2284f8b/timing_f2.jpeg)
 
-In the present analysis, the simulations are sampled from the time of the first hospitalization until the fifty-thousandth infection, as described on page 8 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
+In the present analysis, the simulations are sampled from the time of the first hospitalization to the fifty-thousandth infection, as described on page 8 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
 
 ![Excerpt from page 8 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/4b653347fb1b4642c98d82c50fcea29200c4add1/sample.png)
 
@@ -19,7 +21,7 @@ The stable coalescence is the tMRCA of sampled infections that are active on the
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
 
 
-Contrary to this definition, the function `coalescent_timing` in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) does not stop the tMRCA calculations when 50,000 individuals have been infected. Instead, the calculations always continue until the last (hundredth) day of the simulation.
+Contrary to this definition, the function `coalescent_timing` in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) does not stop the tMRCA calculations when 50,000 individuals have been infected. Instead, the calculations always continue until the last day of the simulation.
 
 ```
 def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num_days=100):
@@ -72,7 +74,7 @@ It is the tMRCA from the end of the simulation that is used as the stable coales
     subtree_sc = tree.extract_tree_with(subtree_sc_leaves)
 ```
 
-Thus, the code ignores basal branches that do not have active sampled infections at the end of simulation (day 100), even if the branches do have active sampled infections at the end of sampling period (infection 50,000). This behaviour is unjustifiable and contrary to the method defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
+Thus, the code ignores basal branches that do not have active sampled infections at the end of simulation (day 100), even if the branches do have active sampled infections at the end of sampling period (infection 50,000). Thus, the code does not implement the method defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
 
 This error might be corrected by breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, e.g.:
 ```
