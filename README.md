@@ -76,7 +76,7 @@ It is the tMRCA from the end of the simulation that is used as the stable coales
 
 Thus, the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if the lineages do have active sampled infections at the end of sampling period (infection 50,000). 
 
-This behaviour does not agree with the method defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). It is also makes no sense, since lineages can have active infections at the end of the simulation that aren't sampled merely because they aren't amongst the first 50,000 infections. 
+This behaviour does not agree with the method defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). It is also makes no sense because a lineage can have active infections at the end of the simulation but lack active _sampled_ infections merely because the active infections were not amongst the first 50,000. 
 
 This error might be corrected by breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, e.g.:
 ```
@@ -92,7 +92,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
 ```
 # Verification
 
-The stable coalescents can be extracted from the `coalData_parameterized.txt` files for each simulation collected at [this repository](https://github.com/nizzaneela/multi-introduction/blob/6c4c02e1a614d3cf482da76a188729f9c6e1933c/notebooks/0.28TF/simulations.zip), or from the summary stored `FAVITES_results` [here](FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip):
+The stable coalescents can be extracted from the `coalData_parameterized.txt` files for each simulation collected at [this repository](https://github.com/nizzaneela/multi-introduction/blob/6c4c02e1a614d3cf482da76a188729f9c6e1933c/notebooks/0.28TF/simulations.zip), or from the summary stored in `FAVITES_results` [here](FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip):
 ```
 wget https://github.com/nizzaneela/multi-introduction/blob/6c4c02e1a614d3cf482da76a188729f9c6e1933c/notebooks/0.28TF/simulations.zip
 wget FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip
