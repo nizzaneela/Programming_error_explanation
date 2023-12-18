@@ -97,7 +97,7 @@ for i in {01..22}; do wget https://zenodo.org/records/6899613/files/simulations_
 and then unzipped and collated with:
 ```
 mkdir ./simulations
-for i in {01..03}; unzip simulations_"$i".zip; mv ./simulations_"$i"/* ./simulations; rm ./simulations_"$i"/*; done
+for i in {01..03}; unzip simulations_"$i".zip; mv ./simulations_"$i"/* ./simulations; rm ./simulations_"$i"; done
 ```
 
 stable coalescents can be extracted from the `coalData_parameterized.txt` files for each simulation collected at [this repository](https://github.com/nizzaneela/multi-introduction/blob/6c4c02e1a614d3cf482da76a188729f9c6e1933c/notebooks/0.28TF/simulations.zip), or from the summary stored in `FAVITES_results` [here](FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip):
