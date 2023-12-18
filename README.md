@@ -1,17 +1,10 @@
 Another error inflates the corrected Bayes factors.
 
-The simulated phylogenies are pruned to remove short-lived basal lineages. The code to do this fails to correctly implement the method described in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf), and removes longer-lived basal lineages that, according to the text, should be retained.
+The simulated phylogenies are pruned to remove short-lived basal lineages. The script to do this, [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py), fails to correctly implement the method described in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf), and removes longer-lived basal lineages that, according to the text, should be retained.
 
-Resampling the last stochastic phase of the simulations using the correct implementation produces Bayesa distribution of Bayes factors centered around 3.3.
+Correcting and rerunning [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) resamples the last stochastic phase of the simulations, and produces widely dispersed Bayes factors because of sampling noise. Repeated resampling of this last phase produces a broad distribution spanning . 
 
-Correcting [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) shifts the distribution of the resampled Bayes factors to around 3.3.
-
-The sampling noise makes it impossible to distinguish the corrected Bayes factors from the relevant significance thresholds. The simulations should be rerun to produce sufficient samples to confidently distiguish the Bayes factors from the relevant signficiance thresholds.
-
-
-reduce the standard error narrow the Bayes factors 
-
-For the primary analysis, correcting this error shifts 13% of the tMRCAs back in time by an average of 5.5 days, and reduces the Bayes factors to 3.9 and 4.0. 
+The entire simulation should be resampled until the Bayes factors can be distinguished from the significance thresholds.
 
 # Explanation
 
