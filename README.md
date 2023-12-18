@@ -1,10 +1,8 @@
-Noise and another error inflate the corrected Bayes factors.
+Another error inflates the corrected Bayes factors.
 
-The simulated phylogenies are pruned to remove short-lived basal lineages. The code in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) fails to correctly implement the method described in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). Longer-lived basal lineages are removed that, according to the text, should be retained.
+The simulated phylogenies are pruned to remove short-lived basal lineages. The code to do this fails to correctly implement the method described in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf), and removes longer-lived basal lineages that, according to the text, should be retained.
 
-The effect on the Bayes factors is smaller than the standard error, but the standard error is relatively large - around ± 1. 
-
-Resampling the last stochastic phase of the simulations produces a distribution of Bayes factors centered around 3.6-3.7.
+Resampling the last stochastic phase of the simulations using the correct implementation produces Bayesa distribution of Bayes factors centered around 3.3.
 
 Correcting [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) shifts the distribution of the resampled Bayes factors to around 3.3.
 
@@ -101,7 +99,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
 ```
 # Verification
 
-The script `stableCoalescence_cladeAnalysis.py` uses epidemic simulation output from GEMF, a transmission network from FAVITES, and a time tree from CoaTran. For the 1100 simulations of these main analysis, these are published on Zenodo in twenty-two zip files, each around 7GB compressed . They can be downloaded with:
+The script `stableCoalescence_cladeAnalysis.py` uses epidemic simulation output from GEMF, a transmission network from FAVITES, and a time tree from CoaTran. For the 1100 simulations of the main analysis, these are published on Zenodo in twenty-two zip files, each around 7GB compressed. They can be downloaded with:
 ```
 for i in {01..22}; do wget https://zenodo.org/records/6899613/files/simulations_"$i".zip; done
 ```
