@@ -92,7 +92,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
 
 The script `stableCoalescence_cladeAnalysis.py` uses epidemic simulation output from GEMF, the transmission network from FAVITES, and the time tree from CoaTran. For the 1100 simulations of these main analysis, these are published on Zenodo and can be downloaded and unzipped with:
 ```
-for i in {01..20}; do batch="simulations_$(printf "%02d" $i)"; wget -q --show-progress https://zenodo.org/records/6899613/files/"$batch".zip -P ./ && done
+for i in {01..22}; do wget https://zenodo.org/records/6899613/files/simulations_"$i".zip; done
 ```
 
 stable coalescents can be extracted from the `coalData_parameterized.txt` files for each simulation collected at [this repository](https://github.com/nizzaneela/multi-introduction/blob/6c4c02e1a614d3cf482da76a188729f9c6e1933c/notebooks/0.28TF/simulations.zip), or from the summary stored in `FAVITES_results` [here](FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip):
