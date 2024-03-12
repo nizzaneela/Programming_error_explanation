@@ -103,7 +103,7 @@ This compression is exacerbated further by an error in the epidemic simulation s
 Thus, the code:
 - filters out basal lineages that did not undergo early growth, thereby increasing the likelihood of basal polytomies,
 - adds back basal lineages that are connected to the stable coalescence via zero-length branches, thereby increasing the size of basal polytomies, and
-- skips the latent phase of the primary case, thereby compressing the time for coalescing lineages and increasing the likelihood of zero-length branches at the stagble coalescence.
+- skips the latent phase of the primary case, thereby compressing the time for coalescing lineages and increasing the likelihood of zero-length branches at the stable coalescence.
 
 
 This behaviour does not agree with the method defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
