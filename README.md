@@ -1,25 +1,20 @@
-Another error inflates the corrected Bayes factors.
+Errors and noise inflate the corrected Bayes factors.
 
-The simulated phylogenies are pruned to remove short-lived basal lineages. The script to do this, [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py), fails to correctly implement the method described in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf), and removes longer-lived basal lineages that, according to the text, should be retained.
+The [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf) describe how short-lived basal lineages are excluded from the clade analysis by rooting each phylogeny at a stable coalescence. The code does not implement the described method. 
 
-Correcting and rerunning [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) resamples the last stochastic phase of the simulations, and produces widely dispersed Bayes factors because of sampling noise. 
+The effects of this discrepency are difficult to quantify because the stochastic simulations are not reproducible and the results are sensitive to sampling noise. However, in 1000 resamples of the final stochastic phase of the simulations using corrected code the Bayes factors were reduced by, on average, 20%.
 
-Many more samples are needed to determine if the Bayes factors are above or below 3.2.
+Many more should simulations are needed to accurately estimate the Bayes factors, and they should be run according to the method described in the text.
 
 # Explanation
 
-The stable coalescent was introduced in [Timing the SARS-CoV-2 index case in Hubei province](https://www.science.org/doi/10.1126/science.abf8003), where a tMRCA inferred from observations was aligned with tMRCAs from simulations. The tMRCA inferred from the observations might have been pushed forward in time by the relatively late and sparse observations failing to detect short-lived basal lineages. The stable coalescence produces a similar effect with the tMRCAs from the simulations by ignoring basal lineages that do not live to the end of the sampling period. The effect is shown in [Fig. 2](https://www.science.org/cms/10.1126/science.abf8003/asset/7e12255a-8ddf-4d55-bc59-6644bc8de6e6/assets/graphic/372_412_f2.jpeg), reproduced below.
-
-![Fig. 2 of "Timing the index case...](https://github.com/nizzaneela/Programming_error_explanation/blob/dae78dd3e2658b59473d68ce5da2a5c9d2284f8b/timing_f2.jpeg)
-
-In the present analysis, the simulations are sampled from the time of the first hospitalization to the fifty-thousandth infection, as described on page 8 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
+The simulated phylogenies are constructed by coalescing lineages sampled from the first 50,000 simulated infections. Partial and delayed sampling is simulated by sampling only the of simulated infections deemed ascertained, and by ignoring samples that precede the first simulated hospitalization, as described on page 8 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
 
 ![Excerpt from page 8 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/4b653347fb1b4642c98d82c50fcea29200c4add1/sample.png)
 
-The stable coalescence is the tMRCA of sampled infections that are active on the day of the fifty-thousandth infection or, should the epidemic fail to grow so far, the end of the simulation, as described on page 10 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).  
+Samples are also ignored if they are on branches from upstream of a stable coalescence, defined on page 10 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).  
 
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
-
 
 Contrary to this definition, the function `coalescent_timing` in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) does not stop the tMRCA calculations when 50,000 individuals have been infected. Instead, the calculations always continue until the last day of the simulation.
 
@@ -44,7 +39,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
     return coalescent_timing_results
 ```
 
-This can be confirmed by inspecting the content of `coalData_parameterized.txt` for each simulation in the data stored on Zenodo [here](https://zenodo.org/records/6899613) (and collected [here](https://github.com/nizzaneela/multi-introduction/blob/6c4c02e1a614d3cf482da76a188729f9c6e1933c/notebooks/0.28TF/simulations.zip) for convenience). For example, the first simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA is 0.000333 years (~3 hours), but the calculations continue until the end of the simulation, after another 61 days and 1.3 million infections, when the tMRCA is 0.016277 years (~6 days).
+This can be confirmed by inspecting the content of `coalData_parameterized.txt` for each simulation in the data stored on Zenodo [here](https://zenodo.org/records/6899613). For example, the first simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA of active sampled infections is 0.000333 years (~3 hours), but the calculations continue until the end of the simulation, after another 61 days and 1.3 million infections, when only 710 sampled infections are still active and their tMRCA is 0.016277 years (~6 days).
 
 ```
 time	coalescence time	total infected	currently infected	current samples
@@ -56,25 +51,7 @@ time	coalescence time	total infected	currently infected	current samples
 100	0.016277	1371985	144107	710
 ```
 
-It is the tMRCA from the end of the simulation that is used as the stable coalescence. In particular, the `main` function of [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) extracts the subtree rooted at the tMRCA from the end of the simulation, and uses the extracted subtree for the subsequent analysis.
-```
-# main function
-    ...
-    coal_timing = coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, subtree, args.num_days)
-
-    # prepare for clade analysis; get the subtree with the stable coalescence (MRCA) root
-    eps = 1e-8
-    stable_coalescence = coal_timing[1][-1]
-    subtree_sc_leaves = []
-    for n in subtree.distances_from_root():
-        if abs(n[1] - stable_coalescence) < eps:
-            # print(n[0].label)
-            subtree_sc_leaves += [n.label for n in subtree.extract_subtree(n[0]).traverse_leaves()]
-    subtree_sc_leaves = set(subtree_sc_leaves)
-    subtree_sc = tree.extract_tree_with(subtree_sc_leaves)
-```
-
-Thus, the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if the lineages do have active sampled infections at the end of sampling period (infection 50,000). 
+It is the tMRCA from the end of the simulation that is used as the time of stable coalescence, so that the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if the lineages do have active sampled infections at the end of sampling period (infection 50,000). 
 
 This behaviour does not agree with the method defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). It is also makes no sense because a lineage can have active infections at the end of the simulation but lack active _sampled_ infections merely because the active infections were not amongst the first 50,000. 
 
@@ -90,7 +67,57 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
             break
         ...
 ```
+
+
+
+
+
+and by walking back as long as the tMRCA of active sampled infections is within one day before the final tMRCA, e.g.:
+```
+    # work back day by day from the last day but stop if
+    # the tMRCA of the next earlier day is more than a day earlier than the final tMRCA,
+    # or the tMRCA of the next earlier day is later than the final tMRCA
+    # or if the next earlier has only one sample, i.e. it doesn't have a tMRCA
+    end_tMRCA = heights[-1]
+    day = -1
+    while (0 <= (end_tMRCA - heights[day-1]) <= (1/365)) and current_samples[day-1] != 1:
+        day -= 1
+    # stable coalescence is the MRCA of that day
+    stable_coalescence = tree.mrca(current_labels[day])
+
+    coalescent_timing_results = [used_times, heights, total_inf, current_inf, current_samples]
+    return stable_coalescence, coalescent_timing_results
+```
+
+And by walking back from the final day
+
+However, the tMRCA from the end of the simulation is not always used as the stable coalescence. 
+
+In particular, the `main` function of [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) extracts the subtree rooted at the tMRCA from the end of the simulation, and uses the extracted subtree for the subsequent analysis.
+```
+# main function
+    ...
+    coal_timing = coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, subtree, args.num_days)
+
+    # prepare for clade analysis; get the subtree with the stable coalescence (MRCA) root
+    eps = 1e-8
+    stable_coalescence = coal_timing[1][-1]
+    subtree_sc_leaves = []
+    for n in subtree.distances_from_root():
+        if abs(n[1] - stable_coalescence) < eps:
+            # print(n[0].label)
+            subtree_sc_leaves += [n.label for n in subtree.extract_subtree(n[0]).traverse_leaves()]
+    subtree_sc_leaves = set(subtree_sc_leaves)
+    subtree_sc = tree.extract_tree_with(subtree_sc_leaves)
+
 # Verification
+
+The stable coalescent was introduced in [Timing the SARS-CoV-2 index case in Hubei province](https://www.science.org/doi/10.1126/science.abf8003), where tMRCAs inferred from observations were aligned with tMRCAs from simulations. The tMRCAs inferred from the observations might have been pushed forward in time by the relatively late and sparse observations failing to detect short-lived basal lineages. The stable coalescence produces a similar effect with the tMRCAs from the simulations by ignoring basal lineages that do not live to the end of the sampling period. The effect is shown in [Fig. 2](https://www.science.org/cms/10.1126/science.abf8003/asset/7e12255a-8ddf-4d55-bc59-6644bc8de6e6/assets/graphic/372_412_f2.jpeg), reproduced below.
+
+![Fig. 2 of "Timing the index case...](https://github.com/nizzaneela/Programming_error_explanation/blob/dae78dd3e2658b59473d68ce5da2a5c9d2284f8b/timing_f2.jpeg)
+
+
+
 
 The script `stableCoalescence_cladeAnalysis.py` uses epidemic simulation output from GEMF, a transmission network from FAVITES, and a time tree from CoaTran. For the 1100 simulations of the main analysis, these are published on Zenodo in twenty-two zip files, each around 7GB compressed. They can be downloaded with:
 ```
