@@ -4,7 +4,7 @@ The [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.
 
 The effects of this discrepency are difficult to quantify because the stochastic simulations are not reproducible and the results are sensitive to sampling noise. However, in 1000 resamples of the final stochastic phase of the simulations using corrected code the Bayes factors were reduced by, on average, 20%.
 
-Many more should simulations are needed to accurately estimate the Bayes factors, and they should be run according to the method described in the text.
+Many more simulations are needed to accurately estimate the Bayes factors, and they should be run according to the method described in the text.
 
 # Explanation
 
@@ -87,9 +87,9 @@ Additionally, the `main` function in the script [stableCoalescence_cladeAnalysis
     subtree_sc_leaves = set(subtree_sc_leaves)
     subtree_sc = tree.extract_tree_with(subtree_sc_leaves)
 ```
-Thus the code increases the size of a basal polytomy when there MRCA is on a zero-length branch/
+Thus the code increases the size of a basal polytomy when there MRCA is on a zero-length branch.
 
-The zero-length branches occur when coalescent events are compressed into a short period of time within a single host. This is partly a result of the coalescence model used in 
+The zero-length branches occur when coalescent events are compressed into a short period of time within a single host. This compression is exacervated by the model used for coalescing lineages in the program [CoaTran](https://github.com/niemasd/CoaTran/tree/main), where a fixed effective population size of 1 year is used back until the first transmission event, and then a truncated exponential distribution is used to coealssece the remaining lineages within the 
 
 
 
