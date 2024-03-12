@@ -2,9 +2,9 @@ Errors and noise inflate the corrected Bayes factors.
 
 The [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf) describe how short-lived basal lineages are excluded from the clade analysis by rooting each phylogeny at a stable coalescence. The code does not implement the described method. 
 
-The effects of this discrepency are difficult to quantify because the stochastic simulations are not reproducible and the results are sensitive to sampling noise. However, the average topology frequencies in 1000 resamples of the final stochastic phase of the simulations - using corrected code - produces Bayes factors of around 3.4.
+The effects of this discrepency are difficult to quantify because the stochastic simulations are not reproducible and the results are sensitive to sampling noise. However, averaging the results of 1000 resamples of the final stochastic phase of the simulations - using corrected code - produces Bayes factors of around 3.4.
 
-Many more simulations are needed to accurately estimate the Bayes factors, and they should be run according to the method described in the text.
+Many more simulations are needed to accurately estimate the Bayes factors, and they should be as described in the text.
 
 # Explanation
 
