@@ -74,7 +74,7 @@ Additionally, the `main` function in the script [stableCoalescence_cladeAnalysis
 ```
 This increases the size of basal polytomies when the MRCA is on a zero-length branch.
 
-The zero-length branches occur when coalescent events within a single host are compressed into a short period of time. This compression is exacerbated by the model used for coalescing lineages in the program [CoaTran](https://github.com/niemasd/CoaTran/tree/main), where a fixed effective population size of 1 year is used back until the first transmission event, and then a truncated exponential distribution is used to sample waiting times for coalescent events until the remaining lineages are coalesced down to one lineage at the time of infection. 
+The zero-length branches occur when coalescent events within a single host are compressed into a short period of time. This compression is exacerbated by the model used for coalescing lineages in the program [CoaTran](https://github.com/niemasd/CoaTran/tree/main), where a fixed effective population size of 1 year is used back until the first transmission from the host, and then a truncated exponential distribution is used to sample waiting times for coalescent events within the remaining time back until, and including, the time of infection. 
 
 This compression is exacerbated further by an error in the epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) that skips the latent phase of the primary case. Specifically, the primary case is set to start in the infectious compartment (`P1`).
 ```
