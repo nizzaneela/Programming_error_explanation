@@ -8,7 +8,7 @@ Many more should simulations are needed to accurately estimate the Bayes factors
 
 # Explanation
 
-The simulated phylogenies are constructed by coalescing lineages sampled from the first 50,000 simulated infections. Partial and delayed sampling is simulated by sampling only the of simulated infections deemed ascertained, and by ignoring samples that precede the first simulated hospitalization, as described on page 8 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
+The simulated phylogenies are constructed by coalescing lineages sampled from the first 50,000 simulated infections. Partial and delayed sampling is simulated by sampling only the 15% of simulated infections deemed ascertained, and by ignoring samples that precede the first simulated hospitalization, as described on page 8 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
 
 ![Excerpt from page 8 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/4b653347fb1b4642c98d82c50fcea29200c4add1/sample.png)
 
@@ -68,8 +68,32 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
         ...
 ```
 
+By removing basal lineages that do not have active sampled infections at the end of the simulation period, and retaining those that do, the code filters out basal lineages that did not undergo rapid growth, so that the MRCA of the retained lineages is more likely to be associated with a superspreading event, and thus more likely to have a basal polytomy.
+
+Additionally, the `main` function in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) restores basal lineages if their MRCA is sufficiently close to that of the retained lineages. More specifically, if the MRCA of the retained lineages is on a zero-length branch, the code will add all basal lineages connected via zero-length branches.
+```
+# main function
+    ...
+    coal_timing = coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, subtree, args.num_days)
+
+    # prepare for clade analysis; get the subtree with the stable coalescence (MRCA) root
+    eps = 1e-8
+    stable_coalescence = coal_timing[1][-1]
+    subtree_sc_leaves = []
+    for n in subtree.distances_from_root():
+        if abs(n[1] - stable_coalescence) < eps:
+            # print(n[0].label)
+            subtree_sc_leaves += [n.label for n in subtree.extract_subtree(n[0]).traverse_leaves()]
+    subtree_sc_leaves = set(subtree_sc_leaves)
+    subtree_sc = tree.extract_tree_with(subtree_sc_leaves)
+```
+Thus the code increases the size of a basal polytomy when there MRCA is on a zero-length branch/
+
+The zero-length branches occur when coalescent events are compressed into a short period of time within a single host. This is partly a result of the coalescence model used in 
 
 
+
+Thus, the code removes basal lineages that did not undergo rapid growth, thereby increasing 
 
 
 and by walking back as long as the tMRCA of active sampled infections is within one day before the final tMRCA, e.g.:
@@ -91,7 +115,7 @@ and by walking back as long as the tMRCA of active sampled infections is within 
 
 And by walking back from the final day
 
-However, the tMRCA from the end of the simulation is not always used as the stable coalescence. 
+However, the MRCA from the end of the simulation is not always used as the stable coalescence. 
 
 In particular, the `main` function of [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) extracts the subtree rooted at the tMRCA from the end of the simulation, and uses the extracted subtree for the subsequent analysis.
 ```
