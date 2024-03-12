@@ -95,24 +95,23 @@ This compression is exacerbated further by an error in the epidemic simulation s
     status_file.close()
     print_log("Wrote GEMF '%s' file: %s" % (GEMF_STATUS_FN, status_fn))
 ```
-...despite the [command](https://github.com/sars-cov-2-origins/multi-introduction/blob/main/FAVITES-COVID-Lite/commands/command.0.28TF_0.15r.txt) indicating that it should start as exposed but non-infectious (`--tn_freq_e 0.00000020`):
+...despite the [command](https://github.com/sars-cov-2-origins/multi-introduction/blob/main/FAVITES-COVID-Lite/commands/command.0.28TF_0.15r.txt) indicating that it should start as exposed but non-infectious (`--tn_freq_e 0.00000020`).
 ```
 ~/scripts/FAVITES-COVID-Lite-updated.py --gzip_output --path_ngg_barabasi_albert ngg_barabasi_albert --path_gemf GEMF --path_coatran_constant coatran_constant --path_seqgen seq-gen --cn_n 5000000 --cn_m 8 --tn_s_to_e_seed 0 --tn_e_to_p1 125.862069 --tn_p1_to_p2 999999999 --tn_p2_to_i1 23.804348 --tn_p2_to_a1 134.891304 --tn_i1_to_i2 62.931034 --tn_i1_to_h 0.000000 --tn_i1_to_r 62.931034 --tn_i2_to_h 45.061728 --tn_i2_to_r 0.000000 --tn_a1_to_a2 9999999999 --tn_a2_to_r 125.862069 --tn_h_to_r 12.166667 --tn_s_to_e_by_e 0 --tn_s_to_e_by_p1 0 --tn_s_to_e_by_p2 3.513125 --tn_s_to_e_by_i1 6.387500 --tn_s_to_e_by_i2 6.387500 --tn_s_to_e_by_a1 0 --tn_s_to_e_by_a2 3.513125 --tn_freq_s 0.99999980 --tn_freq_e 0.00000020 --tn_freq_p1 0 --tn_freq_p2 0 --tn_freq_i1 0 --tn_freq_i2 0 --tn_freq_a1 0 --tn_freq_a2 0 --tn_freq_h 0 --tn_freq_r 0 --tn_end_time 0.273973 --tn_num_seeds 1 --pt_eff_pop_size 1 --pm_mut_rate 0.00092 --o 
 ```
 
 Thus, the code:
-- filters out basal lineages that did not undergo early growth, thereby increasing the likelihood of basal polytomies,
-- adds back basal lineages that are connected to the stable coalescence via zero-length branches, thereby increasing the size of basal polytomies, and
-- skips the latent phase of the primary case, thereby compressing the time for coalescing lineages and increasing the likelihood of zero-length branches at the stable coalescence.
+- removes basal lineages that do not have active sampled infections at the end of the simulation, effectively filtering out those that did not undergo early growth, thereby increasing the likelihood of basal polytomies,
+- adds back basal lineages that are connected to the stable coalescence via zero-length branches, thereby increasing the size of some basal polytomies, and
+- skips the latent phase of the primary case, compressing the time for coalescing lineages in the primary case, thereby increasing the likelihood of zero-length branches at the stable coalescence.
 
 
 This behaviour does not agree with the method defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
 
+# Explanation
 
-
-It also makes no sense because a lineage can have active infections at the end of the simulation but lack active _sampled_ infections merely because the active infections were not amongst the first 50,000. 
-
-This error might be corrected by breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, e.g.:
+stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) might be corrected by:
+- breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, e.g.:
 ```
 def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num_days=100):
     ...
@@ -124,9 +123,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
             break
         ...
 ```
-
-
-and by walking back as long as the tMRCA of active sampled infections is within one day before the final tMRCA, e.g.:
+- then finding the stable coalescence by walking back as long as the tMRCA of active sampled infections is within one day before the final tMRCA, and returning the stable coalescence, e.g.:
 ```
     # work back day by day from the last day but stop if
     # the tMRCA of the next earlier day is more than a day earlier than the final tMRCA,
@@ -142,55 +139,17 @@ and by walking back as long as the tMRCA of active sampled infections is within 
     coalescent_timing_results = [used_times, heights, total_inf, current_inf, current_samples]
     return stable_coalescence, coalescent_timing_results
 ```
-
-And by walking back from the final day
-
-However, the MRCA from the end of the simulation is not always used as the stable coalescence. 
-
-In particular, the `main` function of [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) extracts the subtree rooted at the tMRCA from the end of the simulation, and uses the extracted subtree for the subsequent analysis.
+- modifying the `main` function to accept the stable coalescence returned from calling `coalescent_timing`, and estracting the substree rooted at the stable coalescence, e.g.:
 ```
-# main function
-    ...
-    coal_timing = coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, subtree, args.num_days)
+    # stable coalescence
+    time_inf_dict, current_inf_dict, total_inf_dict = tn_to_time_inf_dict(args.transmission_network, subtree)
+    stable_coalescence, coal_timing = coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, subtree, args.num_days)
 
     # prepare for clade analysis; get the subtree with the stable coalescence (MRCA) root
-    eps = 1e-8
-    stable_coalescence = coal_timing[1][-1]
-    subtree_sc_leaves = []
-    for n in subtree.distances_from_root():
-        if abs(n[1] - stable_coalescence) < eps:
-            # print(n[0].label)
-            subtree_sc_leaves += [n.label for n in subtree.extract_subtree(n[0]).traverse_leaves()]
-    subtree_sc_leaves = set(subtree_sc_leaves)
-    subtree_sc = tree.extract_tree_with(subtree_sc_leaves)
-
-# Verification
-
-The stable coalescent was introduced in [Timing the SARS-CoV-2 index case in Hubei province](https://www.science.org/doi/10.1126/science.abf8003), where tMRCAs inferred from observations were aligned with tMRCAs from simulations. The tMRCAs inferred from the observations might have been pushed forward in time by the relatively late and sparse observations failing to detect short-lived basal lineages. The stable coalescence produces a similar effect with the tMRCAs from the simulations by ignoring basal lineages that do not live to the end of the sampling period. The effect is shown in [Fig. 2](https://www.science.org/cms/10.1126/science.abf8003/asset/7e12255a-8ddf-4d55-bc59-6644bc8de6e6/assets/graphic/372_412_f2.jpeg), reproduced below.
-
-![Fig. 2 of "Timing the index case...](https://github.com/nizzaneela/Programming_error_explanation/blob/dae78dd3e2658b59473d68ce5da2a5c9d2284f8b/timing_f2.jpeg)
-
-
-
-
-The script `stableCoalescence_cladeAnalysis.py` uses epidemic simulation output from GEMF, a transmission network from FAVITES, and a time tree from CoaTran. For the 1100 simulations of the main analysis, these are published on Zenodo in twenty-two zip files, each around 7GB compressed. They can be downloaded with:
+    subtree_sc = tree.extract_subtree(stable_coalescence)
+    subtree_sc.root.edge_length = 0
+    subtree_sc.suppress_unifurcations()
 ```
-for i in {01..22}; do wget https://zenodo.org/records/6899613/files/simulations_"$i".zip; done
-```
-and then unzipped and collated with:
-```
-mkdir ./simulations
-for i in {01..22}; do unzip simulations_"$i".zip && mv ./simulations_"$i"/* ./simulations && rm -r ./simulations_"$i"; done
-```
-
-stable coalescents can be extracted from the `coalData_parameterized.txt` files for each simulation collected at [this repository](https://github.com/nizzaneela/multi-introduction/blob/6c4c02e1a614d3cf482da76a188729f9c6e1933c/notebooks/0.28TF/simulations.zip), or from the summary stored in `FAVITES_results` [here](FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip):
-```
-wget https://github.com/nizzaneela/multi-introduction/blob/6c4c02e1a614d3cf482da76a188729f9c6e1933c/notebooks/0.28TF/simulations.zip
-wget FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip
-unzip simulations.zip
-unzip FAVITES_results.zip
-```
-The stable coalescents stored in `FAVITES_results` can be checked against the voorrect and incorrect values derivable from the `coalData_parameterized.txt` files:
 
 
 
