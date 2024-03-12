@@ -150,8 +150,3 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
     subtree_sc.root.edge_length = 0
     subtree_sc.suppress_unifurcations()
 ```
-
-
-
-The code simulates mutations through the subtree, starting from the stable coalescence. As the randomw number generator used to simulate the mutations did not have a seed, the simulated mutations cannot be replicated. However, the effect of the correction can s 
-
