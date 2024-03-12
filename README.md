@@ -51,12 +51,11 @@ time	coalescence time	total infected	currently infected	current samples
 100	0.016277	1371985	144107	710
 ```
 
-It is the tMRCA from the end of the simulation that is used as the time of stable coalescence, so that the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if the lineages do have active sampled infections at the end of sampling period (infection 50,000). 
-
+It is the tMRCA from the end of the simulation that is used as the time of stable coalescence, so the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if the lineages do have active sampled infections at the end of sampling period (infection 50,000). 
 
 By removing basal lineages that do not have active sampled infections at the end of the simulation period, and retaining those that do, the code filters out basal lineages that did not undergo early growth, so that the MRCA of the retained lineages is more likely to be associated with a superspreading event, and thus more likely to have a basal polytomy.
 
-Additionally, the `main` function in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) restores basal lineages if their MRCA is sufficiently close to that of the retained lineages. More specifically, if the MRCA of the retained lineages is on a zero-length branch, the code will add all basal lineages connected via zero-length branches.
+Additionally, the `main` function in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) restores basal lineages if their MRCA is sufficiently close to that of the retained lineages. More specifically, if the MRCA of the retained lineages is on a zero-length branch, the code will add back all basal lineages connected via zero-length branches.
 ```
 # main function
     ...
@@ -75,9 +74,9 @@ Additionally, the `main` function in the script [stableCoalescence_cladeAnalysis
 ```
 This increases the size of basal polytomies when the MRCA is on a zero-length branch.
 
-The zero-length branches occur when coalescent events within a single host are compressed into a short period of time. This compression is exacerbated by the model used for coalescing lineages in the program [CoaTran](https://github.com/niemasd/CoaTran/tree/main), where a fixed effective population size of 1 year is used back until the first transmission event, and then a truncated exponential distribution is used to coalesce the remaining lineages within the time back until the initial infection. 
+The zero-length branches occur when coalescent events within a single host are compressed into a short period of time. This compression is exacerbated by the model used for coalescing lineages in the program [CoaTran](https://github.com/niemasd/CoaTran/tree/main), where a fixed effective population size of 1 year is used back until the first transmission event, and then a truncated exponential distribution is used to sample waiting times for coalescent events until the remaining lineages are coalesced down to one lineage at the time of infection. 
 
-This compression is exacerbated further by an error in the epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) that skips the latent phase of the primary case. Specifically, the primary case is set to start in the infectious compartment (`P1`):
+This compression is exacerbated further by an error in the epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) that skips the latent phase of the primary case. Specifically, the primary case is set to start in the infectious compartment (`P1`).
 ```
     # write GEMF status file
     out_file = open(out_fn, 'w')
@@ -96,18 +95,19 @@ This compression is exacerbated further by an error in the epidemic simulation s
     status_file.close()
     print_log("Wrote GEMF '%s' file: %s" % (GEMF_STATUS_FN, status_fn))
 ```
-despite the [command](https://github.com/sars-cov-2-origins/multi-introduction/blob/main/FAVITES-COVID-Lite/commands/command.0.28TF_0.15r.txt) indicating that it should start as exposed but non-infectious (`--tn_freq_e 0.00000020`):
+...despite the [command](https://github.com/sars-cov-2-origins/multi-introduction/blob/main/FAVITES-COVID-Lite/commands/command.0.28TF_0.15r.txt) indicating that it should start as exposed but non-infectious (`--tn_freq_e 0.00000020`):
 ```
 ~/scripts/FAVITES-COVID-Lite-updated.py --gzip_output --path_ngg_barabasi_albert ngg_barabasi_albert --path_gemf GEMF --path_coatran_constant coatran_constant --path_seqgen seq-gen --cn_n 5000000 --cn_m 8 --tn_s_to_e_seed 0 --tn_e_to_p1 125.862069 --tn_p1_to_p2 999999999 --tn_p2_to_i1 23.804348 --tn_p2_to_a1 134.891304 --tn_i1_to_i2 62.931034 --tn_i1_to_h 0.000000 --tn_i1_to_r 62.931034 --tn_i2_to_h 45.061728 --tn_i2_to_r 0.000000 --tn_a1_to_a2 9999999999 --tn_a2_to_r 125.862069 --tn_h_to_r 12.166667 --tn_s_to_e_by_e 0 --tn_s_to_e_by_p1 0 --tn_s_to_e_by_p2 3.513125 --tn_s_to_e_by_i1 6.387500 --tn_s_to_e_by_i2 6.387500 --tn_s_to_e_by_a1 0 --tn_s_to_e_by_a2 3.513125 --tn_freq_s 0.99999980 --tn_freq_e 0.00000020 --tn_freq_p1 0 --tn_freq_p2 0 --tn_freq_i1 0 --tn_freq_i2 0 --tn_freq_a1 0 --tn_freq_a2 0 --tn_freq_h 0 --tn_freq_r 0 --tn_end_time 0.273973 --tn_num_seeds 1 --pt_eff_pop_size 1 --pm_mut_rate 0.00092 --o 
 ```
 
 Thus, the code:
-- filters out basal lineages that did not undergo early growth, thereby increasing the rate of basal polytomies,
+- filters out basal lineages that did not undergo early growth, thereby increasing the likelihood of basal polytomies,
 - adds back basal lineages that are connected to the stable coalescence via zero-length branches, thereby increasing the size of basal polytomies, and
-- skips the latent phase of the primary case, thereby compressing the time for coalescing
+- skips the latent phase of the primary case, thereby compressing the time for coalescing lineages and increasing the likelihood of zero-length branches at the stagble coalescence.
 
 
 This behaviour does not agree with the method defined in the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
+
 
 
 It also makes no sense because a lineage can have active infections at the end of the simulation but lack active _sampled_ infections merely because the active infections were not amongst the first 50,000. 
