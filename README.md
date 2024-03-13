@@ -39,7 +39,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
     return coalescent_timing_results
 ```
 
-This can be seen the files `coalData_parameterized.txt` in the data stored on [Zenodo](https://zenodo.org/records/6899613). For example, the first simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA of active sampled infections is 0.000333 years (~3 hours), but the calculations continue until the end of the simulation, after another 61 days and 1.3 million infections, when only 710 sampled infections are still active and their tMRCA is 0.016277 years (~6 days).
+This can be seen in the files `coalData_parameterized.txt` in the published data stored on [Zenodo](https://zenodo.org/records/6899613). For example, the first simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA of active sampled infections is 0.000333 years (~3 hours), but the calculations continue until the end of the simulation, after another 61 days and 1.3 million infections. By then, only 710 sampled infections are still active and their tMRCA is 0.016277 years (~6 days).
 
 ```
 time	coalescence time	total infected	currently infected	current samples
@@ -51,11 +51,11 @@ time	coalescence time	total infected	currently infected	current samples
 100	0.016277	1371985	144107	710
 ```
 
-The tMRCA from the end of the simulation is used as the time of stable coalescence, so the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). 
+The tMRCA from the end of the simulation is used as the time of stable coalescence. This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). 
 
-By removing basal lineages that do not have active sampled infections at the end of the simulation, and retaining those that do, the code filters out basal lineages that did not undergo early rapid growth. This means the MRCA of the retained lineages is more likely to be associated with an early superspreading event, and thus more likely to be part of a basal polytomy.
+By removing basal lineages that do not have active sampled infections at the end of the simulation, and retaining those that do, the code filters out basal lineages that did not undergo early rapid growth. Lineages that underwent early rapid growth are more likely to be part of a basal polytomy.
 
-Another error in the epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) causes the epidemic simulations to skip the latent phase of the primary case. Specifically, the primary case is set to start out infectious (`P1`):
+Additionally, an error in the epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) causes the epidemic simulations to skip the latent phase of the primary case. Specifically, the primary case is set to start out infectious (`P1`):
 ```
     # write GEMF status file
     out_file = open(out_fn, 'w')
@@ -111,8 +111,8 @@ BF =
 $$
 
 where:
-- $P(\tau_P|I_1)$, $P(\tau_{1C}|I_1$ and $P(\tau_{2C}|I_1)$ are the likelihoods of the different topologies (c.f. Fig. 2);
-- $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and $P(S_{T/T}|Y)$ are the posterior probabilities of the different MRCA haplotypes (c.f. Table 1); and
+- $P(\tau_P|I_1)$, $P(\tau_{1C}|I_1$ and $P(\tau_{2C}|I_1)$ are the likelihoods of the different topologies (shown in Fig. 2 and Table S5);
+- $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and $P(S_{T/T}|Y)$ are the posterior probabilities of the different MRCA haplotypes (shown in  Table 1); and
 - $0.25$ and $0.5$ are the normalized coefficients of the vectors that distribute the topology likelihoods across the posterior probabilities of compatible MRCA haplotypes.
 
 Assuming the published likelihoods are sufficiently accurate, the results of the 1100 simulations can be reproduced by sampling appropriate binomial distributions, e.g.:
@@ -156,7 +156,7 @@ The central 95% of the distribution has a range similar to the size of the Bayes
 
 # Correction
 
-The epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) can be corrected to initialise the primary case in the exposed compartment (`E`). However, rather than repeating the epidemic simulations, the published data stored on Zenodo [here](https://zenodo.org/records/6899613) can be reused by sampling and adding times for the latent period to the transmission and sample time, and rerunning [CoaTran](https://github.com/niemasd/CoaTran) to obtain corrected phylogenies, e.g.:
+The epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) can be corrected to initialise the primary case in the exposed compartment (`E`). However, rather than repeating the epidemic simulations, the published data stored on  [Zenodo](https://zenodo.org/records/6899613) can be reused by sampling times for the latent periods and adding them to the respective transmission and sampling times. [CoaTran](https://github.com/niemasd/CoaTran) can then be rerun to obtain corrected phylogenies.
 ```
 import os
 import numpy as np
@@ -191,11 +191,7 @@ for i in range(1,1101):
         file_handle.write(result.stdout.decode())
 ```
 
-
-
-
-
-[stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) may be corrected by:
+The script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) can be corrected to properly determine the stable coalescence by:
 - breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, e.g.:
 ```
 def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num_days=100):
@@ -224,7 +220,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
     coalescent_timing_results = [used_times, heights, total_inf, current_inf, current_samples]
     return stable_coalescence, coalescent_timing_results
 ```
-- modifying the `main` function to accept the stable coalescence returned from calling `coalescent_timing`, and estracting the substree rooted at the stable coalescence, e.g.:
+- modifying the `main` function to accept the stable coalescence returned from `coalescent_timing`, and to extract the subtree rooted at same, e.g.:
 ```
     # stable coalescence
     time_inf_dict, current_inf_dict, total_inf_dict = tn_to_time_inf_dict(args.transmission_network, subtree)
