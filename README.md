@@ -126,8 +126,8 @@ python3
 ...     # sample the number of simulations that have basal polytomies
 ...     n_tau_p = np.random.binomial(1100,p_tau_p_given_i1)
 ...     # sample the number of simulations that also have one clade on a two mutation branch
-...     p_tau_1c_given_polytomy = p_tau_1c_given_i1/p_tau_p_given_i1 # depends on basal polytomy
-...     n_tau_1c = np.random.binomial(n_tau_p,p_tau_1c_given_polytomy)
+...     p_tau_1c_given_tau_p = p_tau_1c_given_i1/p_tau_p_given_i1 # depends on basal polytomy
+...     n_tau_1c = np.random.binomial(n_tau_p,p_tau_1c_given_tau_p)
 ...     # return the likelihoods
 ...     return n_tau_p/1100, n_tau_1c/1100
 ```
