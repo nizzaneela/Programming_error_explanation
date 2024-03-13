@@ -39,7 +39,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
     return coalescent_timing_results
 ```
 
-This is shown in each simulations `coalData_parameterized.txt` in the data stored on Zenodo [here](https://zenodo.org/records/6899613). For example, the first simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA of active sampled infections is 0.000333 years (~3 hours), but the calculations continue until the end of the simulation, after another 61 days and 1.3 million infections, when only 710 sampled infections are still active and their tMRCA is 0.016277 years (~6 days).
+This can be seen the files `coalData_parameterized.txt` in the data stored on [Zenodo](https://zenodo.org/records/6899613). For example, the first simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA of active sampled infections is 0.000333 years (~3 hours), but the calculations continue until the end of the simulation, after another 61 days and 1.3 million infections, when only 710 sampled infections are still active and their tMRCA is 0.016277 years (~6 days).
 
 ```
 time	coalescence time	total infected	currently infected	current samples
@@ -51,9 +51,9 @@ time	coalescence time	total infected	currently infected	current samples
 100	0.016277	1371985	144107	710
 ```
 
-The tMRCA from the end of the simulation is used as the time of stable coalescence, so the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if the lineages do have active sampled infections at the end of sampling period (infection 50,000). 
+The tMRCA from the end of the simulation is used as the time of stable coalescence, so the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). 
 
-By removing basal lineages that do not have active sampled infections at the end of the simulation, and retaining those that do, the code filters out basal lineages that did not undergo early rapid growth, so that the MRCA of the retained lineages is more likely to be associated with an early superspreading event, and thus more likely to be part of a basal polytomy.
+By removing basal lineages that do not have active sampled infections at the end of the simulation, and retaining those that do, the code filters out basal lineages that did not undergo early rapid growth. This means the MRCA of the retained lineages is more likely to be associated with an early superspreading event, and thus more likely to be part of a basal polytomy.
 
 Another error in the epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) causes the epidemic simulations to skip the latent phase of the primary case. Specifically, the primary case is set to start out infectious (`P1`):
 ```
@@ -79,8 +79,6 @@ while the published [command](https://github.com/sars-cov-2-origins/multi-introd
 ~/scripts/FAVITES-COVID-Lite-updated.py --gzip_output --path_ngg_barabasi_albert ngg_barabasi_albert --path_gemf GEMF --path_coatran_constant coatran_constant --path_seqgen seq-gen --cn_n 5000000 --cn_m 8 --tn_s_to_e_seed 0 --tn_e_to_p1 125.862069 --tn_p1_to_p2 999999999 --tn_p2_to_i1 23.804348 --tn_p2_to_a1 134.891304 --tn_i1_to_i2 62.931034 --tn_i1_to_h 0.000000 --tn_i1_to_r 62.931034 --tn_i2_to_h 45.061728 --tn_i2_to_r 0.000000 --tn_a1_to_a2 9999999999 --tn_a2_to_r 125.862069 --tn_h_to_r 12.166667 --tn_s_to_e_by_e 0 --tn_s_to_e_by_p1 0 --tn_s_to_e_by_p2 3.513125 --tn_s_to_e_by_i1 6.387500 --tn_s_to_e_by_i2 6.387500 --tn_s_to_e_by_a1 0 --tn_s_to_e_by_a2 3.513125 --tn_freq_s 0.99999980 --tn_freq_e 0.00000020 --tn_freq_p1 0 --tn_freq_p2 0 --tn_freq_i1 0 --tn_freq_i2 0 --tn_freq_a1 0 --tn_freq_a2 0 --tn_freq_h 0 --tn_freq_r 0 --tn_end_time 0.273973 --tn_num_seeds 1 --pt_eff_pop_size 1 --pm_mut_rate 0.00092 --o 
 ```
 This compresses coalescence events near the beginning of the primary case, reducing the likelihood of an early mutation breaking up a basal polytomy, but only if the stable coalescence is in the primary case (~20% of simulations). 
-
-This behaviour does not agree with the methods described in the paper and [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). 
 
 Among other, minor errors, the `main` function in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) restores basal lineages if their MRCA is sufficiently close to the time of stable coalescence.
 ```
@@ -115,7 +113,7 @@ $$
 where:
 - $P(\tau_P|I_1)$, $P(\tau_{1C}|I_1$ and $P(\tau_{2C}|I_1)$ are the likelihoods of the different topologies (c.f. Fig. 2);
 - $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and $P(S_{T/T}|Y)$ are the posterior probabilities of the different MRCA haplotypes (c.f. Table 1); and
-- $0.25$ and $0.5$ are the normalized coefficients of the compatibility vectors that which distribute the topology likelihoods across the posterior probabilities of compatible MRCA haplotypes.
+- $0.25$ and $0.5$ are the normalized coefficients of the vectors that distribute the topology likelihoods across the posterior probabilities of compatible MRCA haplotypes.
 
 Assuming the published likelihoods are sufficiently accurate, the results of the 1100 simulations can be reproduced by sampling appropriate binomial distributions, e.g.:
 ```
@@ -133,7 +131,7 @@ python3
 ...     # return the likelihoods
 ...     return n_tau_p/1100, n_tau_1c/1100
 ```
-($\tau_{2C}$ is neglected here because its measured frequency was zero.)
+($\tau_{2C}$ is neglected here because its measured likelihood was zero.)
 
 The equations for the Bayes factors can be written in terms of the likelihoods and posterior probabilities, e.g.:
 ```
@@ -141,7 +139,7 @@ The equations for the Bayes factors can be written in terms of the likelihoods a
 ...     bf = 0.25*p_tau_p_given_i1**2*sum(posteriors)/(0.5*p_tau_1c_given_i1*sum(posteriors[:2]))
 ...     return bf
 ```
-Repeatedly resampling the likelihoods and computing the resulting Bayes factors then provides a distribution expected from a sample of 1100 simulations.
+Repeatedly resampling the likelihoods and computing the resulting Bayes factors then provides a distribution of what can be expected from a sample of 1100 simulations.
 ```
 >>> recCA_posteriors = np.array([77.28, 8.18, 10.49, 3.71])/100 # from Table 1
 >>> results = []
@@ -152,11 +150,50 @@ Repeatedly resampling the likelihoods and computing the resulting Bayes factors 
 ... print(f'95% CDI of Bayes factors with recCA rooting: {results[500]:.1f}, {results[19500]:.1f}')
 95% CDI of Bayes factors with recCA rooting: 3.2, 6.2
 ```
-The central 95% of the distribution spans a range of similar magnitude to the measured Bayes factors. The assumption of sufficient accuracy is clearly invalid.
+The central 95% of the distribution has a range similar to the size of the Bayes factors. The assumption of sufficient accuracy is clearly invalid.
 
 1100 simulations are not enough to measure the Bayes factors with useful accuracy.
 
 # Correction
+
+The epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) can be corrected to initialise the primary case in the exposed compartment (`E`). However, rather than repeating the epidemic simulations, the published data stored on Zenodo [here](https://zenodo.org/records/6899613) can be reused by sampling and adding times for the latent period to the transmission and sample time, and rerunning [CoaTran](https://github.com/niemasd/CoaTran) to obtain corrected phylogenies, e.g.:
+```
+import os
+import numpy as np
+from gzip import open as gopen
+np.random.seed(42)
+
+for i in range(1,1101):
+    # generate latent period
+    latent_period = np.random.exponential(2.9/365) #expected value is 2.9/365 days (Table S3)
+    # set up file paths, open files and write out the corrected data for transmission network
+    old_tn_path = f'simulations/{i:04d}/transmission_network.subsampled.txt.gz'
+    new_tn_path = f'simulations/{i:04d}/transmission_network.subsampled.corrected.txt'
+    with gopen(old_tn_path, 'rt') as old_tn, open(new_tn_path, 'w') as new_tn:
+        for line in old_tn:
+            u, v, t = line.strip().split('\t')
+            new_tn.write(f'{u}\t{v}\t{float(t) + latent_period:.6f}\n')
+    # set up file paths, open files and write out the corrected data for sample times
+    old_samples_path = f'simulations/{i:04d}/subsample_times.txt.gz'
+    new_samples_path = f'simulations/{i:04d}/subsample_times.corrected.txt'
+    with gopen(old_samples_path, 'rt') as old_samples, open(new_samples_path, 'w') as new_samples:
+        for line in old_samples:
+            u, t = line.strip().split('\t')
+            new_samples.write(f'{u}\t{float(t) + latent_period}\n')
+    # setup and run CoaTRan to generate corrected time trees
+    command = ['coatran_constant', new_tn_path, new_samples_path, '1']
+    env = os.environ.copy()
+    coatran_rng_seed = np.random.randint(low=0, high=2**31) # ensure it is reproducible
+    env["COATRAN_RNG_SEED"] = str(coatran_rng_seed)
+    result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+    tree_path = f'simulations/{i:04d}/tree.time.subsampled.corrected.nwk'
+    with open(tree_path, 'w') as file_handle:
+        file_handle.write(result.stdout.decode())
+```
+
+
+
+
 
 [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) may be corrected by:
 - breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, e.g.:
