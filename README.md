@@ -53,7 +53,7 @@ time	coalescence time	total infected	currently infected	current samples
 
 The tMRCA from the end of the simulation is used as the time of stable coalescence. This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). 
 
-By removing basal lineages that do not have active sampled infections at the end of the simulation, and retaining those that do, the code filters out basal lineages that did not undergo early rapid growth. Lineages that underwent early rapid growth are more likely to be part of a basal polytomy.
+By removing basal lineages that do not have active sampled infections at the end of the simulation, and retaining those that do, the code filters out basal lineages that did not undergo early rapid growth. Lineages that do undergo early rapid growth are more likely to be part of a basal polytomy. The error therefore causes spurious basal polytomies.
 
 Additionally, an error in the epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) causes the epidemic simulations to skip the latent phase of the primary case. Specifically, the primary case is set to start out infectious (`P1`):
 ```
