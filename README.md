@@ -39,7 +39,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
     return coalescent_timing_results
 ```
 
-This can be confirmed from the content of `coalData_parameterized.txt` for each simulation in the data stored on Zenodo [here](https://zenodo.org/records/6899613). For example, the first simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA of active sampled infections is 0.000333 years (~3 hours), but the calculations continue until the end of the simulation, after another 61 days and 1.3 million infections, when only 710 sampled infections are still active and their tMRCA is 0.016277 years (~6 days).
+This is shown in each simulations `coalData_parameterized.txt` in the data stored on Zenodo [here](https://zenodo.org/records/6899613). For example, the first simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA of active sampled infections is 0.000333 years (~3 hours), but the calculations continue until the end of the simulation, after another 61 days and 1.3 million infections, when only 710 sampled infections are still active and their tMRCA is 0.016277 years (~6 days).
 
 ```
 time	coalescence time	total infected	currently infected	current samples
@@ -53,7 +53,7 @@ time	coalescence time	total infected	currently infected	current samples
 
 The tMRCA from the end of the simulation is used as the time of stable coalescence, so the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if the lineages do have active sampled infections at the end of sampling period (infection 50,000). 
 
-By removing basal lineages that do not have active sampled infections at the end of the simulation, and retaining those that do, the code filters out basal lineages that did not undergo early rapid growth, so that the MRCA of the retained lineages is more likely to be associated with an early superspreading event, and thus more likely to have a basal polytomy.
+By removing basal lineages that do not have active sampled infections at the end of the simulation, and retaining those that do, the code filters out basal lineages that did not undergo early rapid growth, so that the MRCA of the retained lineages is more likely to be associated with an early superspreading event, and thus more likely to be part of a basal polytomy.
 
 Another error in the epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) causes the epidemic simulations to skip the latent phase of the primary case. Specifically, the primary case is set to start out infectious (`P1`):
 ```
@@ -74,13 +74,13 @@ Another error in the epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py]
     status_file.close()
     print_log("Wrote GEMF '%s' file: %s" % (GEMF_STATUS_FN, status_fn))
 ```
-while the published [command](https://github.com/sars-cov-2-origins/multi-introduction/blob/main/FAVITES-COVID-Lite/commands/command.0.28TF_0.15r.txt) indicates that it should start as exposed but non-infectious (`--tn_freq_e 0.00000020`):
+while the published [command](https://github.com/sars-cov-2-origins/multi-introduction/blob/main/FAVITES-COVID-Lite/commands/command.0.28TF_0.15r.txt) indicates that it should start out exposed but non-infectious (`--tn_freq_e 0.00000020`):
 ```
 ~/scripts/FAVITES-COVID-Lite-updated.py --gzip_output --path_ngg_barabasi_albert ngg_barabasi_albert --path_gemf GEMF --path_coatran_constant coatran_constant --path_seqgen seq-gen --cn_n 5000000 --cn_m 8 --tn_s_to_e_seed 0 --tn_e_to_p1 125.862069 --tn_p1_to_p2 999999999 --tn_p2_to_i1 23.804348 --tn_p2_to_a1 134.891304 --tn_i1_to_i2 62.931034 --tn_i1_to_h 0.000000 --tn_i1_to_r 62.931034 --tn_i2_to_h 45.061728 --tn_i2_to_r 0.000000 --tn_a1_to_a2 9999999999 --tn_a2_to_r 125.862069 --tn_h_to_r 12.166667 --tn_s_to_e_by_e 0 --tn_s_to_e_by_p1 0 --tn_s_to_e_by_p2 3.513125 --tn_s_to_e_by_i1 6.387500 --tn_s_to_e_by_i2 6.387500 --tn_s_to_e_by_a1 0 --tn_s_to_e_by_a2 3.513125 --tn_freq_s 0.99999980 --tn_freq_e 0.00000020 --tn_freq_p1 0 --tn_freq_p2 0 --tn_freq_i1 0 --tn_freq_i2 0 --tn_freq_a1 0 --tn_freq_a2 0 --tn_freq_h 0 --tn_freq_r 0 --tn_end_time 0.273973 --tn_num_seeds 1 --pt_eff_pop_size 1 --pm_mut_rate 0.00092 --o 
 ```
 This compresses coalescence events near the beginning of the primary case, reducing the likelihood of an early mutation breaking up a basal polytomy, but only if the stable coalescence is in the primary case (~20% of simulations). 
 
-This behaviour does not agree with the methods described in the paper and the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). 
+This behaviour does not agree with the methods described in the paper and [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). 
 
 Among other, minor errors, the `main` function in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) restores basal lineages if their MRCA is sufficiently close to the time of stable coalescence.
 ```
@@ -152,11 +152,11 @@ Repeatedly resampling the likelihoods and computing the resulting Bayes factors 
 ... print(f'95% CDI of Bayes factors with recCA rooting: {results[500]:.1f}, {results[19500]:.1f}')
 95% CDI of Bayes factors with recCA rooting: 3.2, 6.2
 ```
-The central 95% of the distribution spans a range of similar magnitude to the measured Bayes factors.
+The central 95% of the distribution spans a range of similar magnitude to the measured Bayes factors. The assumption of sufficient accuracy is clearly invalid.
 
 1100 simulations are not enough to measure the Bayes factors with useful accuracy.
 
-# Evaluation
+# Correction
 
 [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) may be corrected by:
 - breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, e.g.:
