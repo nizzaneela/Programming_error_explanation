@@ -4,15 +4,15 @@ The [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.
 
 The effects of this discrepency are difficult to quantify because the stochastic simulations are not reproducible and the results are sensitive to sampling noise. However, averaging the results of 1000 resamples of the final stochastic phase of the simulations, using corrected code, produces Bayes factors of around 3.4.
 
-Many more simulations are needed to accurately estimate the Bayes factors, and those simulations should be as described in the text.
+Many more simulations are needed to accurately estimate the Bayes factors. Preferably, the simulations should be deterministic and follow the method described in the text.
 
 # Errors
 
-The simulated phylogenies are constructed by coalescing lineages sampled from the first 50,000 simulated infections. Partial and delayed sampling is simulated by sampling only the 15% of simulated infections deemed ascertained, and by ignoring samples that precede the first simulated hospitalization, as described on page 8 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
+The simulated phylogenies are constructed by coalescing lineages sampled from the first 50,000 simulated infections. Partial and delayed sampling is simulated by sampling only a portion of simulated infections, and by ignoring samples that precede the first simulated hospitalization, as described on page 8 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
 
 ![Excerpt from page 8 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/4b653347fb1b4642c98d82c50fcea29200c4add1/sample.png)
 
-Samples are also ignored if they are on branches from upstream of a stable coalescence, defined on page 10 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).  
+Samples are also ignored if they are on branches ancestral to a stable coalescence, defined on page 10 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).  
 
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
 
@@ -51,9 +51,9 @@ time	coalescence time	total infected	currently infected	current samples
 100	0.016277	1371985	144107	710
 ```
 
-It is the tMRCA from the end of the simulation that is used as the time of stable coalescence, so the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if the lineages do have active sampled infections at the end of sampling period (infection 50,000). 
+The tMRCA from the end of the simulation is used as the time of stable coalescence, so the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if the lineages do have active sampled infections at the end of sampling period (infection 50,000). 
 
-By removing basal lineages that do not have active sampled infections at the end of the simulation, and retaining those that do, the code filters out basal lineages that did not undergo early rapid growth, so that the MRCA of the retained lineages is more likely to be associated with a superspreading event, and thus more likely to have a basal polytomy.
+By removing basal lineages that do not have active sampled infections at the end of the simulation, and retaining those that do, the code filters out basal lineages that did not undergo early rapid growth, so that the MRCA of the retained lineages is more likely to be associated with an early superspreading event, and thus more likely to have a basal polytomy.
 
 Additionally, the `main` function in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) restores basal lineages if their MRCA is sufficiently close to that of the retained lineages.
 ```
@@ -72,9 +72,9 @@ Additionally, the `main` function in the script [stableCoalescence_cladeAnalysis
     subtree_sc_leaves = set(subtree_sc_leaves)
     subtree_sc = tree.extract_tree_with(subtree_sc_leaves)
 ```
-This can increase the size of basal polytomies when coalescent events are sufficiently compressed around the stable coalescent. This occurs in only a small fraction (i.e. ~0.1%) of the simulations.
+The effect of this error is very small. It can increase the size of basal polytomies, but only in rare cases where coalescence events are compressed closely enough around the stable coalescence (i.e. < 0.2% of the simulations).
 
-When the stable coalescence is in the primary case, coalescent events are compressed by an error in the epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) that skips the latent phase of the primary case. Specifically, the primary case is set to start in the infectious compartment (`P1`).
+When the stable coalescence is in the primary case, coalescence events are compressed by an error in the epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) that skips the latent phase of the primary case. Specifically, the primary case is set to start in the infectious compartment (`P1`).
 ```
     # write GEMF status file
     out_file = open(out_fn, 'w')
@@ -93,21 +93,27 @@ When the stable coalescence is in the primary case, coalescent events are compre
     status_file.close()
     print_log("Wrote GEMF '%s' file: %s" % (GEMF_STATUS_FN, status_fn))
 ```
-...despite the [command](https://github.com/sars-cov-2-origins/multi-introduction/blob/main/FAVITES-COVID-Lite/commands/command.0.28TF_0.15r.txt) indicating that it should start as exposed but non-infectious (`--tn_freq_e 0.00000020`).
+The published [command](https://github.com/sars-cov-2-origins/multi-introduction/blob/main/FAVITES-COVID-Lite/commands/command.0.28TF_0.15r.txt) indicates that it should start as exposed but non-infectious (`--tn_freq_e 0.00000020`).
 ```
 ~/scripts/FAVITES-COVID-Lite-updated.py --gzip_output --path_ngg_barabasi_albert ngg_barabasi_albert --path_gemf GEMF --path_coatran_constant coatran_constant --path_seqgen seq-gen --cn_n 5000000 --cn_m 8 --tn_s_to_e_seed 0 --tn_e_to_p1 125.862069 --tn_p1_to_p2 999999999 --tn_p2_to_i1 23.804348 --tn_p2_to_a1 134.891304 --tn_i1_to_i2 62.931034 --tn_i1_to_h 0.000000 --tn_i1_to_r 62.931034 --tn_i2_to_h 45.061728 --tn_i2_to_r 0.000000 --tn_a1_to_a2 9999999999 --tn_a2_to_r 125.862069 --tn_h_to_r 12.166667 --tn_s_to_e_by_e 0 --tn_s_to_e_by_p1 0 --tn_s_to_e_by_p2 3.513125 --tn_s_to_e_by_i1 6.387500 --tn_s_to_e_by_i2 6.387500 --tn_s_to_e_by_a1 0 --tn_s_to_e_by_a2 3.513125 --tn_freq_s 0.99999980 --tn_freq_e 0.00000020 --tn_freq_p1 0 --tn_freq_p2 0 --tn_freq_i1 0 --tn_freq_i2 0 --tn_freq_a1 0 --tn_freq_a2 0 --tn_freq_h 0 --tn_freq_r 0 --tn_end_time 0.273973 --tn_num_seeds 1 --pt_eff_pop_size 1 --pm_mut_rate 0.00092 --o 
 ```
-The main effect of this is a compression is a small reduction in the likelihood of an early mutation breaking up a basal polytomy. In one case (simulation `0823`) this compression brings basal lineages close enough to the stable coalescence to be restored.
+
+The main effect of this compression is a small reduction in the likelihood of an early mutation breaking up a basal polytomy. In one case (simulation `0823`) this compression brings basal lineages close enough to the stable coalescence to be restored.
 
 Thus, the code:
 1. removes basal lineages that do not have active sampled infections at the end of the simulation, effectively filtering out those that did not undergo early rapid growth, thereby increasing the likelihood of basal polytomies,
 2. adds back basal lineages in rare cases when they are sufficiently close to the stable coalescence, thereby increasing the size of basal polytomies, and
 3. skips the latent phase of the primary case, compressing the time for coalescing lineages when the stable coalescence is in the primary case, thereby reducing the likelihood of early mutations breaking up basal polytomies.
 
-This behaviour does not agree with the methods described in the paper [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
+This behaviour does not agree with the methods described in the paper and the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). 
 
 # Noise
 
+The Bayes factor equations described on pages 11 to 14 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf) can be expanded out as:
+
+$$
+\frac{P(Y|I_2)}{P(Y|I_1)} = \frac{\sum_{S_{MRCA}} P(S_{MRCA}|Y)P(I_2|S_{MRCA})}{\sum_{S_{MRCA}} P(S_{MRCA}|Y)P(I_1|S_{MRCA})}
+$$
 
 
 # Evaluation
