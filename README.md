@@ -4,7 +4,7 @@ The [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.
 
 The effects of this discrepency are difficult to quantify because the stochastic simulations are not reproducible and the results are sensitive to sampling noise. However, averaging the results of 1000 resamples of the final stochastic phase of the simulations, using corrected code, produces Bayes factors of around 3.4.
 
-Many more simulations are needed to accurately estimate the Bayes factors. Preferably, the simulations should be deterministic and follow the method described in the text.
+Many more simulations are needed if the Bayes factors are to be confidently distinguished from the significance threshold of 3.2. Preferably, the simulations should be deterministic and conform to their description in the text.
 
 # Errors
 
@@ -109,11 +109,57 @@ This behaviour does not agree with the methods described in the paper and the [S
 
 # Noise
 
-The Bayes factor equations described on pages 11 to 14 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf) can be expanded out as:
+The equations for the Bayes factors are described on pages 11 to 14 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). They can be combined and expanded as:
 
 $$
-\frac{P(Y|I_2)}{P(Y|I_1)} = \frac{\sum_{S_{MRCA}} P(S_{MRCA}|Y)P(I_2|S_{MRCA})}{\sum_{S_{MRCA}} P(S_{MRCA}|Y)P(I_1|S_{MRCA})}
+BF = 
+\frac{0.25 \cdot P(\tau_P|I_1)^2 \left( P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y) \right)} 
+{0.5 \cdot P(\tau_{c1}|I_1) \left( P(S_A|Y) + P(S_B|Y) \right) + 0.5 \cdot P(\tau_{c2}|I_1) \left( P(S_{C/C}|Y) + P(S_{T/T}|Y) \right)}
 $$
+
+where:
+- $P(\tau_P|I_1)$, $P(\tau_{1C}|I_1$ and $P(\tau_{2C}|I_1)$ are the likelihoods of the different topologies (c.f. Fig. 2);
+- $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and $P(S_{T/T}|Y)$ are the posterior probabilities of the different MRCA haplotypes (c.f. Table 1); and
+- $0.25$ and $0.5$ are the normalized coefficients of the compatibility vectors, which distibute topology likelihoods across the posterior probabilities of compatible MRCA haplotypes.
+
+Assuming the published likelihoods are sufficiently accurate, the results of the 1100 simulations can be reproduced by sampling appropriate binomial distributions, e.g.:
+```
+python3
+>>> import numpy as np
+>>> np.random.seed(42)
+>>> def sample_likelihoods():
+...     p_tau_p_given_i1 = 0.475 # from Fig. 2
+...     p_tau_1c_given_i1 = 0.031 # from Fig. 2
+...     # sample the number of simulations that have basal polytomies
+...     n_tau_p = np.random.binomial(1100,p_tau_p_given_i1)
+...     # sample the number of simulations that also have one clade on a two mutation branch
+...     p_tau_1c_given_polytomy = p_tau_1c_given_i1/p_tau_p_given_i1 # depends on basal polytomy
+...     n_tau_1c = np.random.binomial(n_tau_p,p_tau_1c_given_polytomy)
+...     # return the likelihoods
+...     return n_tau_p/1100, n_tau_1c/1100
+```
+($\tau_{2C}$ is neglected here because its measured frequency was zero.)
+
+The Bayes factors can be written in terms of the likelihoods and posterior probabilities, e.g.:
+```
+>>> def compute_bfs(p_tau_p_given_i1, p_tau_1c_given_i1, posteriors):
+...     bf = 0.25*p_tau_p_given_i1**2*sum(posteriors)/(0.5*p_tau_1c_given_i1*sum(posteriors[:2]))
+...     return bf
+```
+Repeatedly resampling the likelihoods and computing the resulting Bayes factors then provides a distribution to be expected from a sample of 1100 simulations.
+```
+>>> recCA_posteriors = np.array([77.28, 8.18, 10.49, 3.71])/100 # from Table 1
+>>> results = []
+>>> for i in range(20000): # sample 20000 times
+...     p_tau_p_given_i1, p_tau_1c_given_i1 = sample_likelihoods()
+...     results.append(compute_bfs(p_tau_p_given_i1, p_tau_1c_given_i1, unconstrained_posteriors))
+... results.sort()
+... print(f'95% CDI of Bayes factors with recCA rooting: {results[500]:.1f}, {results[19500]:.1f}')
+95% CDI of Bayes factors with recCA rooting: 3.2, 6.2
+```
+The central 95% of the distribution spans a range of similar magnitude to the measured Bayes factors.
+
+1100 simulations are not enough to measure the Bayes factors with useful accuracy.
 
 
 # Evaluation
