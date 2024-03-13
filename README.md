@@ -115,7 +115,7 @@ where:
 - $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and $P(S_{T/T}|Y)$ are the posterior probabilities of the different MRCA haplotypes (shown in  Table 1); and
 - $0.25$ and $0.5$ are the normalized coefficients of the vectors that distribute the topology likelihoods across the posterior probabilities of compatible MRCA haplotypes.
 
-Assuming the published likelihoods are sufficiently accurate, the results of the 1100 simulations can be reproduced by sampling appropriate binomial distributions, e.g.:
+Assuming the published likelihoods are sufficiently accurate, the results of the 1100 simulations can be reproduced by sampling appropriate binomial distributions ($\tau_{2C}$ is neglected here because its measured likelihood was zero).
 ```
 python3
 >>> import numpy as np
@@ -131,15 +131,13 @@ python3
 ...     # return the likelihoods
 ...     return n_tau_p/1100, n_tau_1c/1100
 ```
-($\tau_{2C}$ is neglected here because its measured likelihood was zero.)
-
 The equations for the Bayes factors can be written in terms of the likelihoods and posterior probabilities, e.g.:
 ```
 >>> def compute_bfs(p_tau_p_given_i1, p_tau_1c_given_i1, posteriors):
 ...     bf = 0.25*p_tau_p_given_i1**2*sum(posteriors)/(0.5*p_tau_1c_given_i1*sum(posteriors[:2]))
 ...     return bf
 ```
-Repeatedly resampling the likelihoods and computing the resulting Bayes factors then provides a distribution of what can be expected from a sample of 1100 simulations.
+Repeatedly resampling the likelihoods and computing the Bayes factors then provides a distribution of the results that can be expected from a sample of 1100 simulations.
 ```
 >>> recCA_posteriors = np.array([77.28, 8.18, 10.49, 3.71])/100 # from Table 1
 >>> results = []
@@ -191,7 +189,7 @@ for i in range(1,1101):
         file_handle.write(result.stdout.decode())
 ```
 
-The script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) can be corrected to properly determine the stable coalescence by:
+The script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) can be corrected to determine the stable coalescence properly by:
 - breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, e.g.:
 ```
 def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num_days=100):
@@ -204,7 +202,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
             break
         ...
 ```
-- then finding the stable coalescence by walking back as long as the tMRCA of active sampled infections is within one day before the final tMRCA, and returning the stable coalescence, e.g.:
+- walking back to find the the stable coalescence as when tMRCA of active sampled infections is within one day before the final tMRCA, e.g.:
 ```
     # work back day by day from the last day but stop if
     # the tMRCA of the next earlier day is more than a day earlier than the final tMRCA,
@@ -220,7 +218,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
     coalescent_timing_results = [used_times, heights, total_inf, current_inf, current_samples]
     return stable_coalescence, coalescent_timing_results
 ```
-- modifying the `main` function to accept the stable coalescence returned from `coalescent_timing`, and to extract the subtree rooted at same, e.g.:
+- modifying the `main` function to extract the subtree rooted at the stable coalescence, e.g.:
 ```
     # stable coalescence
     time_inf_dict, current_inf_dict, total_inf_dict = tn_to_time_inf_dict(args.transmission_network, subtree)
