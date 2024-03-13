@@ -39,7 +39,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
     return coalescent_timing_results
 ```
 
-This can be confirmed by inspecting the content of `coalData_parameterized.txt` for each simulation in the data stored on Zenodo [here](https://zenodo.org/records/6899613). For example, the first simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA of active sampled infections is 0.000333 years (~3 hours), but the calculations continue until the end of the simulation, after another 61 days and 1.3 million infections, when only 710 sampled infections are still active and their tMRCA is 0.016277 years (~6 days).
+This can be confirmed from the content of `coalData_parameterized.txt` for each simulation in the data stored on Zenodo [here](https://zenodo.org/records/6899613). For example, the first simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA of active sampled infections is 0.000333 years (~3 hours), but the calculations continue until the end of the simulation, after another 61 days and 1.3 million infections, when only 710 sampled infections are still active and their tMRCA is 0.016277 years (~6 days).
 
 ```
 time	coalescence time	total infected	currently infected	current samples
@@ -55,26 +55,7 @@ The tMRCA from the end of the simulation is used as the time of stable coalescen
 
 By removing basal lineages that do not have active sampled infections at the end of the simulation, and retaining those that do, the code filters out basal lineages that did not undergo early rapid growth, so that the MRCA of the retained lineages is more likely to be associated with an early superspreading event, and thus more likely to have a basal polytomy.
 
-Additionally, the `main` function in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) restores basal lineages if their MRCA is sufficiently close to that of the retained lineages.
-```
-# main function
-    ...
-    coal_timing = coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, subtree, args.num_days)
-
-    # prepare for clade analysis; get the subtree with the stable coalescence (MRCA) root
-    eps = 1e-8
-    stable_coalescence = coal_timing[1][-1]
-    subtree_sc_leaves = []
-    for n in subtree.distances_from_root():
-        if abs(n[1] - stable_coalescence) < eps:
-            # print(n[0].label)
-            subtree_sc_leaves += [n.label for n in subtree.extract_subtree(n[0]).traverse_leaves()]
-    subtree_sc_leaves = set(subtree_sc_leaves)
-    subtree_sc = tree.extract_tree_with(subtree_sc_leaves)
-```
-The effect of this error is very small. It can increase the size of basal polytomies, but only in rare cases where coalescence events are compressed closely enough around the stable coalescence (i.e. < 0.2% of the simulations).
-
-When the stable coalescence is in the primary case, coalescence events are compressed by an error in the epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) that skips the latent phase of the primary case. Specifically, the primary case is set to start in the infectious compartment (`P1`).
+Another error in the epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) causes the epidemic simulations to skip the latent phase of the primary case. Specifically, the primary case is set to start out infectious (`P1`):
 ```
     # write GEMF status file
     out_file = open(out_fn, 'w')
@@ -93,19 +74,33 @@ When the stable coalescence is in the primary case, coalescence events are compr
     status_file.close()
     print_log("Wrote GEMF '%s' file: %s" % (GEMF_STATUS_FN, status_fn))
 ```
-The published [command](https://github.com/sars-cov-2-origins/multi-introduction/blob/main/FAVITES-COVID-Lite/commands/command.0.28TF_0.15r.txt) indicates that it should start as exposed but non-infectious (`--tn_freq_e 0.00000020`).
+while the published [command](https://github.com/sars-cov-2-origins/multi-introduction/blob/main/FAVITES-COVID-Lite/commands/command.0.28TF_0.15r.txt) indicates that it should start as exposed but non-infectious (`--tn_freq_e 0.00000020`):
 ```
 ~/scripts/FAVITES-COVID-Lite-updated.py --gzip_output --path_ngg_barabasi_albert ngg_barabasi_albert --path_gemf GEMF --path_coatran_constant coatran_constant --path_seqgen seq-gen --cn_n 5000000 --cn_m 8 --tn_s_to_e_seed 0 --tn_e_to_p1 125.862069 --tn_p1_to_p2 999999999 --tn_p2_to_i1 23.804348 --tn_p2_to_a1 134.891304 --tn_i1_to_i2 62.931034 --tn_i1_to_h 0.000000 --tn_i1_to_r 62.931034 --tn_i2_to_h 45.061728 --tn_i2_to_r 0.000000 --tn_a1_to_a2 9999999999 --tn_a2_to_r 125.862069 --tn_h_to_r 12.166667 --tn_s_to_e_by_e 0 --tn_s_to_e_by_p1 0 --tn_s_to_e_by_p2 3.513125 --tn_s_to_e_by_i1 6.387500 --tn_s_to_e_by_i2 6.387500 --tn_s_to_e_by_a1 0 --tn_s_to_e_by_a2 3.513125 --tn_freq_s 0.99999980 --tn_freq_e 0.00000020 --tn_freq_p1 0 --tn_freq_p2 0 --tn_freq_i1 0 --tn_freq_i2 0 --tn_freq_a1 0 --tn_freq_a2 0 --tn_freq_h 0 --tn_freq_r 0 --tn_end_time 0.273973 --tn_num_seeds 1 --pt_eff_pop_size 1 --pm_mut_rate 0.00092 --o 
 ```
-
-The main effect of this compression is a small reduction in the likelihood of an early mutation breaking up a basal polytomy. In one case (simulation `0823`) this compression brings basal lineages close enough to the stable coalescence to be restored.
-
-Thus, the code:
-1. removes basal lineages that do not have active sampled infections at the end of the simulation, effectively filtering out those that did not undergo early rapid growth, thereby increasing the likelihood of basal polytomies,
-2. adds back basal lineages in rare cases when they are sufficiently close to the stable coalescence, thereby increasing the size of basal polytomies, and
-3. skips the latent phase of the primary case, compressing the time for coalescing lineages when the stable coalescence is in the primary case, thereby reducing the likelihood of early mutations breaking up basal polytomies.
+This compresses coalescence events near the beginning of the primary case, reducing the likelihood of an early mutation breaking up a basal polytomy, but only if the stable coalescence is in the primary case (~20% of simulations). 
 
 This behaviour does not agree with the methods described in the paper and the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). 
+
+Among other, minor errors, the `main` function in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) restores basal lineages if their MRCA is sufficiently close to the time of stable coalescence.
+```
+# main function
+    ...
+    coal_timing = coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, subtree, args.num_days)
+
+    # prepare for clade analysis; get the subtree with the stable coalescence (MRCA) root
+    eps = 1e-8
+    stable_coalescence = coal_timing[1][-1]
+    subtree_sc_leaves = []
+    for n in subtree.distances_from_root():
+        if abs(n[1] - stable_coalescence) < eps:
+            # print(n[0].label)
+            subtree_sc_leaves += [n.label for n in subtree.extract_subtree(n[0]).traverse_leaves()]
+    subtree_sc_leaves = set(subtree_sc_leaves)
+    subtree_sc = tree.extract_tree_with(subtree_sc_leaves)
+```
+This can increase the size of basal polytomies, but only in rare cases where coalescence events are compressed closely enough around the stable coalescence (i.e. < 0.2% of simulations).
+In one instance (simulation `0823`) this occured in the primary case, where the compression was amplified by the elision of the latent phase.
 
 # Noise
 
@@ -120,7 +115,7 @@ $$
 where:
 - $P(\tau_P|I_1)$, $P(\tau_{1C}|I_1$ and $P(\tau_{2C}|I_1)$ are the likelihoods of the different topologies (c.f. Fig. 2);
 - $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and $P(S_{T/T}|Y)$ are the posterior probabilities of the different MRCA haplotypes (c.f. Table 1); and
-- $0.25$ and $0.5$ are the normalized coefficients of the compatibility vectors, which distibute topology likelihoods across the posterior probabilities of compatible MRCA haplotypes.
+- $0.25$ and $0.5$ are the normalized coefficients of the compatibility vectors that which distribute the topology likelihoods across the posterior probabilities of compatible MRCA haplotypes.
 
 Assuming the published likelihoods are sufficiently accurate, the results of the 1100 simulations can be reproduced by sampling appropriate binomial distributions, e.g.:
 ```
@@ -140,13 +135,13 @@ python3
 ```
 ($\tau_{2C}$ is neglected here because its measured frequency was zero.)
 
-The Bayes factors can be written in terms of the likelihoods and posterior probabilities, e.g.:
+The equations for the Bayes factors can be written in terms of the likelihoods and posterior probabilities, e.g.:
 ```
 >>> def compute_bfs(p_tau_p_given_i1, p_tau_1c_given_i1, posteriors):
 ...     bf = 0.25*p_tau_p_given_i1**2*sum(posteriors)/(0.5*p_tau_1c_given_i1*sum(posteriors[:2]))
 ...     return bf
 ```
-Repeatedly resampling the likelihoods and computing the resulting Bayes factors then provides a distribution to be expected from a sample of 1100 simulations.
+Repeatedly resampling the likelihoods and computing the resulting Bayes factors then provides a distribution expected from a sample of 1100 simulations.
 ```
 >>> recCA_posteriors = np.array([77.28, 8.18, 10.49, 3.71])/100 # from Table 1
 >>> results = []
@@ -160,7 +155,6 @@ Repeatedly resampling the likelihoods and computing the resulting Bayes factors 
 The central 95% of the distribution spans a range of similar magnitude to the measured Bayes factors.
 
 1100 simulations are not enough to measure the Bayes factors with useful accuracy.
-
 
 # Evaluation
 
