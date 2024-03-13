@@ -154,7 +154,7 @@ The central 95% of the distribution has a range similar to the size of the Bayes
 
 # Correction
 
-The epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) can be corrected to initialise the primary case in the exposed compartment (`E`). However, rather than repeating the epidemic simulations, the published data stored on  [Zenodo](https://zenodo.org/records/6899613) can be reused by sampling times for the latent periods and adding them to the respective transmission and sampling times. [CoaTran](https://github.com/niemasd/CoaTran) can then be rerun to obtain corrected phylogenies.
+The epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) can be corrected to initialise the primary case in the exposed compartment (`E`). However, rather than repeating the epidemic simulations, the published data stored on  [Zenodo](https://zenodo.org/records/6899613) can be reused by sampling times for the latent periods and adding them to the existing transmission and sampling times. [CoaTran](https://github.com/niemasd/CoaTran) can then be rerun to obtain corrected phylogenies.
 ```
 import os
 import numpy as np
@@ -229,3 +229,6 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
     subtree_sc.root.edge_length = 0
     subtree_sc.suppress_unifurcations()
 ```
+Complete code and instructions for reproducibly obtaining corrected time trees is published in this branch of the authors' repository. The code also automates resampling of the mutation simulation and clade analysis 1000 times. 
+![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
+The corrections and resampling reduce the Bayes factors by ~15%.
