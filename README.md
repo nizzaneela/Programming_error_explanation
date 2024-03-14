@@ -1,4 +1,4 @@
-There are some discrepencies between the methods described in the text and those carried out by the code.
+There are discrepencies between the methods described in the text and those carried out by the code.
 
 The effects are difficult to quantify because the stochastic simulations are not reproducible and the results are sensitive to sampling noise. However, resampling the final stochastic phase of the simulations, using corrected code, reduces the Bayes factors for the primary analysis by ~15%.
 
@@ -6,17 +6,17 @@ The effects are difficult to quantify because the stochastic simulations are not
 
 ### The stable coalescence
 
-The simulated phylogenies are constructed by coalescing lineages sampled from the first 50,000 simulated infections. Partial and delayed sampling is simulated by sampling only a portion of simulated infections, and by ignoring samples that precede the first simulated hospitalization, as described on page 8 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
+The simulated phylogenies are constructed by coalescing lineages sampled from the first 50,000 simulated infections. Partial and delayed sampling is simulated by sampling only a portion of simulated infections, and by ignoring samples that precede the first simulated hospitalization (page 8 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf)).
 
 ![Excerpt from page 8 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/4b653347fb1b4642c98d82c50fcea29200c4add1/sample.png)
 
-Samples are also ignored if they are on branches ancestral to a stable coalescence, defined on page 10 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).  
+Samples are also ignored if they are on branches ancestral to a stable coalescence (page 10 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf)).  
 
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
 
 By rooting each phylogeny at the stable coalescence, lineages that do not undergo early rapid growth are filtered out. Lineages that do undergo early rapid growth are more likely to be part of a basal polytomy, so the use of the stable coalescence increases the frequency basal polytomies. 
 
-The function `coalescent_timing` in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) does not stop the tMRCA calculations when 50,000 individuals have been infected. Calculations continue until the last day of the simulation.
+Contrary to the method described above, the function `coalescent_timing` in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) does not stop the tMRCA calculations when 50,000 individuals have been infected. Calculations continue until the last day of the simulation.
 
 ```
 def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num_days=100):
