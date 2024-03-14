@@ -2,7 +2,9 @@ There are some discrepencies between the methods described in the text and those
 
 The effects are difficult to quantify because the stochastic simulations are not reproducible and the results are sensitive to sampling noise. However, resampling the final stochastic phase of the simulations for the primary analysis, using corrected code, produces Bayes factors of 3.4.
 
-# Discrepencies
+## Discrepencies
+
+### The stable coalescence
 
 The simulated phylogenies are constructed by coalescing lineages sampled from the first 50,000 simulated infections. Partial and delayed sampling is simulated by sampling only a portion of simulated infections, and by ignoring samples that precede the first simulated hospitalization, as described on page 8 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
 
@@ -56,9 +58,11 @@ Run	Coalescent time	First ascertained	First unascertained	First hospitalized	inf
 ...
 ```
 
-This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). This does not agree with the method described in the text, and enhances the filtering effect so that the frequency of basal polyomies is increased further.
+This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). This does not agree with the method described in the text, and enhances the filtering effect of the stable coalescence so that the frequency of basal polyomies is increased further.
 
-Additionally, the epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) accepts commends to initialise the primary case in arbitrary states, but is hard-coded to start the primary case infectious (`P1`), so that transmissions being immediately.
+### The primary case state
+
+The epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) accepts commands to initialise the primary case in arbitrary states, but is hard-coded to start the primary case infectious (`P1`), so that transmissions being immediately.
 ```
     # write GEMF status file
     out_file = open(out_fn, 'w')
@@ -81,9 +85,11 @@ This is despite the published [command](https://github.com/sars-cov-2-origins/mu
 ```
 ~/scripts/FAVITES-COVID-Lite-updated.py --gzip_output --path_ngg_barabasi_albert ngg_barabasi_albert --path_gemf GEMF --path_coatran_constant coatran_constant --path_seqgen seq-gen --cn_n 5000000 --cn_m 8 --tn_s_to_e_seed 0 --tn_e_to_p1 125.862069 --tn_p1_to_p2 999999999 --tn_p2_to_i1 23.804348 --tn_p2_to_a1 134.891304 --tn_i1_to_i2 62.931034 --tn_i1_to_h 0.000000 --tn_i1_to_r 62.931034 --tn_i2_to_h 45.061728 --tn_i2_to_r 0.000000 --tn_a1_to_a2 9999999999 --tn_a2_to_r 125.862069 --tn_h_to_r 12.166667 --tn_s_to_e_by_e 0 --tn_s_to_e_by_p1 0 --tn_s_to_e_by_p2 3.513125 --tn_s_to_e_by_i1 6.387500 --tn_s_to_e_by_i2 6.387500 --tn_s_to_e_by_a1 0 --tn_s_to_e_by_a2 3.513125 --tn_freq_s 0.99999980 --tn_freq_e 0.00000020 --tn_freq_p1 0 --tn_freq_p2 0 --tn_freq_i1 0 --tn_freq_i2 0 --tn_freq_a1 0 --tn_freq_a2 0 --tn_freq_h 0 --tn_freq_r 0 --tn_end_time 0.273973 --tn_num_seeds 1 --pt_eff_pop_size 1 --pm_mut_rate 0.00092 --o 
 ```
-For simulations where the stable coalescence is in the primary case, this compresses coalescence events around the stagble coalescence, reducing the likelihood of an early mutation breaking up a basal polytomy.
+For simulations where the stable coalescence is in the primary case (~20% of simulations), this compresses coalescence events around the stagble coalescence, reducing the likelihood of an early mutation breaking up a basal polytomy.
 
-For simulations where the stable coalescence is not in the primary case, this reduces  
+For simulations where the stable coalescence is not in the primary case (~20% of simulations), this increases the time, and the variance in the time, of the introduction.
+
+### Others
 
 Among other, minor errors, the `main` function in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) restores basal lineages if their MRCA is sufficiently close to the time of stable coalescence.
 ```
