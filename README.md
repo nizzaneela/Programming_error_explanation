@@ -14,7 +14,7 @@ Samples are also ignored if they are on branches ancestral to a stable coalescen
 
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
 
-By rooting each phylogeny at the stable coalescence, lineages that do not undergo early rapid growth are filtered out. Lineages that do undergo early rapid growth are more likely to be part of a basal polytomy, so the stable coalescence increases the frequency basal polytomies. 
+By rooting each phylogeny at the stable coalescence, lineages that do not undergo early rapid growth are filtered out. Lineages that do undergo early rapid growth are more likely to be part of a basal polytomy, so the use of the stable coalescence increases the frequency basal polytomies. 
 
 The function `coalescent_timing` in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) does not stop the tMRCA calculations when 50,000 individuals have been infected. Calculations continue until the last day of the simulation.
 
@@ -51,14 +51,14 @@ time	coalescence time	total infected	currently infected	current samples
 100	0.016277	1371985	144107	710
 ```
 
-The tMRCA from the last day of the simulation is used as the time of stable coalescence. This can be seen by comparing the coalescence times in each simulation's `coalData_parameterized.txt`, to those time recorded in the [summary data](https://github.com/sars-cov-2-origins/multi-introduction/raw/main/FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip) on GitHub.
+The tMRCA from the last day of the simulation is used as the time of stable coalescence. This can be seen by comparing the coalescence times in each simulation's `coalData_parameterized.txt`, to those recorded in the [summary data](https://github.com/sars-cov-2-origins/multi-introduction/raw/main/FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip) on GitHub.
 ```
 Run	Coalescent time	First ascertained	First unascertained	First hospitalized	infections
 0001	0.016277	0.003101	0.018548	0.038307	3
 ...
 ```
 
-This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). This does not agree with the method described in the text, and it enhances the filtering effect of the stable coalescence, so that the frequency of basal polyomies is increased further.
+This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). This does not agree with the method described in the text, and it enhances the filtering cause by the use of the stable coalescence, so that the frequency of basal polyomies is increased further.
 
 ### The primary case state
 
@@ -88,7 +88,7 @@ This is despite the published [command](https://github.com/sars-cov-2-origins/mu
 
 That is, the simulations skip the latent phase of the first infection.
 
-For simulations where the stable coalescence is in the primary case (~20% of simulations), this compresses coalescence events around the stagble coalescence, reducing the likelihood of an early mutation breaking up a basal polytomy.
+For simulations where the stable coalescence is in the primary case (~20% of simulations), this compresses coalescence events around the stable coalescence, reducing the likelihood of an early mutation breaking up a basal polytomy.
 
 For simulations where the stable coalescence is not in the primary case (~80% of simulations), this pushes the estimated time of introduction forward, and decreases its variance.
 
@@ -125,11 +125,11 @@ BF =
 $$
 
 where:
-- $P(\tau_P|I_1)$, $P(\tau_{1C}|I_1$ and $P(\tau_{2C}|I_1)$ are the likelihoods of the different topologies (shown in Fig. 2 and Table S5);
-- $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and $P(S_{T/T}|Y)$ are the posterior probabilities of the different MRCA haplotypes (shown in  Table 1); and
+- $P(\tau_P|I_1)$, $P(\tau_{1C}|I_1$ and $P(\tau_{2C}|I_1)$ are the likelihoods of the different topologies (taken from the simulations and shown in Fig. 2 and Table S5);
+- $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and $P(S_{T/T}|Y)$ are the posterior probabilities of the different MRCA haplotypes (taken from BEAST and shown in  Table 1); and
 - $0.25$ and $0.5$ are the normalized coefficients of the vectors that distribute the topology likelihoods across the posterior probabilities of compatible MRCA haplotypes.
 
-The data includes RNG seeds for the spiecmic simulations, but not for the sample times, lineage coalescence, or mutation simulations. Therefore, the simulations cannot be reproduced. However, assuming the published likelihoods are sufficiently accurate, the results of the 1100 simulations can be stoachastically replicated by sampling appropriate binomial distributions ($\tau_{2C}$ is neglected here because its measured likelihood was zero).
+The data includes RNG seeds for the epidemic simulations, but not for the sample times, lineage coalescence, or mutation simulations. Therefore, the simulations cannot be reproduced. However, assuming the published likelihoods are sufficiently accurate, the results of the 1100 simulations can be stochastically replicated by sampling appropriate binomial distributions ($\tau_{2C}$ is neglected here because its measured likelihood was zero).
 ```
 import numpy as np
 np.random.seed(42)
@@ -150,7 +150,7 @@ def compute_bfs(p_tau_p_given_i1, p_tau_1c_given_i1, posteriors):
      bf = 0.25*p_tau_p_given_i1**2*sum(posteriors)/(0.5*p_tau_1c_given_i1*sum(posteriors[:2]))
      return bf
 ```
-Repeatedly resampling the likelihoods and computing the Bayes factors then provides a distribution of results that can be expected from reproducing the analysis.
+Repeatedly resampling the likelihoods and computing the Bayes factors then provides a distribution of results that can be expected from replicating the analysis.
 ```
 recCA_posteriors = np.array([77.28, 8.18, 10.49, 3.71])/100 # from Table 1
 results = []
