@@ -129,7 +129,7 @@ where:
 - $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and $P(S_{T/T}|Y)$ are the posterior probabilities of the different MRCA haplotypes (shown in  Table 1); and
 - $0.25$ and $0.5$ are the normalized coefficients of the vectors that distribute the topology likelihoods across the posterior probabilities of compatible MRCA haplotypes.
 
-Assuming the published likelihoods are sufficiently accurate, the results of the 1100 simulations can be reproduced by sampling appropriate binomial distributions ($\tau_{2C}$ is neglected here because its measured likelihood was zero).
+The data includes RNG seeds for the spiecmic simulations, but not for the sample times, lineage coalescence, or mutation simulations. Therefore, the simulations cannot be reproduced. However, assuming the published likelihoods are sufficiently accurate, the results of the 1100 simulations can be stoachastically replicated by sampling appropriate binomial distributions ($\tau_{2C}$ is neglected here because its measured likelihood was zero).
 ```
 import numpy as np
 np.random.seed(42)
