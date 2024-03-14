@@ -51,14 +51,14 @@ time	coalescence time	total infected	currently infected	current samples
 100	0.016277	1371985	144107	710
 ```
 
-The tMRCA from the last day of the simulation is used as the time of stable coalescence. This can be seen by comparing the coalescence times in each simulation's `coalData_parameterized.txt`, to those recorded in the [summary data](https://github.com/sars-cov-2-origins/multi-introduction/raw/main/FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip) on GitHub.
+The tMRCA from the last day of the simulation is used as the time of stable coalescence. This can be seen by comparing the coalescence times in each simulation's `coalData_parameterized.txt` to those recorded in the [summary data](https://github.com/sars-cov-2-origins/multi-introduction/raw/main/FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip) on GitHub.
 ```
 Run	Coalescent time	First ascertained	First unascertained	First hospitalized	infections
 0001	0.016277	0.003101	0.018548	0.038307	3
 ...
 ```
 
-This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). This does not agree with the method described in the text, and it enhances the filtering cause by the use of the stable coalescence, so that the frequency of basal polyomies is increased further.
+This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). This does not agree with the method described in the text. It enhances the filtering caused by the use of the stable coalescence, so that the frequency of basal polyomies is increased further.
 
 ### The primary case state
 
