@@ -158,7 +158,7 @@ i in range(20000): # sample 20000 times
     p_tau_p_given_i1, p_tau_1c_given_i1 = sample_likelihoods()
     results.append(compute_bfs(p_tau_p_given_i1, p_tau_1c_given_i1, unconstrained_posteriors))
     results.sort()
-    print(f'95% CDI of Bayes factors with recCA rooting: {results[500]:.1f}, {results[19500]:.1f}')
+    print(f'95% CDI of Bayes factors with unconstrained rooting: {results[500]:.1f}, {results[19500]:.1f}')
 95% CDI of Bayes factors with unconstrained rooting: 3.1, 6.0
 ```
 The central 95% of the distribution has a range similar to the size of the Bayes factors. The assumption of sufficient accuracy is clearly invalid.
