@@ -1,6 +1,6 @@
 There are some discrepencies between the methods described in the text and those carried out by the code.
 
-The effects are difficult to quantify because the stochastic simulations are not reproducible and the results are sensitive to sampling noise. However, resampling the final stochastic phase of the simulations for the primary analysis, using corrected code, produces Bayes factors of 3.4.
+The effects are difficult to quantify because the stochastic simulations are not reproducible and the results are sensitive to sampling noise. However, resampling the final stochastic phase of the simulations, using corrected code, reduces the Bayes factors of primary analysis by ~20%.
 
 ## Discrepencies
 
