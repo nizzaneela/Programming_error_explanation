@@ -1,12 +1,8 @@
-Errors and noise inflate the corrected Bayes factors.
+There are some discrepencies between the methods described in the text and those carried out by the code.
 
-The [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf) describe how short-lived basal lineages are excluded from the clade analysis by rooting each phylogeny at a stable coalescence. The code does not implement the described method. 
+The effects are difficult to quantify because the stochastic simulations are not reproducible and the results are sensitive to sampling noise. However, resampling the final stochastic phase of the simulations for the primary analysis, using corrected code, produces Bayes factors of 3.4.
 
-The effects of this discrepency are difficult to quantify because the stochastic simulations are not reproducible and the results are sensitive to sampling noise. However, averaging the results of 1000 resamples of the final stochastic phase of the simulations, using corrected code, produces Bayes factors of 3.4 for the primary analysis.
-
-Many more simulations are needed if the Bayes factors are to be confidently distinguished from the significance threshold of 3.2. Preferably, the simulations should be deterministic and conform to their description in the text.
-
-# Errors
+# Discrepencies
 
 The simulated phylogenies are constructed by coalescing lineages sampled from the first 50,000 simulated infections. Partial and delayed sampling is simulated by sampling only a portion of simulated infections, and by ignoring samples that precede the first simulated hospitalization, as described on page 8 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
 
@@ -16,7 +12,9 @@ Samples are also ignored if they are on branches ancestral to a stable coalescen
 
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
 
-Contrary to this definition, the function `coalescent_timing` in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) does not stop the tMRCA calculations when 50,000 individuals have been infected. Instead, the calculations always continue until the last day of the simulation.
+That is, short-lived lineages are removed if they are basal, but retained if they are not. 
+
+Contrary to the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf), the function `coalescent_timing` in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) does not stop the tMRCA calculations when 50,000 individuals have been infected. Calculations continue until the last day of the simulation.
 
 ```
 def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num_days=100):
@@ -39,7 +37,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
     return coalescent_timing_results
 ```
 
-This can be seen in the files `coalData_parameterized.txt` in the published data stored on [Zenodo](https://zenodo.org/records/6899613). For example, the first simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA of active sampled infections is 0.000333 years (~3 hours), but the calculations continue until the end of the simulation, after another 61 days and 1.3 million infections. By then, only 710 sampled infections are still active and their tMRCA is 0.016277 years (~6 days).
+For example, the first successful simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA of active sampled infections is 0.000333 years (~3 hours). The calculations continue until the end of the simulation, after another 61 days and 1.3 million infections. By then, only 710 sampled infections are still active and their tMRCA is 0.016277 years (~6 days). This can be seen in the file `simulations_01/0001/coalData_parameterized.txt` in the published [data](https://zenodo.org/records/6899613/files/simulations_01.zip?download=1) on [Zenodo](https://zenodo.org/records/6899613). 
 
 ```
 time	coalescence time	total infected	currently infected	current samples
@@ -51,7 +49,15 @@ time	coalescence time	total infected	currently infected	current samples
 100	0.016277	1371985	144107	710
 ```
 
-The tMRCA from the end of the simulation is used as the time of stable coalescence. This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). 
+The tMRCA from the last day of the simulation is used as the time of stable coalescence. This can be seen by comparing the coalescence times in each simulation's `coalData_parameterized.txt` to the coalescent time recoreded in the [summary data](https://github.com/sars-cov-2-origins/multi-introduction/raw/main/FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip) on GitHub.
+```
+Run	Coalescent time	First ascertained	First unascertained	First hospitalized	infections
+0001	0.016277	0.003101	0.018548	0.038307	3
+...
+```
+
+
+This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). 
 
 By removing basal lineages that do not have active sampled infections at the end of the simulation, and retaining those that do, the code filters out basal lineages that did not undergo early rapid growth. Lineages that do undergo early rapid growth are more likely to be part of a basal polytomy. The error therefore causes spurious basal polytomies.
 
