@@ -14,7 +14,7 @@ Samples are also ignored if they are on branches ancestral to a stable coalescen
 
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
 
-By rooting each phylogeny at the stable coalescence, lineages that do not undergo early rapid growth are filtered out. Lineages that do undergo early rapid growth are more likely to be part of a basal polytomy, so the use of the stable coalescence increases the frequency basal polytomies. 
+By rooting each phylogeny at the stable coalescence, lineages that do not experience early rapid growth are filtered out. Lineages that do experience early rapid growth are more likely to be part of a basal polytomy. The use of the stable coalescence increases the frequency basal polytomies. 
 
 Contrary to the method described above, the function `coalescent_timing` in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) does not stop the tMRCA calculations when 50,000 individuals have been infected. Calculations continue until the last day of the simulation.
 
@@ -58,11 +58,11 @@ Run	Coalescent time	First ascertained	First unascertained	First hospitalized	inf
 ...
 ```
 
-This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). This does not agree with the method described in the text. It enhances the filtering caused by the use of the stable coalescence, so that the frequency of basal polyomies is increased further.
+This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). This does not agree with the method described in the text. It enhances the filtering caused by the use of the stable coalescence, further increasing the frequency of basal polyomies.
 
 ### The primary case state
 
-The epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) accepts commands to initialise the primary case in arbitrary states, but is hard-coded to start the primary case infectious (`P1`), so that transmissions being immediately.
+The epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) accepts commands to initialise the primary case in arbitrary states. However, the script is hard-coded to initialise the primary case in an infectious state (`P1`), so that transmissions being immediately.
 ```
     # write GEMF status file
     out_file = open(out_fn, 'w')
@@ -81,12 +81,12 @@ The epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.c
     status_file.close()
     print_log("Wrote GEMF '%s' file: %s" % (GEMF_STATUS_FN, status_fn))
 ```
-This is despite the published [command](https://github.com/sars-cov-2-origins/multi-introduction/blob/main/FAVITES-COVID-Lite/commands/command.0.28TF_0.15r.txt) indicating that the primary infection should start out exposed but non-infectious (`--tn_freq_e 0.00000020`).
+This is despite the published [command](https://github.com/sars-cov-2-origins/multi-introduction/blob/main/FAVITES-COVID-Lite/commands/command.0.28TF_0.15r.txt) indicating that the primary case should start out in the exposed but non-infectious state (`--tn_freq_e 0.00000020`).
 ```
 ~/scripts/FAVITES-COVID-Lite-updated.py --gzip_output --path_ngg_barabasi_albert ngg_barabasi_albert --path_gemf GEMF --path_coatran_constant coatran_constant --path_seqgen seq-gen --cn_n 5000000 --cn_m 8 --tn_s_to_e_seed 0 --tn_e_to_p1 125.862069 --tn_p1_to_p2 999999999 --tn_p2_to_i1 23.804348 --tn_p2_to_a1 134.891304 --tn_i1_to_i2 62.931034 --tn_i1_to_h 0.000000 --tn_i1_to_r 62.931034 --tn_i2_to_h 45.061728 --tn_i2_to_r 0.000000 --tn_a1_to_a2 9999999999 --tn_a2_to_r 125.862069 --tn_h_to_r 12.166667 --tn_s_to_e_by_e 0 --tn_s_to_e_by_p1 0 --tn_s_to_e_by_p2 3.513125 --tn_s_to_e_by_i1 6.387500 --tn_s_to_e_by_i2 6.387500 --tn_s_to_e_by_a1 0 --tn_s_to_e_by_a2 3.513125 --tn_freq_s 0.99999980 --tn_freq_e 0.00000020 --tn_freq_p1 0 --tn_freq_p2 0 --tn_freq_i1 0 --tn_freq_i2 0 --tn_freq_a1 0 --tn_freq_a2 0 --tn_freq_h 0 --tn_freq_r 0 --tn_end_time 0.273973 --tn_num_seeds 1 --pt_eff_pop_size 1 --pm_mut_rate 0.00092 --o 
 ```
 
-That is, the simulations skip the latent phase of the first infection.
+That is, the code forces simulations to skip the latent phase of the first infection.
 
 For simulations where the stable coalescence is in the primary case (~20% of simulations), this compresses coalescence events around the stable coalescence, reducing the likelihood of an early mutation breaking up a basal polytomy.
 
@@ -144,13 +144,13 @@ def sample_likelihoods():
     # return the likelihoods
     return n_tau_p/1100, n_tau_1c/1100
 ```
-The equations for the Bayes factors can be written in terms of the likelihoods and posterior probabilities.
+The Bayes factor equation can be written in terms of the likelihoods and posterior probabilities.
 ```
 def compute_bfs(p_tau_p_given_i1, p_tau_1c_given_i1, posteriors):
      bf = 0.25*p_tau_p_given_i1**2*sum(posteriors)/(0.5*p_tau_1c_given_i1*sum(posteriors[:2]))
      return bf
 ```
-Repeatedly resampling the likelihoods and computing the Bayes factors then provides a distribution of results that can be expected from replicating the analysis.
+Repeatedly resampling the likelihoods and computing the Bayes factors then provides a distribution of results that would be expected from replicating the analysis.
 ```
 unconstrained_posteriors = np.array([1.68, 80.85, 10.32, 0.92])/100 # from Table 1
 results = []
