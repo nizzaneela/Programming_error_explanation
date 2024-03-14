@@ -14,7 +14,7 @@ Samples are also ignored if they are on branches ancestral to a stable coalescen
 
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
 
-By rooting each phylogeny at the stable coalescence, lineages that did not undergo early rapid growth are filtered out. Lineages that do undergo early rapid growth are more likely to be part of a basal polytomy, so the stable coalescence increases the frequency basal polytomies. 
+By rooting each phylogeny at the stable coalescence, lineages that do not undergo early rapid growth are filtered out. Lineages that do undergo early rapid growth are more likely to be part of a basal polytomy, so the stable coalescence increases the frequency basal polytomies. 
 
 The function `coalescent_timing` in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) does not stop the tMRCA calculations when 50,000 individuals have been infected. Calculations continue until the last day of the simulation.
 
@@ -51,14 +51,14 @@ time	coalescence time	total infected	currently infected	current samples
 100	0.016277	1371985	144107	710
 ```
 
-The tMRCA from the last day of the simulation is used as the time of stable coalescence. This can be seen by comparing the coalescence times in each simulation's `coalData_parameterized.txt` to the coalescent time recoreded in the [summary data](https://github.com/sars-cov-2-origins/multi-introduction/raw/main/FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip) on GitHub.
+The tMRCA from the last day of the simulation is used as the time of stable coalescence. This can be seen by comparing the coalescence times in each simulation's `coalData_parameterized.txt`, to those time recorded in the [summary data](https://github.com/sars-cov-2-origins/multi-introduction/raw/main/FAVITES-COVID-Lite/cumulative_results/FAVITES_results.zip) on GitHub.
 ```
 Run	Coalescent time	First ascertained	First unascertained	First hospitalized	infections
 0001	0.016277	0.003101	0.018548	0.038307	3
 ...
 ```
 
-This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). This does not agree with the method described in the text, and enhances the filtering effect of the stable coalescence so that the frequency of basal polyomies is increased further.
+This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). This does not agree with the method described in the text, and it enhances the filtering effect of the stable coalescence, so that the frequency of basal polyomies is increased further.
 
 ### The primary case state
 
@@ -85,13 +85,16 @@ This is despite the published [command](https://github.com/sars-cov-2-origins/mu
 ```
 ~/scripts/FAVITES-COVID-Lite-updated.py --gzip_output --path_ngg_barabasi_albert ngg_barabasi_albert --path_gemf GEMF --path_coatran_constant coatran_constant --path_seqgen seq-gen --cn_n 5000000 --cn_m 8 --tn_s_to_e_seed 0 --tn_e_to_p1 125.862069 --tn_p1_to_p2 999999999 --tn_p2_to_i1 23.804348 --tn_p2_to_a1 134.891304 --tn_i1_to_i2 62.931034 --tn_i1_to_h 0.000000 --tn_i1_to_r 62.931034 --tn_i2_to_h 45.061728 --tn_i2_to_r 0.000000 --tn_a1_to_a2 9999999999 --tn_a2_to_r 125.862069 --tn_h_to_r 12.166667 --tn_s_to_e_by_e 0 --tn_s_to_e_by_p1 0 --tn_s_to_e_by_p2 3.513125 --tn_s_to_e_by_i1 6.387500 --tn_s_to_e_by_i2 6.387500 --tn_s_to_e_by_a1 0 --tn_s_to_e_by_a2 3.513125 --tn_freq_s 0.99999980 --tn_freq_e 0.00000020 --tn_freq_p1 0 --tn_freq_p2 0 --tn_freq_i1 0 --tn_freq_i2 0 --tn_freq_a1 0 --tn_freq_a2 0 --tn_freq_h 0 --tn_freq_r 0 --tn_end_time 0.273973 --tn_num_seeds 1 --pt_eff_pop_size 1 --pm_mut_rate 0.00092 --o 
 ```
+
+That is, the simulations skip the latent phase of the first infection.
+
 For simulations where the stable coalescence is in the primary case (~20% of simulations), this compresses coalescence events around the stagble coalescence, reducing the likelihood of an early mutation breaking up a basal polytomy.
 
-For simulations where the stable coalescence is not in the primary case (~20% of simulations), this increases the time, and the variance in the time, of the introduction.
+For simulations where the stable coalescence is not in the primary case (~80% of simulations), this pushes the estimated time of introduction forward, and decreases its variance.
 
 ### Others
 
-Among other, minor errors, the `main` function in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) restores basal lineages if their MRCA is sufficiently close to the time of stable coalescence.
+The `main` function in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) restores basal lineages if their MRCA is sufficiently close to the time of stable coalescence.
 ```
 # main function
     ...
@@ -111,7 +114,7 @@ Among other, minor errors, the `main` function in the script [stableCoalescence_
 This can increase the size of basal polytomies, but only in rare cases where coalescence events are compressed closely enough around the stable coalescence (i.e. < 0.2% of simulations).
 In one instance (simulation `0823`) this occured in the primary case, where the compression was amplified by the elision of the latent phase.
 
-# Noise
+## Noise
 
 The equations for the Bayes factors are described on pages 11 to 14 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). They can be combined and expanded as:
 
@@ -128,40 +131,37 @@ where:
 
 Assuming the published likelihoods are sufficiently accurate, the results of the 1100 simulations can be reproduced by sampling appropriate binomial distributions ($\tau_{2C}$ is neglected here because its measured likelihood was zero).
 ```
-python3
->>> import numpy as np
->>> np.random.seed(42)
->>> def sample_likelihoods():
-...     p_tau_p_given_i1 = 0.475 # from Fig. 2
-...     p_tau_1c_given_i1 = 0.031 # from Fig. 2
-...     # sample the number of simulations that have basal polytomies
-...     n_tau_p = np.random.binomial(1100,p_tau_p_given_i1)
-...     # sample the number of simulations that also have one clade on a two mutation branch
-...     p_tau_1c_given_tau_p = p_tau_1c_given_i1/p_tau_p_given_i1 # depends on basal polytomy
-...     n_tau_1c = np.random.binomial(n_tau_p,p_tau_1c_given_tau_p)
-...     # return the likelihoods
-...     return n_tau_p/1100, n_tau_1c/1100
+import numpy as np
+np.random.seed(42)
+def sample_likelihoods():
+     p_tau_p_given_i1 = 0.475 # from Fig. 2
+     p_tau_1c_given_i1 = 0.031 # from Fig. 2
+     # sample the number of simulations that have basal polytomies
+     n_tau_p = np.random.binomial(1100,p_tau_p_given_i1)
+     # sample the number of simulations that also have one clade on a two mutation branch
+     p_tau_1c_given_tau_p = p_tau_1c_given_i1/p_tau_p_given_i1 # depends on basal polytomy
+     n_tau_1c = np.random.binomial(n_tau_p,p_tau_1c_given_tau_p)
+     # return the likelihoods
+     return n_tau_p/1100, n_tau_1c/1100
 ```
 The equations for the Bayes factors can be written in terms of the likelihoods and posterior probabilities, e.g.:
 ```
->>> def compute_bfs(p_tau_p_given_i1, p_tau_1c_given_i1, posteriors):
-...     bf = 0.25*p_tau_p_given_i1**2*sum(posteriors)/(0.5*p_tau_1c_given_i1*sum(posteriors[:2]))
-...     return bf
+def compute_bfs(p_tau_p_given_i1, p_tau_1c_given_i1, posteriors):
+     bf = 0.25*p_tau_p_given_i1**2*sum(posteriors)/(0.5*p_tau_1c_given_i1*sum(posteriors[:2]))
+     return bf
 ```
-Repeatedly resampling the likelihoods and computing the Bayes factors then provides a distribution of the results that can be expected from a sample of 1100 simulations.
+Repeatedly resampling the likelihoods and computing the Bayes factors then provides a distribution of the results that can be expected from reprodcuing the analysis.
 ```
->>> recCA_posteriors = np.array([77.28, 8.18, 10.49, 3.71])/100 # from Table 1
->>> results = []
->>> for i in range(20000): # sample 20000 times
-...     p_tau_p_given_i1, p_tau_1c_given_i1 = sample_likelihoods()
-...     results.append(compute_bfs(p_tau_p_given_i1, p_tau_1c_given_i1, unconstrained_posteriors))
-... results.sort()
-... print(f'95% CDI of Bayes factors with recCA rooting: {results[500]:.1f}, {results[19500]:.1f}')
+recCA_posteriors = np.array([77.28, 8.18, 10.49, 3.71])/100 # from Table 1
+results = []
+i in range(20000): # sample 20000 times
+    p_tau_p_given_i1, p_tau_1c_given_i1 = sample_likelihoods()
+    results.append(compute_bfs(p_tau_p_given_i1, p_tau_1c_given_i1, unconstrained_posteriors))
+    results.sort()
+    print(f'95% CDI of Bayes factors with recCA rooting: {results[500]:.1f}, {results[19500]:.1f}')
 95% CDI of Bayes factors with recCA rooting: 3.2, 6.2
 ```
 The central 95% of the distribution has a range similar to the size of the Bayes factors. The assumption of sufficient accuracy is clearly invalid.
-
-1100 simulations are not enough to measure the Bayes factors with useful accuracy.
 
 # Correction
 
