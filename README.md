@@ -116,7 +116,7 @@ In one instance (simulation `0823`) this occured in the primary case, where the 
 
 ## Noise
 
-The equations for the Bayes factors are described on pages 11 to 14 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). They can be combined and expanded as:
+The Bayes factors are described on pages 11 to 14 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). Combined and expanded, their equations can be written as:
 
 $$
 BF = 
@@ -134,23 +134,23 @@ Assuming the published likelihoods are sufficiently accurate, the results of the
 import numpy as np
 np.random.seed(42)
 def sample_likelihoods():
-     p_tau_p_given_i1 = 0.475 # from Fig. 2
-     p_tau_1c_given_i1 = 0.031 # from Fig. 2
-     # sample the number of simulations that have basal polytomies
-     n_tau_p = np.random.binomial(1100,p_tau_p_given_i1)
-     # sample the number of simulations that also have one clade on a two mutation branch
-     p_tau_1c_given_tau_p = p_tau_1c_given_i1/p_tau_p_given_i1 # depends on basal polytomy
-     n_tau_1c = np.random.binomial(n_tau_p,p_tau_1c_given_tau_p)
-     # return the likelihoods
-     return n_tau_p/1100, n_tau_1c/1100
+    p_tau_p_given_i1 = 0.475 # from Fig. 2
+    p_tau_1c_given_i1 = 0.031 # from Fig. 2
+    # sample the number of simulations that have basal polytomies
+    n_tau_p = np.random.binomial(1100,p_tau_p_given_i1)
+    # sample the number of simulations that also have one clade on a two mutation branch
+    p_tau_1c_given_tau_p = p_tau_1c_given_i1/p_tau_p_given_i1 # depends on basal polytomy
+    n_tau_1c = np.random.binomial(n_tau_p,p_tau_1c_given_tau_p)
+    # return the likelihoods
+    return n_tau_p/1100, n_tau_1c/1100
 ```
-The equations for the Bayes factors can be written in terms of the likelihoods and posterior probabilities, e.g.:
+The equations for the Bayes factors can be written in terms of the likelihoods and posterior probabilities.
 ```
 def compute_bfs(p_tau_p_given_i1, p_tau_1c_given_i1, posteriors):
      bf = 0.25*p_tau_p_given_i1**2*sum(posteriors)/(0.5*p_tau_1c_given_i1*sum(posteriors[:2]))
      return bf
 ```
-Repeatedly resampling the likelihoods and computing the Bayes factors then provides a distribution of the results that can be expected from reprodcuing the analysis.
+Repeatedly resampling the likelihoods and computing the Bayes factors then provides a distribution of results that can be expected from reproducing the analysis.
 ```
 recCA_posteriors = np.array([77.28, 8.18, 10.49, 3.71])/100 # from Table 1
 results = []
@@ -163,7 +163,7 @@ i in range(20000): # sample 20000 times
 ```
 The central 95% of the distribution has a range similar to the size of the Bayes factors. The assumption of sufficient accuracy is clearly invalid.
 
-# Correction
+## Remedies
 
 The epidemic simulation script [FAVITES-COVID-Lite_noSeqgen.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/FAVITES-COVID-Lite_noSeqgen.py) can be corrected to initialise the primary case in the exposed compartment (`E`). However, rather than repeating the epidemic simulations, the published data stored on  [Zenodo](https://zenodo.org/records/6899613) can be reused by sampling times for the latent periods and adding them to the existing transmission and sampling times. [CoaTran](https://github.com/niemasd/CoaTran) can then be rerun to obtain corrected phylogenies.
 ```
@@ -172,8 +172,9 @@ import numpy as np
 from gzip import open as gopen
 np.random.seed(42)
 
+# go through each of the 1100 simulations
 for i in range(1,1101):
-    # generate latent period
+    # generate a latent period
     latent_period = np.random.exponential(2.9/365) #expected value is 2.9/365 days (Table S3)
     # set up file paths, open files and write out the corrected data for transmission network
     old_tn_path = f'simulations/{i:04d}/transmission_network.subsampled.txt.gz'
@@ -189,7 +190,7 @@ for i in range(1,1101):
         for line in old_samples:
             u, t = line.strip().split('\t')
             new_samples.write(f'{u}\t{float(t) + latent_period}\n')
-    # setup and run CoaTRan to generate corrected time trees
+    # setup and run CoaTRan to generate a corrected time tree
     command = ['coatran_constant', new_tn_path, new_samples_path, '1']
     env = os.environ.copy()
     coatran_rng_seed = np.random.randint(low=0, high=2**31) # ensure it is reproducible
@@ -201,7 +202,7 @@ for i in range(1,1101):
 ```
 
 The script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) can be corrected to determine the stable coalescence properly by:
-- breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, e.g.:
+- breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected:
 ```
 def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num_days=100):
     ...
@@ -213,9 +214,9 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
             break
         ...
 ```
-- walking back to find the the stable coalescence as when tMRCA of active sampled infections is within one day before the final tMRCA, e.g.:
+- walking back to find the first day when tMRCA of active sampled infections will jump forward by less than one day to reach the final tMRCA, e.g.:
 ```
-    # work back day by day from the last day but stop if
+    # work back day by day, stopping if
     # the tMRCA of the next earlier day is more than a day earlier than the final tMRCA,
     # or the tMRCA of the next earlier day is later than the final tMRCA
     # or if the next earlier has only one sample, i.e. it doesn't have a tMRCA
@@ -240,6 +241,6 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
     subtree_sc.root.edge_length = 0
     subtree_sc.suppress_unifurcations()
 ```
-Complete code and instructions for reproducibly obtaining corrected time trees is published in this branch of the authors' repository. The code also automates resampling of the mutation simulation and clade analysis 1000 times. 
+Complete code and instructions for reproducibly obtaining corrected time trees is published in [this branch](https://github.com/nizzaneela/multi-introduction/tree/corrected) of the authors' repository. The code also automates resampling of the mutation simulations and subsequent clade analysis, 1000 times. 
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
 The corrections and resampling reduce the Bayes factors by ~15%.
