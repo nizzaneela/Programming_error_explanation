@@ -244,3 +244,5 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
 Complete code and instructions for reproducibly obtaining corrected time trees is published in [this branch](https://github.com/nizzaneela/multi-introduction/tree/corrected) of the authors' repository. The code also automates resampling of the mutation simulations and subsequent clade analysis, 1000 times. 
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
 The corrections and resampling reduce the Bayes factors by ~15%.
+
+Resampling of all stochastic processes would be preferable, but the mutation simulation places mutations as a Poisson process, and thus intruduces a great deal of variance in comparision to the lineage coalescence times (sampled using an effective population size of one year, truncated from the last transmission to coalesce by infection).
