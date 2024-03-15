@@ -118,7 +118,7 @@ The `main` function in the script [stableCoalescence_cladeAnalysis.py](https://g
 This can increase the size of basal polytomies, but only in rare cases where coalescence events are compressed closely enough around the stable coalescence (i.e. < 0.2% of simulations).
 In one instance (simulation `0823`) this occured in the primary case, where the compression was amplified by the elision of the latent phase.
 
-Clumsy removal of the primary case sample also removes leaves that include the primary case node number in their label string. (The primary case is always sampled to ensure CoaTran roots the phylogeny in the primary case, but is then removed for clade analysis.)
+Clumsy removal of the primary case sample also removes leaves that include the primary case node number in their label string. (The primary case is always sampled to ensure CoaTran roots the phylogeny in the primary case, and is removed for clade analysis.)
 ```
     # get subtree that excludes index case
     tree = treeswift.read_tree_newick(args.time_tree)
