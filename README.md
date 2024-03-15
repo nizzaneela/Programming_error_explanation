@@ -137,8 +137,8 @@ The Bayes factors are described on pages 11 to 14 of the [Supplementary Material
 
 $$
 BF = 
-\frac{0.25 \cdot P(\tau_P|I_1)^2 \left( P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y) \right)} 
-{0.5 \cdot P(\tau_{c1}|I_1) \left( P(S_A|Y) + P(S_B|Y) \right) + 0.5 \cdot P(\tau_{c2}|I_1) \left( P(S_{C/C}|Y) + P(S_{T/T}|Y) \right)}
+\frac{0.25 \cdot P(\tau_P|I_1)^2 \cdot \left( P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y) \right)} 
+{0.5 \cdot P(\tau_{c1}|I_1) \cdot \left( P(S_A|Y) + P(S_B|Y) \right) + 0.5 \cdot P(\tau_{c2}|I_1) \cdot \left( P(S_{C/C}|Y) + P(S_{T/T}|Y) \right)}
 $$
 
 where:
@@ -235,4 +235,4 @@ Complete code and instructions for reproducibly generating corrected time trees 
 
 ![](https://github.com/nizzaneela/Programming_error_explanation/blob/ff3cab7fca370a03961a6536ffe8740146eab014/results.png)
 
-The corrections and resampling reduce the Bayes factors by ~15%.
+The corrections and resampling reduce the Bayes factors by ~15%. 
