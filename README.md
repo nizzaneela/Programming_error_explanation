@@ -2,10 +2,11 @@ The Bayes factors compare the likelihood of two successful introductions each pr
 
 The $\tau_P$ topology is defined on page 10 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
 
-
+![](tau_p.png)
 
 The $\tau_{1C}$ and $\tau_{2C}$ topologies are defined on page 11.
 
+![](tau_12c.png)
 
 
 
