@@ -6,7 +6,7 @@ The effects are difficult to quantify because the stochastic simulations are not
 
 ### The stable coalescence
 
-The simulated phylogenies are constructed by coalescing lineages sampled from the first 50,000 simulated infections. Partial and delayed sampling is simulated by sampling only a portion of simulated infections, and by ignoring samples that precede the first simulated hospitalization (page 8 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf)).
+The simulated phylogenies are constructed by coalescing lineages sampled from the first 50,000 simulated cases. Partial and delayed sampling is simulated by sampling only a portion of simulated cases, and by ignoring samples that precede the first simulated hospitalization (page 8 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf)).
 
 ![Excerpt from page 8 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/4b653347fb1b4642c98d82c50fcea29200c4add1/sample.png)
 
@@ -37,7 +37,7 @@ def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num
     return coalescent_timing_results
 ```
 
-For example, the first successful simulation run `0001` reaches 50,000 infections on day 39, when the tMRCA of active sampled infections is 0.000333 years (~3 hours). The calculations continue until the end of the simulation, after another 61 days and 1.3 million infections. By then, only 710 sampled infections are still active and their tMRCA is 0.016277 years (~6 days). This can be seen in the file `simulations_01/0001/coalData_parameterized.txt` in the published [data](https://zenodo.org/records/6899613/files/simulations_01.zip?download=1) on [Zenodo](https://zenodo.org/records/6899613). 
+For example, the first successful simulation run `0001` reaches 50,000 cases on day 39, when the tMRCA of active sampled cases is 0.000333 years (~3 hours). The calculations continue until the end of the simulation, after another 61 days and 1.3 million cases. By then, only 710 sampled cases are still active and their tMRCA is 0.016277 years (~6 days). This can be seen in the file `simulations_01/0001/coalData_parameterized.txt` in the published [data](https://zenodo.org/records/6899613/files/simulations_01.zip?download=1) on [Zenodo](https://zenodo.org/records/6899613). 
 
 ```
 time	coalescence time	total infected	currently infected	current samples
@@ -56,13 +56,13 @@ Run	Coalescent time	First ascertained	First unascertained	First hospitalized	inf
 ...
 ```
 
-This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). This does not agree with the method described in the text
+This means the code removes basal lineages that do not have active sampled cases at the end of simulation (day 100), even if they do have active sampled cases at the end of sampling period (infection 50,000th case). This does not agree with the method described in the text
 
-As described in the text, the stable coalescence is based on the MRCA of lineages that have a sampled infection that is active at the time of the 50,000th infection. Lineages are more likely to have an active sampled infection at this time if they undergo more early growth, so they are more likely to be associated with an early polytomy. By rooting the tree at the stable coalescence, basal lineages that are less likely to be associated with an early polytomy are removed. If the next derived structure is a polytomy, it is made basal.
+As described in the text, the stable coalescence is based on the MRCA of lineages that have a sampled case that is active when the 50,000th case is infected. Lineages are more likely to have an active sampled case at this time if they undergo more early growth, so they are more likely to be associated with an early polytomy. By rooting the tree at the stable coalescence, basal lineages that are less likely to be associated with an early polytomy are removed. If the next derived structure is a polytomy, it is made basal.
 
-As implemented in the code, the stable coalescence is the MRCA of lineages that have a sampled infection that is active at the end of the simulation, even though the last sampled infection might have been infected months earlier. Lineages are more likely to have an active sampled infection at this time if they undergo a lot more early growth, so they are much more likely to be associated with an early polytomy. This means more basal lineages are removed, and more early polytomies are made basal.
+As implemented in the code, the stable coalescence is the MRCA of lineages that have a sampled case that is active at the end of the simulation, even though the last sampled case might have been infected months earlier. Lineages are more likely to have an active sampled case at this time if they undergo a lot more early growth, so they are much more likely to be associated with an early polytomy. This means more basal lineages are removed, and more early polytomies are made basal.
 
-Lineages are not removed if they descend from the stable coalescence, irrespective of how long they survive.
+Lineages are not removed if they descend from the stable coalescence.
 
 ### The primary case state
 
@@ -90,7 +90,7 @@ This is despite the published [command](https://github.com/sars-cov-2-origins/mu
 ~/scripts/FAVITES-COVID-Lite-updated.py --gzip_output --path_ngg_barabasi_albert ngg_barabasi_albert --path_gemf GEMF --path_coatran_constant coatran_constant --path_seqgen seq-gen --cn_n 5000000 --cn_m 8 --tn_s_to_e_seed 0 --tn_e_to_p1 125.862069 --tn_p1_to_p2 999999999 --tn_p2_to_i1 23.804348 --tn_p2_to_a1 134.891304 --tn_i1_to_i2 62.931034 --tn_i1_to_h 0.000000 --tn_i1_to_r 62.931034 --tn_i2_to_h 45.061728 --tn_i2_to_r 0.000000 --tn_a1_to_a2 9999999999 --tn_a2_to_r 125.862069 --tn_h_to_r 12.166667 --tn_s_to_e_by_e 0 --tn_s_to_e_by_p1 0 --tn_s_to_e_by_p2 3.513125 --tn_s_to_e_by_i1 6.387500 --tn_s_to_e_by_i2 6.387500 --tn_s_to_e_by_a1 0 --tn_s_to_e_by_a2 3.513125 --tn_freq_s 0.99999980 --tn_freq_e 0.00000020 --tn_freq_p1 0 --tn_freq_p2 0 --tn_freq_i1 0 --tn_freq_i2 0 --tn_freq_a1 0 --tn_freq_a2 0 --tn_freq_h 0 --tn_freq_r 0 --tn_end_time 0.273973 --tn_num_seeds 1 --pt_eff_pop_size 1 --pm_mut_rate 0.00092 --o 
 ```
 
-That is, the code forces simulations to skip the latent phase of the first infection.
+That is, the code forces simulations to skip the latent phase of the first case.
 
 For simulations where the stable coalescence is in the primary case (~20% of simulations), this compresses coalescence events around the stable coalescence, reducing the likelihood of an early mutation breaking up a basal polytomy.
 
@@ -219,7 +219,7 @@ for i in range(1,1101):
 ```
 
 The script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) can be corrected to determine the stable coalescence properly by:
-- breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, walking back to find the first day when tMRCA of active sampled infections will jump forward by less than one day, and returning the MRCA of that day as the stable coalescence; and
+- breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, walking back to find the first day when tMRCA of active sampled cases will jump forward by less than one day, and returning the MRCA of that day as the stable coalescence; and
 
 ![](https://github.com/nizzaneela/Programming_error_explanation/blob/f08072e335f3d6988b98300728e831590cdc275d/get_Sc.png)
 
