@@ -14,7 +14,7 @@ Samples are also ignored if they are on branches ancestral to a stable coalescen
 
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
 
-Contrary to the method described above, the function `coalescent_timing` in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) does not stop the tMRCA calculations when 50,000 individuals have been infected. Calculations continue until the last day of the simulation.
+Contrary to the described method, the function `coalescent_timing` in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) does not stop the tMRCA calculations when 50,000 individuals have been infected. Calculations continue until the last day of the simulation.
 
 ```
 def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num_days=100):
@@ -58,9 +58,11 @@ Run	Coalescent time	First ascertained	First unascertained	First hospitalized	inf
 
 This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). This does not agree with the method described in the text
 
-As described in the text, the stable coalescence ignores basal lineages that do not grow fast enough, early enough, to have a sampled infection active at the time of the 50,000th infection. Lineages that do grow fast, early, are more likely to be associated with an early polytomy. By rooting the tree at the stable coalescence, basal lineages that are less likely to be associated with an early polytomy are removed, so that early polytomies are likely to become basal.
+As described in the text, the stable coalescence is the MRCA of lineages with sufficient early growth to have a sampled infection active at the time of the 50,000th infection. Lineages that with early growth are more likely to be associated with an early polytomy. By rooting the tree at the stable coalescence, basal lineages that are less likely to be associated with an early polytomy are removed. The next derived structure is a polytomy, it is made basal.
 
-As implemented in the code, the stable coalescence ignores basal lineages that do not grow fast enough, early enough, to have a sampled infection from the first 50,000 infections that is still active at the end of the simulation. This removes basal lineages that, according to the text, should be retained, and further increases the likelihood of early polytomies being made basal.
+As implemented in the code, the stable coalescence is the MRCA of lineages with even more early growth, sufficient to have a sampled infection from the first 50,000 infections that is still active at the end of the simulation. This removes more basal lineages and increases the number of early polytomies that are made basal.
+
+Note that lineages are not removed if they descend from the stable-coalescent, irrespective of how long they survive.
 
 ### The primary case state
 
@@ -222,7 +224,8 @@ The script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-or
 ![](https://github.com/nizzaneela/Programming_error_explanation/blob/15248e0d2472ea3dff7a9c6da540f7a58a672cb8/get_Sc.png)
 - modifying the `main` function to extract the subtree rooted at the stable coalescence.
 ![](https://github.com/nizzaneela/Programming_error_explanation/blob/15248e0d2472ea3dff7a9c6da540f7a58a672cb8/stable_coalescence.png)
-
+Correcting the removal of the primary case sample is not really necessary, but simple enough.
+![](https://github.com/nizzaneela/Programming_error_explanation/blob/b663c0f36f2fc8d3166bbf852dfdf08da67b4870/primary_removel.png)
 
 Complete code and instructions for reproducibly obtaining corrected time trees is published in [this branch](https://github.com/nizzaneela/multi-introduction/tree/corrected) of the authors' repository. The code also automates resampling of the mutation simulations and subsequent clade analysis, 1000 times. 
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
