@@ -231,7 +231,7 @@ Correcting the removal of the primary case sample is not really necessary, but s
 
 ![](https://github.com/nizzaneela/Programming_error_explanation/blob/b663c0f36f2fc8d3166bbf852dfdf08da67b4870/primary_removel.png)
 
-Complete code and instructions for reproducibly obtaining corrected time trees is published in [this branch](https://github.com/nizzaneela/multi-introduction/tree/corrected) of the authors' repository. The code also automates resampling of the mutation simulations and subsequent clade analysis, 1000 times. 
+Complete code and instructions for reproducibly obtaining corrected time trees is published in [this branch](https://github.com/nizzaneela/multi-introduction/tree/corrected) of the authors' repository. The code also automates resampling of the mutation simulations and re-analysis of the resulting clades, 1000 times. 
 
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
 
