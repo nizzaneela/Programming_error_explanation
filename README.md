@@ -206,45 +206,12 @@ for i in range(1,1101):
 ```
 
 The script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) can be corrected to determine the stable coalescence properly by:
-- breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected:
-```
-def coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, tree, num_days=100):
-    ...
-    for index, time in enumerate(times):
-        if time > num_days: # sometimes gemf goes past the limit but we don't always know when
-            break
-        ### added break condition ###
-        elif total_inf_dict[time-1]>50000: # stop after the day of 50000 total infections
-            break
-        ...
-```
-- walking back to find the first day when tMRCA of active sampled infections will jump forward by less than one day to reach the final tMRCA, e.g.:def calculate_bf(asr_results, simulation_results):
-```
-    # work back day by day, stopping if
-    # the tMRCA of the next earlier day is more than a day earlier than the final tMRCA,
-    # or the tMRCA of the next earlier day is later than the final tMRCA
-    # or if the next earlier has only one sample, i.e. it doesn't have a tMRCA
-    end_tMRCA = heights[-1]
-    day = -1
-    while (0 <= (end_tMRCA - heights[day-1]) <= (1/365)) and current_samples[day-1] != 1:
-        day -= 1
-    # stable coalescence is the MRCA of that day
-    stable_coalescence = tree.mrca(current_labels[day])
+- breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, walking back to find the first day when tMRCA of active sampled infections will jump forward by less than one day, and returning the MRCA of that day as the stable coalescence; and
+![](https://github.com/nizzaneela/Programming_error_explanation/blob/15248e0d2472ea3dff7a9c6da540f7a58a672cb8/get_Sc.png)
+- modifying the `main` function to extract the subtree rooted at the stable coalescence.
+![](https://github.com/nizzaneela/Programming_error_explanation/blob/15248e0d2472ea3dff7a9c6da540f7a58a672cb8/stable_coalescence.png)
 
-    coalescent_timing_results = [used_times, heights, total_inf, current_inf, current_samples]
-    return stable_coalescence, coalescent_timing_results
-```
-- modifying the `main` function to extract the subtree rooted at the stable coalescence, e.g.:
-```
-    # stable coalescence
-    time_inf_dict, current_inf_dict, total_inf_dict = tn_to_time_inf_dict(args.transmission_network, subtree)
-    stable_coalescence, coal_timing = coalescent_timing(time_inf_dict, current_inf_dict, total_inf_dict, subtree, args.num_days)
 
-    # prepare for clade analysis; get the subtree with the stable coalescence (MRCA) root
-    subtree_sc = tree.extract_subtree(stable_coalescence)
-    subtree_sc.root.edge_length = 0
-    subtree_sc.suppress_unifurcations()
-```
 Complete code and instructions for reproducibly obtaining corrected time trees is published in [this branch](https://github.com/nizzaneela/multi-introduction/tree/corrected) of the authors' repository. The code also automates resampling of the mutation simulations and subsequent clade analysis, 1000 times. 
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
 The corrections and resampling reduce the Bayes factors by ~15%.
