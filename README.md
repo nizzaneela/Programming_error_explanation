@@ -220,11 +220,11 @@ for i in range(1,1101):
 
 The script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) can be corrected to determine the stable coalescence properly by:
 - breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, walking back to find the first day when tMRCA of active sampled infections will jump forward by less than one day, and returning the MRCA of that day as the stable coalescence; and
-- 
+
 ![](https://github.com/nizzaneela/Programming_error_explanation/blob/15248e0d2472ea3dff7a9c6da540f7a58a672cb8/get_Sc.png)
 
 - modifying the `main` function to extract the subtree rooted at the stable coalescence.
-- 
+
 ![](https://github.com/nizzaneela/Programming_error_explanation/blob/15248e0d2472ea3dff7a9c6da540f7a58a672cb8/stable_coalescence.png)
 
 Correcting the removal of the primary case sample is not really necessary, but simple enough.
