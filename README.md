@@ -1,4 +1,14 @@
-There are discrepencies between the methods described in the text and those carried out by the code.
+The Bayes factors compare the likelihood of two successful introductions each producing $\tau_P$ topologies versus the likelihood of one introduction producing a $\tau_{1C}$ or $\tau_{2C}$ topology.
+
+The $\tau_P$ topology is defined on page 10 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf).
+
+
+
+The $\tau_{1C}$ and $\tau_{2C}$ topologies are defined on page 11.
+
+
+
+
 
 The effects are difficult to quantify because the stochastic simulations are not reproducible and the results are sensitive to sampling noise. However, resampling the final stochastic phase of the simulations, using corrected code, reduces the Bayes factors of the primary analysis by ~15%.
 
