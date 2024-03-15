@@ -131,7 +131,7 @@ $$
 where:
 - $P(\tau_P|I_1)$, $P(\tau_{1C}|I_1$ and $P(\tau_{2C}|I_1)$ are the likelihoods of the different topologies (taken from the simulations and shown in Fig. 2 and Table S5);
 - $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and $P(S_{T/T}|Y)$ are the posterior probabilities of the different MRCA haplotypes (taken from BEAST and shown in  Table 1); and
-- $0.25$ and $0.5$ are the normalized coefficients of the vectors that distribute the topology likelihoods across the posterior probabilities of compatible MRCA haplotypes.
+- $0.25$ and $0.5$ are the coefficients of the normalized vectors that distribute the topology likelihoods across the posterior probabilities of compatible MRCA haplotypes.
 
 The data includes RNG seeds for the epidemic simulations, but not for the sample times, lineage coalescence, or mutation simulations. Therefore, the simulations cannot be reproduced. However, assuming the published likelihoods are sufficiently accurate, the results of the 1100 simulations can be stochastically replicated by sampling appropriate binomial distributions ($\tau_{2C}$ is neglected here because its measured likelihood was zero).
 ```
@@ -165,7 +165,7 @@ i in range(20000): # sample 20000 times
     print(f'95% CDI of Bayes factors with unconstrained rooting: {results[500]:.1f}, {results[19500]:.1f}')
 95% CDI of Bayes factors with unconstrained rooting: 3.1, 6.0
 ```
-The central 95% of the distribution has a range similar to the size of the Bayes factors. The assumption of sufficient accuracy is clearly invalid.
+The central 95% of the distribution has a range similar to the size of the Bayes factors. The assumption of sufficient accuracy is invalid.
 
 ## Remedies
 
