@@ -229,10 +229,10 @@ The script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-or
 
 Correcting the removal of the primary case sample is not really necessary, but simple enough.
 
-![](https://github.com/nizzaneela/Programming_error_explanation/blob/b663c0f36f2fc8d3166bbf852dfdf08da67b4870/primary_removel.png)
+![](https://github.com/nizzaneela/Programming_error_explanation/blob/ff3cab7fca370a03961a6536ffe8740146eab014/primary_removel.png)
 
-Complete code and instructions for reproducibly generating corrected time trees is published in [this branch](https://github.com/nizzaneela/multi-introduction/tree/corrected) of the authors' repository. The code also automates resampling of the mutation simulations and re-analysis of the resulting clades, 1000 times. 
+Complete code and instructions for reproducibly generating corrected time trees is published in [this branch](https://github.com/nizzaneela/multi-introduction/tree/corrected) of the authors' repository. The code also automates resampling of the mutation simulations and re-analysis of the resulting clades, using the correct stable coalescence, 1000 times. 
 
-![](https://github.com/nizzaneela/Programming_error_explanation/blob/f08072e335f3d6988b98300728e831590cdc275d/results.png)
+![](https://github.com/nizzaneela/Programming_error_explanation/blob/ff3cab7fca370a03961a6536ffe8740146eab014/results.png)
 
 The corrections and resampling reduce the Bayes factors by ~15%.
