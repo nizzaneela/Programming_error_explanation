@@ -60,9 +60,9 @@ This means the code removes basal lineages that do not have active sampled infec
 
 As described in the text, the stable coalescence is the MRCA of lineages that have a sampled infection that is active at the time of the 50,000th infection. Lineages are more likely to produce such a sample if they undergo more early growth, so they are more likely to be associated with an early polytomy. By rooting the tree at the stable coalescence, basal lineages that are less likely to be associated with an early polytomy are removed. If the next derived structure is a polytomy, it is made basal.
 
-As implemented in the code, the stable coalescence is the MRCA of lineages that have a sampled infection that is active at the end of the simulation, even though the last sampled infection might have been infected months earlier. Lineages are more likely to produce a sampled infection that remains active for so long if they undergo a lot more early growth. This increases the removal basal lineages and the number of early polytomies made basal.
+As implemented in the code, the stable coalescence is the MRCA of lineages that have a sampled infection that is active at the end of the simulation, even though the last sampled infection might have been infected months earlier. Lineages are more likely to produce a sampled infection that remains active for so long if they undergo a lot more early growth. This increases the number of basal lineages removed and the number of early polytomies made basal.
 
-Note that lineages are not removed if they descend from the stable-coalescent, irrespective of how long they survive.
+Lineages are not removed if they descend from the stable coalescence, irrespective of how long they survive.
 
 ### The primary case state
 
