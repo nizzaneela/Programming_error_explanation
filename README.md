@@ -118,7 +118,7 @@ The `main` function in the script [stableCoalescence_cladeAnalysis.py](https://g
 This can increase the size of basal polytomies, but only in rare cases where coalescence events are compressed closely enough around the stable coalescence (i.e. < 0.2% of simulations).
 In one instance (simulation `0823`) this occured in the primary case, where the compression was amplified by the elision of the latent phase.
 
-Clumsy removal of the primary case sample occasionally removes leaves that have a label string that includes the string of the primary case node number. (The primary case is always sampled to ensure CoaTran roots the phylogeny in the primary case, but is then removed for clade analysis.)
+Clumsy removal of the primary case sample also removes leaves that include the primary case node number in their label string. (The primary case is always sampled to ensure CoaTran roots the phylogeny in the primary case, but is then removed for clade analysis.)
 ```
     # get subtree that excludes index case
     tree = treeswift.read_tree_newick(args.time_tree)
@@ -221,7 +221,7 @@ for i in range(1,1101):
 The script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) can be corrected to determine the stable coalescence properly by:
 - breaking the loop in the function `coalescent_timing` once 50,000 individuals have been infected, walking back to find the first day when tMRCA of active sampled infections will jump forward by less than one day, and returning the MRCA of that day as the stable coalescence; and
 
-![](https://github.com/nizzaneela/Programming_error_explanation/blob/15248e0d2472ea3dff7a9c6da540f7a58a672cb8/get_Sc.png)
+![](https://github.com/nizzaneela/Programming_error_explanation/blob/f08072e335f3d6988b98300728e831590cdc275d/get_Sc.png)
 
 - modifying the `main` function to extract the subtree rooted at the stable coalescence.
 
@@ -233,6 +233,6 @@ Correcting the removal of the primary case sample is not really necessary, but s
 
 Complete code and instructions for reproducibly obtaining corrected time trees is published in [this branch](https://github.com/nizzaneela/multi-introduction/tree/corrected) of the authors' repository. The code also automates resampling of the mutation simulations and re-analysis of the resulting clades, 1000 times. 
 
-![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
+![](https://github.com/nizzaneela/Programming_error_explanation/blob/f08072e335f3d6988b98300728e831590cdc275d/results.png)
 
 The corrections and resampling reduce the Bayes factors by ~15%.
