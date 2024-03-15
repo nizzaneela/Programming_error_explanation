@@ -58,9 +58,9 @@ Run	Coalescent time	First ascertained	First unascertained	First hospitalized	inf
 
 This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). This does not agree with the method described in the text
 
-As described in the text, the stable coalescence is the MRCA of lineages that undergo sufficient early growth to have a sampled infection active at the time of the 50,000th infection. Lineages that undergo early growth are more likely to be associated with an early polytomy. By rooting the tree at the stable coalescence, basal lineages that are less likely to be associated with an early polytomy are removed. If the next derived structure is a polytomy, it is made basal.
+As described in the text, the stable coalescence is the MRCA of lineages that have a sampled infection that is active at the time of the 50,000th infection. Lineages are more likely to produce such a sample if they undergo more early growth, so they are more likely to be associated with an early polytomy. By rooting the tree at the stable coalescence, basal lineages that are less likely to be associated with an early polytomy are removed. If the next derived structure is a polytomy, it is made basal.
 
-As implemented in the code, the stable coalescence is the MRCA of a smaller subset of lineages that undergo sufficient eqarly growth to have a sampled infection active at the end of the simulation, even though the last sampled infection might have been infected months earlier. This removes more basal lineages and increases the number of early polytomies that are made basal.
+As implemented in the code, the stable coalescence is the MRCA of lineages that have a sampled infection that is active at the end of the simulation, even though the last sampled infection might have been infected months earlier. Lineages are more likely to produce a sampled infection that remains active for so long if they undergo a lot more early growth. This increases the removal basal lineages and the number of early polytomies made basal.
 
 Note that lineages are not removed if they descend from the stable-coalescent, irrespective of how long they survive.
 
@@ -118,8 +118,7 @@ The `main` function in the script [stableCoalescence_cladeAnalysis.py](https://g
 This can increase the size of basal polytomies, but only in rare cases where coalescence events are compressed closely enough around the stable coalescence (i.e. < 0.2% of simulations).
 In one instance (simulation `0823`) this occured in the primary case, where the compression was amplified by the elision of the latent phase.
 
-Clumsy removal of the primary case sample occasionally removes leaves that have a label string that includes the string of the primary case node number. (The primary case is always sampled to ensure CoaTran roots the phylogeny in the primary case. It is therefore removed for clade analysis).
-
+Clumsy removal of the primary case sample occasionally removes leaves that have a label string that includes the string of the primary case node number. (The primary case is always sampled to ensure CoaTran roots the phylogeny in the primary case, but is then removed for clade analysis.)
 ```
     # get subtree that excludes index case
     tree = treeswift.read_tree_newick(args.time_tree)
@@ -224,6 +223,7 @@ The script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-or
 ![](https://github.com/nizzaneela/Programming_error_explanation/blob/15248e0d2472ea3dff7a9c6da540f7a58a672cb8/get_Sc.png)
 - modifying the `main` function to extract the subtree rooted at the stable coalescence.
 ![](https://github.com/nizzaneela/Programming_error_explanation/blob/15248e0d2472ea3dff7a9c6da540f7a58a672cb8/stable_coalescence.png)
+
 Correcting the removal of the primary case sample is not really necessary, but simple enough.
 ![](https://github.com/nizzaneela/Programming_error_explanation/blob/b663c0f36f2fc8d3166bbf852dfdf08da67b4870/primary_removel.png)
 
