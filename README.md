@@ -58,9 +58,9 @@ Run	Coalescent time	First ascertained	First unascertained	First hospitalized	inf
 
 This means the code removes basal lineages that do not have active sampled infections at the end of simulation (day 100), even if they do have active sampled infections at the end of sampling period (infection 50,000). This does not agree with the method described in the text
 
-As described in the text, the stable coalescence is the MRCA of lineages with sufficient early growth to have a sampled infection active at the time of the 50,000th infection. Lineages that with early growth are more likely to be associated with an early polytomy. By rooting the tree at the stable coalescence, basal lineages that are less likely to be associated with an early polytomy are removed. The next derived structure is a polytomy, it is made basal.
+As described in the text, the stable coalescence is the MRCA of lineages that undergo sufficient early growth to have a sampled infection active at the time of the 50,000th infection. Lineages that undergo early growth are more likely to be associated with an early polytomy. By rooting the tree at the stable coalescence, basal lineages that are less likely to be associated with an early polytomy are removed. If the next derived structure is a polytomy, it is made basal.
 
-As implemented in the code, the stable coalescence is the MRCA of lineages with even more early growth, sufficient to have a sampled infection from the first 50,000 infections that is still active at the end of the simulation. This removes more basal lineages and increases the number of early polytomies that are made basal.
+As implemented in the code, the stable coalescence is the MRCA of a smaller subset of lineages that undergo sufficient eqarly growth to have a sampled infection active at the end of the simulation, even though the last sampled infection might have been infected months earlier. This removes more basal lineages and increases the number of early polytomies that are made basal.
 
 Note that lineages are not removed if they descend from the stable-coalescent, irrespective of how long they survive.
 
