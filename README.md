@@ -1,6 +1,6 @@
 There are discrepencies between the methods described in the text and those carried out by the code.
 
-The effects are difficult to quantify because the stochastic simulations are not reproducible and the results are sensitive to sampling noise. However, resampling the final stochastic phase of the simulations, using corrected code, reduces the Bayes factors for the primary analysis by ~15%.
+The effects are difficult to quantify because the stochastic simulations are not reproducible and the results are sensitive to sampling noise. However, resampling the final stochastic phase of the simulations, using corrected code, reduces the Bayes factors of the primary analysis by ~15%.
 
 ## Discrepencies
 
@@ -13,8 +13,6 @@ The simulated phylogenies are constructed by coalescing lineages sampled from th
 Samples are also ignored if they are on branches ancestral to a stable coalescence (page 10 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf)).  
 
 ![Excerpt from page 10 of the Supplementary Materials](https://github.com/nizzaneela/Programming_error_explanation/blob/b988d5b5b507d88619c9b9fb9fcaceb5349ff771/sctext.png)
-
-Note that this method retains lineages that have gone extinct if they are derived from the stable coalescence.
 
 Contrary to the method described above, the function `coalescent_timing` in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) does not stop the tMRCA calculations when 50,000 individuals have been infected. Calculations continue until the last day of the simulation.
 
@@ -96,7 +94,7 @@ For simulations where the stable coalescence is in the primary case (~20% of sim
 
 For simulations where the stable coalescence is not in the primary case (~80% of simulations), this pushes the estimated time of introduction forward, and decreases its variance.
 
-### Others
+### Minor errors
 
 The `main` function in the script [stableCoalescence_cladeAnalysis.py](https://github.com/sars-cov-2-origins/multi-introduction/blob/78ec9e3b90215267b45ed34be2720566b7398b77/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) restores basal lineages if their MRCA is sufficiently close to the time of stable coalescence.
 ```
@@ -117,6 +115,20 @@ The `main` function in the script [stableCoalescence_cladeAnalysis.py](https://g
 ```
 This can increase the size of basal polytomies, but only in rare cases where coalescence events are compressed closely enough around the stable coalescence (i.e. < 0.2% of simulations).
 In one instance (simulation `0823`) this occured in the primary case, where the compression was amplified by the elision of the latent phase.
+
+Clumsy removal of the primary case sample occasionally removes leaves that have a label string that includes the string of the primary case node number. (The primary case is always sampled to ensure CoaTran roots the phylogeny in the primary case. It is therefore removed for clade analysis).
+
+```
+    # get subtree that excludes index case
+    tree = treeswift.read_tree_newick(args.time_tree)
+    subtree_leaves = []
+    for n in tree.traverse_leaves():
+        if index_case not in n.label:
+            subtree_leaves.append(n.label)
+    subtree = tree.extract_tree_with(subtree_leaves)
+    subtree.suppress_unifurcations()
+```
+This is a very minor error, mentioned here only because it was corrected in subsequent reanalyses.
 
 ## Noise
 
