@@ -82,7 +82,7 @@ The notebook can then be rerun to produce the following results.
 
 ![](results2.png)
 
-When both hypotheses are required to produce similarly sized clades, the Bayes factors are reduced by a factor of six.
+Requiring the two introduction hypothesis to produce similarly sized clades, just as the one introduction hypothesis does already, reduces the Bayes factors by a factor of six.
 
 The paper measures the two week doubling times of the simulated epidemics at the 1000th infection, and found a 95% highest density interval (HDI) of 1.35 to 5.44 days. This range of early growth rates suggests that two introductions are unlikely to grow to similar sizes within the first 50,000 infections, and the results confirm this.
 
