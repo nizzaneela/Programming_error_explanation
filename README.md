@@ -18,7 +18,7 @@ The published Bayes factors (4.2 and 4.3) might reflect a higher plausiblity of 
 
 This can be corrected by applying conditions 2 and 3 to the two introduction likelihoods.
 
-Two successful introductions can be be tested against condition 2 by going through the first 50,000 infections amongst both, and comparing the number taxa (samples) from each, e.g.:
+Two successful introductions can be be tested against condition 2 by going through the first 50,000 infections amongst both, and comparing the number samples from each, e.g.:
 ```
 def test_sizes(run_1,run_2):
     # read samples into seperate sets for each run
