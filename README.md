@@ -1,4 +1,4 @@
-The Bayes factors weigh the single introduction likelihoods according to the posterior probabilites of their compatible MRCA haplotypes. Defining weights $\alpha_{1c}$ and $\alpha_{2c}$ as, respectively, $\frac{2 \cdot (P(S_A|Y) + P(S_B|Y))}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ and $\frac{2 \cdot (P(S_{C/C}|Y) + P(S_{T/T}|Y)}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ , the Bayes factor to be written as
+The Bayes factors weigh the single introduction likelihoods according to the posterior probabilites of their compatible MRCA haplotypes. Defining weights $\alpha_{1c}$ and $\alpha_{2c}$ as $\frac{2 \cdot (P(S_A|Y) + P(S_B|Y))}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ and $\frac{2 \cdot (P(S_{C/C}|Y) + P(S_{T/T}|Y)}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ , respectively, the Bayes factor to be written as
 
 $$
 BF = 
@@ -18,7 +18,7 @@ The published Bayes factors (4.2 and 4.3) might reflect a higher plausiblity of 
 
 This can be corrected by applying conditions 2 and 3 to the two introduction likelihoods.
 
-Two successful introductions can be be tested against condition 2 by going through the first 50,000 infections amongst both, and comparing the number taxa (samples) in each, e.g.:
+Two successful introductions can be be tested against condition 2 by going through the first 50,000 infections amongst both, and comparing the number taxa (samples) from each, e.g.:
 ```
 def test_sizes(run_1,run_2):
     # read samples into seperate sets for each run
@@ -68,7 +68,7 @@ for i in range(1100):
             count_atLeastMinDescendants += 1
 ```
 
-The function `clade_analysis_updated` in the notebook [stableCoalescence_cladeAnalysis.py](https://github.com/nizzaneela/multi-introduction/blob/corrected/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) can be adapted to do this instead of counting the number of simulations with a basal polytomies. The `function calculate_bf` can then be adapted to use the resulting likelihood as $P((\tau_p,\tau_p)|I_2)$, where $(\tau_p,\tau_p)$ encompasses all topologies compatible with the two introduction hypothesis, so that the other two introduction likelihoods are zero (as in #7).
+The function `clade_analysis_updated` in the notebook [stableCoalescence_cladeAnalysis.py](https://github.com/nizzaneela/multi-introduction/blob/corrected/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) can be adapted to do this instead of counting the number of simulations with basal polytomies. The `function calculate_bf` can then be adapted to use the resulting likelihood as $P((\tau_p,\tau_p)|I_2)$, where $(\tau_p,\tau_p)$ encompasses all topologies compatible with the two introduction hypothesis, so that the other two introduction likelihoods are zero (as in #7).
 ```
 def calculate_bf(asr_results, simulation_results):
     # Let t_p be a polytomy, t_1C be one clade, and t_2c be two clades. Note that t_p includes t_1c. t_p equals all topologies with a basal polytomy (Fig. 2a). 
@@ -77,6 +77,7 @@ def calculate_bf(asr_results, simulation_results):
     ...
     pr_trees_given_I2 = np.concatenate([np.array([0]*3), np.array([simulation_results[0]]), np.array([0]*8)])
 ```
+
 The compatibility matrix can also be updated to negate compatiblity with the topologies that are made redundant, but this isn't really necessary because their likelihoods are zero.
 ```
     compatibility_matrix = np.array([np.array([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]), # S_A
