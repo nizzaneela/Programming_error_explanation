@@ -34,9 +34,9 @@ Page 13 then describes how the likelihood is set for an MRCA under the specific 
 
 This description is misleading in at least two ways.
 
-Firstly, the topology $(\tau_p, \tau_p)$ encompasses the topologies $(\tau_p, \tau_{1c})$, $(\tau_{1c}, \tau_p)$ and $(\tau_{1c}, \tau_{1c})$. Therefore, the topology likelihoods other than $P((\tau_p, \tau_p)|I_2)$ are redundant to the two introduction hypothesis. Overlooking this may have lead to the error described in #7.
+Firstly, the topology $(\tau_p, \tau_p)$ encompasses the topologies $(\tau_p, \tau_{1c})$, $(\tau_{1c}, \tau_p)$ and $(\tau_{1c}, \tau_{1c})$. Therefore, the topology likelihoods other than $P((\tau_p, \tau_p)|I_2)$ are redundant. Overlooking this may have lead to the error described in #7.
 
-
+Secodnly, 
 
 
 
