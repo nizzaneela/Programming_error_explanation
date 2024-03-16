@@ -1,4 +1,4 @@
-The [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf) describe the derivation of the Bayes factors over pages 11 to 14. The approach is set out on page 13:
+The derivation of the Bayes factors is described over pages 11 to 14 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). The approach is set out on page 13:
 
 ![](approach.png)
 
