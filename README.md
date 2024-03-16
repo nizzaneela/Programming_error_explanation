@@ -68,7 +68,7 @@ for i in range(1100):
             count_atLeastMinDescendants += 1
 ```
 
-The function `clade_analysis_updated` in the notebook [stableCoalescence_cladeAnalysis.py](https://github.com/nizzaneela/multi-introduction/blob/corrected/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) can be adapted to do this instead of counting the number of simulations with basal polytomies. The `function calculate_bf` can then be adapted to use the resulting likelihood as $P((\tau_p,\tau_p)|I_2)$. $(\tau_p,\tau_p)$ encompasses all topologies compatible with the two introduction hypothesis, so the likelihoods of the other two introduction topologies ( $(\tau_p,\tau_{1c})$, $(\tau_{1c},\tau_p})$, $(\tau_{1c},\tau_{1c}) )$, can be set to zero.
+The function `clade_analysis_updated` in the notebook [stableCoalescence_cladeAnalysis.py](https://github.com/nizzaneela/multi-introduction/blob/corrected/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) can be adapted to do this instead of counting the number of simulations with basal polytomies. The `function calculate_bf` can then be adapted to use the resulting likelihood as $P((\tau_p,\tau_p)|I_2)$. $(\tau_p,\tau_p)$ encompasses all topologies compatible with the two introduction hypothesis, so the likelihoods of the other two introduction topologies ( $(\tau_p,\tau_{1c})$, $(\tau_{1c},\tau_p})$, $(\tau_{1c},\tau_{1c})$ ), can be set to zero.
 ```
 def calculate_bf(asr_results, simulation_results):
     # Let t_p be a polytomy, t_1C be one clade, and t_2c be two clades. Note that t_p includes t_1c. t_p equals all topologies with a basal polytomy (Fig. 2a). 
