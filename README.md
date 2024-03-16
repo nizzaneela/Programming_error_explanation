@@ -18,7 +18,7 @@ The published Bayes factors (4.2 and 4.3) might reflect a higher plausiblity of 
 
 This can be corrected by applying conditions 2 and 3 to the two introduction likelihoods.
 
-Two successful introductions can be be tested against condition 2 by going through the first 50,000 infections amongst both, and comparing the number samples from each, e.g.:
+Two successful introductions can be be tested against condition 2 by going through the first 50,000 infections amongst both, and comparing the number of samples from each, e.g.:
 ```
 def test_sizes(run_1,run_2):
     # read samples into seperate sets for each run
@@ -91,7 +91,7 @@ The notebook can then be rerun to produce the following results.
 
 ![](results2.png)
 
-The paper measures the doubling times of the simulated epidemics at the 1000th infection, and found a 95% highest density interval (HDI) of 1.35 to 5.44 days. This range of early growth rates suggests that two introductions are unlikely to grow to similar sizes within the first 50,000 infections, and the results confirm this.
+The paper measures the two week doubling times of the simulated epidemics at the 1000th infection, and found a 95% highest density interval (HDI) of 1.35 to 5.44 days. This range of early growth rates suggests that two introductions are unlikely to grow to similar sizes within the first 50,000 infections, and the results confirm this.
 
 Code and instructions for reproducing these results are available at [this branch](https://github.com/nizzaneela/multi-introduction/tree/corrected_with_relative_size_condition) of the author's repository.
 
@@ -102,4 +102,4 @@ Code and instructions for reproducing these results are available at [this branc
 
 Overall, the limitations increase the likelihood of two simulations satisfying conditions 1 and 2, so the resulting Bayes factors may be considered a rough upper bound.
 
-It is theoretically possible that applying condition 3 to the two introduction likelihoods could an increase in the Bayes factors. This would require an increase in the likelihood of two introductions producing topologies compatible with the more probable MRCA haplotypes (i.e. A or B). This is considered unlikely, but will be confirmed either way in the next comment.
+It is theoretically possible that applying condition 3 to the two introduction likelihoods could increase the Bayes factors. This would require an increase in the likelihood of two introductions producing topologies compatible with the more probable MRCA haplotypes (i.e. A or B). This is considered unlikely, but will be confirmed either way in the next comment.
