@@ -1,4 +1,4 @@
-The Bayes factors weigh the single introduction likelihoods according to the posterior probabilites of their compatible MRCA haplotypes. Defining weights $\alpha_{1c}$ and $\alpha_{2c}$ as $\frac{2 \cdot (P(S_A|Y) + P(S_B|Y))}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ and $\frac{2 \cdot (P(S_{C/C}|Y) + P(S_{T/T}|Y)}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ , respectively, the Bayes factor to be written as
+The Bayes factors weigh the single introduction likelihoods according to the posterior probabilites of their compatible MRCA haplotypes. Defining weights $\alpha_{1c}$ and $\alpha_{2c}$ as $\frac{2 \cdot (P(S_A|Y) + P(S_B|Y))}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ and $\frac{2 \cdot (P(S_{C/C}|Y) + P(S_{T/T}|Y)}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ , respectively, the Bayes factor can be written as:
 
 $$
 BF = 
