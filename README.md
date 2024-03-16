@@ -14,7 +14,7 @@ $P(\tau_{1c}|I_1)$ and $P(\tau_{2c}|I_1)$ are the likelihoods of a single succes
 2. each clade includes 30-70% of the total taxa (taxa being sampled from the first 50,000 infections); and
 3. the clades are separated by two mutations (with one being basal for $P(\tau_{1c}|I_1)$ and both being derived for $P(\tau_{2c}|I_1)$ ).
 
-The additional conditions 2 and 3 reduce the single introduction likelihoods. This makes the published Bayes factors (4.2 and 4.3) meaningless - they be caused by this reduction rather than a higher plausiblity of the two introduction hypothesis.
+The additional conditions 2 and 3 reduce the single introduction likelihoods. This makes the published Bayes factors (4.2 and 4.3) meaningless, since they may be caused by this reduction rather than a higher plausiblity of the two introduction hypothesis.
 
 This can be corrected by applying conditions 2 and 3 to the two introduction likelihood $P((\tau_P,\tau_P)|I_2)$.
 
