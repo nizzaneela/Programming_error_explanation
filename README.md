@@ -68,7 +68,7 @@ for i in range(1100):
             count_atLeastMinDescendants += 1
 ```
 
-The function `clade_analysis_updated` in the notebook [stableCoalescence_cladeAnalysis.py](https://github.com/nizzaneela/multi-introduction/blob/corrected/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) can be adapted to do this instead of counting the number of simulations with basal polytomies. The `function calculate_bf` can then be adapted to use the resulting likelihood as $P((\tau_p,\tau_p)|I_2)$. $(\tau_p,\tau_p)$ encompasses all topologies compatible with the two introduction hypothesis, so the likelihoods of the other two introduction topologies ( (\tau_p,\tau_{1c}), (\tau_{1c},\tau_p}), (\tau_{1c},\tau_{1c}) ), can be set to zero.
+The function `clade_analysis_updated` in the notebook [stableCoalescence_cladeAnalysis.py](https://github.com/nizzaneela/multi-introduction/blob/corrected/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) can be adapted to do this instead of counting the number of simulations with basal polytomies. The `function calculate_bf` can then be adapted to use the resulting likelihood as $P((\tau_p,\tau_p)|I_2)$. $(\tau_p,\tau_p)$ encompasses all topologies compatible with the two introduction hypothesis, so the likelihoods of the other two introduction topologies ( $(\tau_p,\tau_{1c})$, $(\tau_{1c},\tau_p})$, $(\tau_{1c},\tau_{1c}) )$, can be set to zero.
 ```
 def calculate_bf(asr_results, simulation_results):
     # Let t_p be a polytomy, t_1C be one clade, and t_2c be two clades. Note that t_p includes t_1c. t_p equals all topologies with a basal polytomy (Fig. 2a). 
@@ -76,15 +76,6 @@ def calculate_bf(asr_results, simulation_results):
     # (t_p, t_1C, t_2C, (t_p,(t_p,t_1C,t_2C)), (t_1C,(t_p,t_1C,t_2C)), (t_2c,(t_p,t_1C,t_2C)))
     ...
     pr_trees_given_I2 = np.concatenate([np.array([0]*3), np.array([simulation_results[0]]), np.array([0]*8)])
-```
-
-The compatibility matrix can also be updated to negate compatiblity with the topologies that are made redundant, but this isn't really necessary because their likelihoods are zero.
-```
-    compatibility_matrix = np.array([np.array([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]), # S_A
-                                     np.array([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]), # S_B
-                                     np.array([0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0]), # S_CC
-                                     np.array([0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0])] # S_TT
-                                    )
 ```
 
 The notebook can then be rerun to produce the following results.
