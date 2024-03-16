@@ -1,3 +1,36 @@
+The [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf) describe the derivation of the Bayes factors over pages 11 to 14. The approach is set out on page 13:
+
+![](approach.png)
+
+That is, the Bayes factors are the ratio of the likelihood of the sequence data $\bf{Y}$ arising from two introductions $I_2$ vs the likelihood of that sequence data $\bf{Y}$ arising from one introduction $I_1$:   
+
+$$
+BF = \frac{P(\mathbf{Y}|I_2)}{P(\mathbf{Y} |I_1)}
+$$
+
+Page 14 describes how the Bayes factor is taken from the combination of the posterior and prior odds. Though not stated explicitly, this must refer to multiplication of the posterior odds by the inverse of the prior odds (Bayes' theorem). i.e.:
+
+$$
+BF = \frac{P(I_2|\mathbf{Y})}{P(I_1|\mathbf{Y})} \cdot \frac{P(I_1)}{P(I_2)}
+$$
+
+Page 12 rewrites the posterior probabilities as joint probabilities and breaks them down in terms of the different MRCA haplotypes $S_{MRCA}$ so that the Bayes factor equations can be written:
+
+$$
+BF = \frac{\sum_{S_{MRCA}} P(S_{MRCA} | Y)P(I_2, S_{MRCA})}{\sum_{S_{MRCA}} P(S_{MRCA} | Y)P(I_1, S_{MRCA})} \cdot \frac{P(I_1)}{P(I_2)}
+$$
+
+Page 13 then breaks down the joint probabilities $P(I_2, S_{MRCA})$ and $P(I_1, S_{MRCA})$ over the possible topologies $\tau$ so that the Bayes factor equations can be written:
+
+$$
+BF = \frac{\sum_{S_{MRCA}} P(S_{MRCA} | Y)\left( \sum_{\tau} P(S_{MRCA} | \tau)P(\tau | I_2)P(I_2) \right)}
+{\sum_{S_{MRCA}} P(S_{MRCA} | Y)\left( \sum_{\tau} P(S_{MRCA} | \tau)P(\tau | I_1)P(I_1) \right)} 
+\cdot \frac{P(I_1)}{P(I_2)}
+$$
+
+
+$\left[ \sum_{\tau} P(S_{MRCA} | \tau)P(\tau | I_n)P(I_n) \right]$
+
 The Bayes factors weigh the single introduction likelihoods according to the posterior probabilites of their compatible MRCA haplotypes. Defining weights $\alpha_{1c}$ and $\alpha_{2c}$ as $\frac{2 \cdot (P(S_A|Y) + P(S_B|Y))}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ and $\frac{2 \cdot (P(S_{C/C}|Y) + P(S_{T/T}|Y)}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ , respectively, the Bayes factor can be written as:
 
 $$
@@ -17,6 +50,8 @@ $P(\tau_{1c}|I_1)$ and $P(\tau_{2c}|I_1)$ are the likelihoods of a single succes
 The additional conditions 2 and 3 reduce the single introduction likelihoods. This makes the published Bayes factors (4.2 and 4.3) meaningless, since they may be caused by this reduction rather than a higher plausiblity of the two introduction hypothesis.
 
 This can be corrected by applying conditions 2 and 3 to the two introduction likelihood $P((\tau_P,\tau_P)|I_2)$.
+
+This comment examines the effects of condition 2. A subsequent comment will examine condition 3.
 
 Two simulations can be be tested against condition 2 by going through the first 50,000 infections amongst both, and comparing the number of samples from each, e.g.:
 ```
