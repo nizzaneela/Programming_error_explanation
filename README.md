@@ -101,3 +101,5 @@ Code and instructions for reproducing these results are available at [this branc
 3. Each introduction has a stable coalescence based on when it reaches 50,000 infections. The authors do not explain what aspect of reality the stable coalescence is used to reproduce. Assuming the stable coalescence should instead be based on when simulations reach 50,000 combined infections, this analysis removes more basal lineages than it should, increasing the likelihood of basal polytomies.
 
 Overall, the limitations increase the likelihood of two simulations satisfying conditions 1 and 2, so the resulting Bayes factors may be considered a rough upper bound.
+
+It is theoretically possible that applying condition 3 to the two introduction likelihoods could an increase in the Bayes factors. This would require an increase in the likelihood of two introductions producing topologies compatible with the more probable MRCA haplotypes (i.e. A or B). This is considered unlikely, but will be confirmed either way in the next comment.
