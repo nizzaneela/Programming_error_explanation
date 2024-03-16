@@ -1,4 +1,4 @@
-The Bayes factors weigh the single introduction likelihoods according to the posterior probabilites of their compatible MRCA haplotypes. Defining the weights $\alpha_{1c}$ and $\alpha_{2c}$ as, respectively, $\frac{2 \cdot (P(S_A|Y) + P(S_B|Y))}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ and $\frac{2 \cdot (P(S_{C/C}|Y) + P(S_{T/T}|Y)}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ allows the Bayes factor to be written as
+The Bayes factors weigh the single introduction likelihoods according to the posterior probabilites of their compatible MRCA haplotypes. Defining weights $\alpha_{1c}$ and $\alpha_{2c}$ as, respectively, $\frac{2 \cdot (P(S_A|Y) + P(S_B|Y))}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ and $\frac{2 \cdot (P(S_{C/C}|Y) + P(S_{T/T}|Y)}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ , the Bayes factor to be written as
 
 $$
 BF = 
@@ -14,11 +14,11 @@ $P(\tau_{1c}|I_1)$ and $P(\tau_{2c}|I_1)$ are the likelihoods of a single succes
 2. each clade includes 30-70% of the total taxa (taxa being sampled from the first 50,000 infections); and
 3. the clades are separated by two mutations (with one being basal for $P(\tau_{1c}|I_1)$ and both being derived for $P(\tau_{2c}|I_1)$).
 
-The published Bayes factors (4.2 and 4.3) might be caused by a higher plausiblity of the two introduction hypothesis or by the additional conditions 2 and 3 applied to single introduction likelihoods. This makes them meaningless.
+The published Bayes factors (4.2 and 4.3) might reflect a higher plausiblity of the two introduction hypothesis, or the additional conditions 2 and 3 applied to single introduction likelihoods. This makes the Bayes factors meaningless.
 
 This can be corrected by applying conditions 2 and 3 to the two introduction likelihoods.
 
-Two successful introductions can be be tested against condition 2 by going through the first 50,000 infections amongst both, counting the taxa (samples) in each, and comparing the results, e.g.:
+Two successful introductions can be be tested against condition 2 by going through the first 50,000 infections amongst both, and comparing the number taxa (samples) in each, e.g.:
 ```
 def test_sizes(run_1,run_2):
     # read samples into seperate sets for each run
@@ -37,7 +37,7 @@ def test_sizes(run_1,run_2):
                     transmission_list.append((v,float(t),run))
     # sort the transmissions in order of time
     transmission_list = sorted(transmission_list, key=lambda x: x[1])
-    # start sample counts from -1 to compensate for the primary sample
+    # start sample counts from -1 because the primary case is not to be included 
     n_valid_samples = {run_1: -1, run_2: -1}
     # go through the first 50,000 transmissions and count those that are sampled from each run
     for event_no, transmission in enumerate(transmission_list):
@@ -90,7 +90,7 @@ The notebook can then be rerun to produce the following results.
 
 ![](results2.png)
 
-The paper measures the doubling times of the simulated epidemics at the 1000th infection, and found a 95% highest density interval (HDI) of 1.35 to 5.44 days. This range of early growth rates suggests that two introductions are unlikely to grow to similar sizes within the first 50,000 infections, and the results conform this.
+The paper measures the doubling times of the simulated epidemics at the 1000th infection, and found a 95% highest density interval (HDI) of 1.35 to 5.44 days. This range of early growth rates suggests that two introductions are unlikely to grow to similar sizes within the first 50,000 infections, and the results confirm this.
 
 Code and instructions for reproducing these results are available at [this branch](https://github.com/nizzaneela/multi-introduction/tree/corrected_with_relative_size_condition) of the author's repository.
 
