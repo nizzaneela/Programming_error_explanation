@@ -8,7 +8,7 @@ $$
 BF = \frac{P(\mathbf{Y}|I_2)}{P(\mathbf{Y} |I_1)}
 $$
 
-Page 14 describes how the Bayes factor is taken from the combination of the posterior and prior odds. Though not stated explicitly, this must refer to multiplication of the posterior odds by the inverse of the prior odds (Bayes' theorem). i.e.:
+Page 14 describes how the Bayes factor is taken from the combination of the posterior and prior odds. Though not stated explicitly, this must refer to multiplication of the posterior odds by the inverse of the prior odds (Bayes' theorem), i.e.:
 
 $$
 BF = \frac{P(I_2|\mathbf{Y})}{P(I_1|\mathbf{Y})} \cdot \frac{P(I_1)}{P(I_2)}
@@ -20,7 +20,7 @@ $$
 BF = \frac{\sum_{S_{MRCA}} P(S_{MRCA} | Y)P(I_2, S_{MRCA})}{\sum_{S_{MRCA}} P(S_{MRCA} | Y)P(I_1, S_{MRCA})} \cdot \frac{P(I_1)}{P(I_2)}
 $$
 
-Page 13 then breaks down the joint probabilities $P(I_2, S_{MRCA})$ and $P(I_1, S_{MRCA})$ over the possible topologies $\tau$ so that the Bayes factor equations can be written:
+Page 13 breaks down the joint probabilities $P(I_2, S_{MRCA})$ and $P(I_1, S_{MRCA})$ over the possible topologies $\tau$ so that the Bayes factor equations can be written:
 
 $$
 BF = \frac{\sum_{S_{MRCA}} \left( P(S_{MRCA} | Y)\left( \sum_{\tau} P(S_{MRCA} | \tau)P(\tau | I_2)P(I_2) \right) \right)}
@@ -28,8 +28,10 @@ BF = \frac{\sum_{S_{MRCA}} \left( P(S_{MRCA} | Y)\left( \sum_{\tau} P(S_{MRCA} |
 \cdot \frac{P(I_1)}{P(I_2)}
 $$
 
+Page 13 then describes how the likelihood of a specific MRCA under the different topologoies ($P(S_{MRCA}|\tau)$ ) is set:
 
-This is misleading in two ways.
+
+
 
 Firstly, 
 
