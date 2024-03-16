@@ -28,7 +28,14 @@ BF = \frac{\sum_{S_{MRCA}} \left( P(S_{MRCA} | Y)\left( \sum_{\tau} P(S_{MRCA} |
 \cdot \frac{P(I_1)}{P(I_2)}
 $$
 
-Page 13 then describes how the likelihood of a specific MRCA under the different topologoies ($P(S_{MRCA}|\tau)$ ) is set:
+Page 13 then describes how the likelihood is set for an MRCA under the specific topology (i.e. $P(S_{MRCA}|\tau)$ ):
+
+![](set.png)
+
+This description is misleading in at least two ways.
+
+Firstly, the topology $(\tau_p, \tau_p)$ encompasses the topologies $(\tau_p, \tau_{1c})$, $(\tau_{1c}, \tau_p)$ and $(\tau_{1c}, \tau_{1c})$. Therefore, the topology likelihoods other than $P((\tau_p, \tau_p)|I_2)$ are redundant to the two introduction hypothesis. Overlooking this may have lead to the error described in #7.
+
 
 
 
