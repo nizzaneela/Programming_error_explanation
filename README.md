@@ -34,9 +34,17 @@ Page 13 then describes how the likelihood is set for an MRCA under the specific 
 
 This description is misleading in at least two ways.
 
-Firstly, the topology $(\tau_p, \tau_p)$ encompasses the topologies $(\tau_p, \tau_{1c})$, $(\tau_{1c}, \tau_p)$ and $(\tau_{1c}, \tau_{1c})$. The likelihoods of encompassed topolgogies are redundant. Overlooking this may have lead to the error described in #7.
+Firstly, the topology $(\tau_p, \tau_p)$ encompasses the topologies $(\tau_p, \tau_{1c})$, $(\tau_{1c}, \tau_p)$ and $(\tau_{1c}, \tau_{1c})$. The likelihoods of encompassed topologies are redundant. Overlooking this may have lead to the error described in #7.
 
-Secondly, the renormalization is never applied over 
+Secondly, the description of the normalization of the likelihoods is wrong. 
+![](2.pmg)
+
+
+
+
+The abode interpretation is supported by the 
+
+, the renormalization is never applied over 
 
 
 
