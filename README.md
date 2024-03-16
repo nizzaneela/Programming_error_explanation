@@ -98,7 +98,6 @@ Code and instructions for reproducing these results are available at [this branc
 #### Limitations
 1. `test_sizes` assumes both introductions are simultaneous. This maximises the likelihood of the two introductions having similar sizes;
 2. Each introduction has a different delay before the first samples due to the different times of first hospitalization. Realistically, the earlier time should apply to both. Therefore, this analysis misses some early samples in the simulation with the later time of first hospitalization. In some cases, missing these samples will drop branch counts below the polytomy threshold, or clade sizes below the relative size threshold, reducing the likelihood of satisfying conditions 1 and 2;
-3. Each introduction has a stable coalescence based on when it reaches 50,000 infections. Realistically, these should be based on when they reach 50,000 combined infections. Therefore, this analysis removes more basal lineages than it should, increasing the likelihood of satisfying condition 1.
+3. Each introduction has a stable coalescence based on when it reaches 50,000 infections. The authors do not explain what aspect of reality the stable coalescence is used to reproduce. Assuming the stable coalescence should instead be based on when simulations reach 50,000 combined infections, this analysis removes more basal lineages than it should, increasing the likelihood of basal polytomies.
 
-Overall, the limitations increase the likelihood of two simulations satisfying conditions 1 and 2, so the resulting Bayes factors may be considered a  rough upper bound.
-
+Overall, the limitations increase the likelihood of two simulations satisfying conditions 1 and 2, so the resulting Bayes factors may be considered a rough upper bound.
