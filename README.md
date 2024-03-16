@@ -23,8 +23,8 @@ $$
 Page 13 then breaks down the joint probabilities $P(I_2, S_{MRCA})$ and $P(I_1, S_{MRCA})$ over the possible topologies $\tau$ so that the Bayes factor equations can be written:
 
 $$
-BF = \frac{\sum_{S_{MRCA}} P(S_{MRCA} | Y)\left( \sum_{\tau} P(S_{MRCA} | \tau)P(\tau | I_2)P(I_2) \right)}
-{\sum_{S_{MRCA}} P(S_{MRCA} | Y)\left( \sum_{\tau} P(S_{MRCA} | \tau)P(\tau | I_1)P(I_1) \right)} 
+BF = \frac{\sum_{S_{MRCA}} \left( P(S_{MRCA} | Y)\left( \sum_{\tau} P(S_{MRCA} | \tau)P(\tau | I_2)P(I_2) \right) \right)}
+{\sum_{S_{MRCA}}\left(  P(S_{MRCA} | Y)\left( \sum_{\tau} P(S_{MRCA} | \tau)P(\tau | I_1)P(I_1) \right) \right)} 
 \cdot \frac{P(I_1)}{P(I_2)}
 $$
 
