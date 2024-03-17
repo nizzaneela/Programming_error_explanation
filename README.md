@@ -46,7 +46,7 @@ This description is wrong. The renormalization is applied to the vector of multi
 - $P(S_{MRCA}|\tau = \tau_{1c}) = (0.5, 0.5, 0, 0)$
 - $P(S_{MRCA}|\tau = (\tau_p,\tau_p)) = (0.25, 0.25, 0.25, 0.25)$
 
-The Bayes factor equation can then be expanded out, with the priors $P(I_2)/P(I_1)$ being cancelled their inverse $P(I_1)/P(I_2)$:
+These allow the equation to be expanded out, with the priors $P(I_2)/P(I_1)$ being cancelled their inverse $P(I_1)/P(I_2)$:
 
 $$
 BF = 
@@ -56,7 +56,7 @@ $$
 
 This is mathematically identical to the authors' equations, but simpler because it avoids the superfluous marginalization over the sub-topologies $(\tau_p, \tau_{1c})$, $(\tau_{1c}, \tau_p)$ and $(\tau_{1c}, \tau_{1c})$.
 
-The posterior probabilities $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and P(S_{T/T}|Y) were generated with the phylodynamic inference software [BEAST](https://beast.community/). Results from rooting the phylogenies at a putative common ancestor (recCA) and from not constraining the root (unconstrained) are shown in [Table 1](https://www.science.org/doi/10.1126/science.abp8337#T1). With these values, the Bayes factors can be written:
+The authors inferred the posterior probabilities $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and P(S_{T/T}|Y) using the phylodynamic software [BEAST](https://beast.community/). Results from rooting the phylogenies at a putative common ancestor (recCA) and from not constraining the root (unconstrained) are shown in [Table 1](https://www.science.org/doi/10.1126/science.abp8337#T1). With these values, the equations become:
 
 $$
 BF_{unconstrained} = \frac{P((\tau_P,\tau_P)|I_2)} 
@@ -66,25 +66,29 @@ BF_{recCA} = \frac{P((\tau_P,\tau_P)|I_2)}
 { 1.72 \cdot P(\tau_{1c}|I_1) + 0.28 P(\tau_{2c}|I_1)}
 $$
 
-The likelihoods P((\tau_P,\tau_P)|I_2)$, $P(\tau_{1c}|I_1)$ and $P(\tau_{2c}|I_1)$ were measured from the frequencies with which successful simulated introductions produced the topologies $\tau_p$, $\tau_{1c}$ and $\tau_{2c}$.
+The authors measured the likelihoods $P(\tau_P|I_1)$, $P(\tau_{1c}|I_1)$ and $P(\tau_{2c}|I_1)$ from the frequencies with which successful simulated introductions produced the topologies $\tau_p$, $\tau_{1c}$ and $\tau_{2c}$. $P((\tau_P,\tau_P)|I_2)$ was then calculated as $P(\tau_P|I_1)^2$
 
+ $\tau_p$ is defined on page 10:
 
+![](tau_p.png)
 
-$P((\tau_P,\tau_P)|I_2)$ is the likelihood of two successful introductions producing two clades where:
-1. there is a polytomy at the root of each clade.
+Therefore, $P((\tau_p, \tau_p)|I_2)$ is the likelihood of two successful introductions producing two clades where there is a polytomy at the root of each clade.
 
-$P(\tau_{1c}|I_1)$ and $P(\tau_{2c}|I_1)$ are the likelihoods of a single successful introduction producing two clades where:
-1. there is a polytomy at the root of each clade;
-2. each clade includes 30-70% of the total taxa (taxa being sampled from the first 50,000 infections); and
-3. the clades are separated by two mutations (with one being basal for $P(\tau_{1c}|I_1)$ and both being derived for $P(\tau_{2c}|I_1)$ ).
+$\tau_{1c}$ and  $\tau_{2c}$ are defined on page 11:
 
-The additional conditions 2 and 3 reduce the single introduction likelihoods. This makes the published Bayes factors (4.2 and 4.3) meaningless, since they may be caused by this reduction rather than a higher plausiblity of the two introduction hypothesis.
+![](tau_12c.png)
 
-This can be corrected by applying conditions 2 and 3 to the two introduction likelihood $P((\tau_P,\tau_P)|I_2)$.
+Therefore, $P(\tau_{1c}|I_1)$ and $P(\tau_{2c}|I_1)$ are the likelihoods of a single successful introduction producing two clades where there is a polytomy at the root of each clade, and
+1. each clade includes 30-70% of the total taxa (taxa being sampled from the first 50,000 infections); and
+2. the clades are separated by two mutations (with one being basal for $P(\tau_{1c}|I_1)$ and both being derived for $P(\tau_{2c}|I_1)$ ).
 
-This comment examines the effects of condition 2. A subsequent comment will examine condition 3.
+The additional conditions 1 and 2 reduce the single introduction likelihoods. This makes the published Bayes factors (4.2 and 4.3) meaningless, since they may be caused by this reduction rather than a higher plausiblity of the two introduction hypothesis.
 
-Two simulations can be be tested against condition 2 by going through the first 50,000 infections amongst both, and comparing the number of samples from each, e.g.:
+This can be corrected by applying conditions 1 and 2 to the two introduction likelihood $P((\tau_P,\tau_P)|I_2)$.
+
+This comment examines the effects of condition 1. A subsequent comment will examine condition 2.
+
+Two simulations can be be tested against condition 1 by going through the first 50,000 infections amongst both, and comparing the number of samples from each, e.g.:
 ```
 def test_sizes(run_1,run_2):
     # read samples into seperate sets for each run
@@ -118,7 +122,7 @@ def test_sizes(run_1,run_2):
         return False
 ```
 
-The likelihood of two successful introductions satisfying conditions 1 and 2 can be measured by repeatedly drawing random pairs of simulations and testing them against both conditions, e.g.:
+The likelihood of two successful introductions producing basal polytomies and satisfying condition 1 can be measured by repeatedly drawing random pairs of simulations and testing them against both conditions, e.g.:
 ```
 # sample 1100 topologies, as for the others
 for i in range(1100):
@@ -148,7 +152,7 @@ The notebook can then be rerun to produce the following results.
 
 ![](results2.png)
 
-Requiring the two introduction hypothesis to produce similarly sized clades, just as the one introduction hypothesis does already, reduces the Bayes factors by a factor of six.
+Removing the inconsistency in the relative size condition reduces the Bayes factors by a factor of six.
 
 The paper measures the two week doubling times of the simulated epidemics at the 1000th infection, and found a 95% highest density interval (HDI) of 1.35 to 5.44 days. This range of early growth rates suggests that two introductions are unlikely to grow to similar sizes within the first 50,000 infections, and the results confirm this.
 
@@ -156,8 +160,8 @@ Code and instructions for reproducing these results are available at [this branc
 
 #### Limitations
 1. `test_sizes` assumes both introductions are simultaneous. This maximises the likelihood of the two introductions having similar sizes;
-2. Each introduction has a different delay before the first samples due to the different times of first hospitalization. Realistically, the earlier time should apply to both. Therefore, this analysis misses some early samples in the simulation with the later time of first hospitalization. In some cases, missing these samples will drop branch counts below the polytomy threshold, or clade sizes below the relative size threshold, reducing the likelihood of satisfying conditions 1 and 2;
-3. Each introduction has a stable coalescence based on when it reaches 50,000 infections. The authors do not explain what aspect of reality the stable coalescence is used to reproduce. Assuming the stable coalescence should instead be based on when simulations reach 50,000 combined infections, this analysis removes more basal lineages than it should, increasing the likelihood of basal polytomies.
+2. Each introduction has a different delay before the first samples due to the different times of first hospitalization. Realistically, the earlier time should apply to both. Therefore, this analysis misses some early samples in the simulation with the later time of first hospitalization. In some cases, missing these samples will drop branch counts below the polytomy threshold, or clade sizes below the relative size threshold, reducing the likelihood of a basal polytomy and satisfying condition 1;
+3. Each introduction has a stable coalescence based on when it reaches 50,000 infections. Assuming the stable coalescence should instead be based on when simulations reach 50,000 combined infections, this analysis removes more basal lineages than it should, increasing the likelihood of basal polytomies.
 
 Overall, the limitations increase the likelihood of two simulations satisfying conditions 1 and 2, so the resulting Bayes factors may be considered a rough upper bound.
 
