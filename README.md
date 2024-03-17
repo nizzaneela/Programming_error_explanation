@@ -1,4 +1,4 @@
-The derivation of the Bayes factors is described over pages 11 to 14 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). The approach is set out on page 13:
+The derivation of the Bayes factors is described over pages 11 to 14 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). The approach is set out on page 11:
 
 ![](approach.png)
 
@@ -8,19 +8,19 @@ $$
 BF = \frac{P(\mathbf{Y}|I_2)}{P(\mathbf{Y} |I_1)}
 $$
 
-Page 14 describes how the Bayes factor is taken from the combination of the posterior and prior odds. Though not stated explicitly, this must refer to multiplication of the posterior odds by the inverse of the prior odds (Bayes' theorem), i.e.:
+Page 14 describes how the Bayes factor is taken from the combination of the posterior and prior odds:
 
 $$
 BF = \frac{P(I_2|\mathbf{Y})}{P(I_1|\mathbf{Y})} \cdot \frac{P(I_1)}{P(I_2)}
 $$
 
-Page 12 rewrites the posterior probabilities as joint probabilities and breaks them down in terms of the different MRCA haplotypes $S_{MRCA}$ so that the Bayes factor equations can be written:
+Page 12 rewrites the posterior probabilities as joint probabilities and breaks them down in terms of the different MRCA haplotypes $S_{MRCA}$:
 
 $$
 BF = \frac{\sum_{S_{MRCA}} P(S_{MRCA} | Y)P(I_2, S_{MRCA})}{\sum_{S_{MRCA}} P(S_{MRCA} | Y)P(I_1, S_{MRCA})} \cdot \frac{P(I_1)}{P(I_2)}
 $$
 
-Page 13 breaks down the joint probabilities $P(I_2, S_{MRCA})$ and $P(I_1, S_{MRCA})$ over the possible topologies $\tau$ so that the Bayes factor equations can be written:
+Page 13 breaks down the joint probabilities $P(I_2, S_{MRCA})$ and $P(I_1, S_{MRCA})$ over the possible topologies $\tau$:
 
 $$
 BF = \frac{\sum_{S_{MRCA}} \left( P(S_{MRCA} | Y)\left( \sum_{\tau} P(S_{MRCA} | \tau)P(\tau | I_2)P(I_2) \right) \right)}
@@ -28,39 +28,47 @@ BF = \frac{\sum_{S_{MRCA}} \left( P(S_{MRCA} | Y)\left( \sum_{\tau} P(S_{MRCA} |
 \cdot \frac{P(I_1)}{P(I_2)}
 $$
 
-Page 13 then describes how the likelihood is set for an MRCA under the specific topology (i.e. $P(S_{MRCA}|\tau)$ ):
+Page 13 then describes the compatibility between the different topologies and MRCA haploytpes:
 
-![](set.png)
+![](compatibility.png)
 
-This description is misleading in at least two ways.
+As noted in #7, the topology $(\tau_p, \tau_p)$ encompasses the sub-topologies $(\tau_p, \tau_{1c})$, $(\tau_{1c}, \tau_p)$ and $(\tau_{1c}, \tau_{1c})$. Therefore, it is sufficient to state:
+- $\tau = \tau_{2c}$ is compatible with $S_{MRCA} \in \{S_{C/C}, S_{T/T}\}$
+- $\tau = \tau_{1c}$ is compatible with $S_{MRCA} \in \{S_{A}, S_{B}\}$
+- $\tau = (\tau_{P}, \tau_{P})$ is compatible with $S_{MRCA} \in \{S_{A}, S_{B}, S_{C/C}, S_{T/T}\}$
 
-Firstly, the topology $(\tau_p, \tau_p)$ encompasses the topologies $(\tau_p, \tau_{1c})$, $(\tau_{1c}, \tau_p)$ and $(\tau_{1c}, \tau_{1c})$. The likelihoods of encompassed topologies are redundant. Overlooking this may have lead to the error described in #7.
+Page 13 then describes how the compatbility statements are used define $P(S_{MRCA}|\tau)$:
 
-Secondly, the description of the normalization of the likelihoods is wrong. 
-![](2.pmg)
+![](renorm.png)
 
+This description is wrong. The renormalization is applied to the vector of multiple MRCA haplotypes $(A, B, C/C, T/T)$ that are compatible with a topology. The renormalised vectors for the three relevant topologies are:
+- $P(S_{MRCA}|\tau = \tau_{2c}) = (0, 0, 0.5, 0.5)$
+- $P(S_{MRCA}|\tau = \tau_{1c}) = (0.5, 0.5, 0, 0)$
+- $P(S_{MRCA}|\tau = (\tau_p,\tau_p)) = (0.25, 0.25, 0.25, 0.25)$
 
-
-
-The abode interpretation is supported by the 
-
-, the renormalization is never applied over 
-
-
-
-Firstly, 
-
-
-
-$\left[ \sum_{\tau} P(S_{MRCA} | \tau)P(\tau | I_n)P(I_n) \right]$
-
-The Bayes factors weigh the single introduction likelihoods according to the posterior probabilites of their compatible MRCA haplotypes. Defining weights $\alpha_{1c}$ and $\alpha_{2c}$ as $\frac{2 \cdot (P(S_A|Y) + P(S_B|Y))}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ and $\frac{2 \cdot (P(S_{C/C}|Y) + P(S_{T/T}|Y)}{P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y)}$ , respectively, the Bayes factor can be written as:
+The Bayes factor equation can then be expanded out, with the priors $P(I_2)/P(I_1)$ being cancelled their inverse $P(I_1)/P(I_2)$:
 
 $$
 BF = 
-\frac{P((\tau_P,\tau_P)|I_2)} 
-{ \alpha_{1c} \cdot P(\tau_{1c}|I_1) + \alpha_{2c} \cdot P(\tau_{2c}|I_1)}
+\frac{0.25 \cdot P((\tau_P,\tau_P)|I_2) \cdot \left( P(S_A|Y) + P(S_B|Y) + P(S_{C/C}|Y) + P(S_{T/T}|Y) \right)} 
+{ 0.5 \cdot P(\tau_{1c}|I_1) \cdot \left( P(S_A|Y) + P(S_B|Y) \right) + 0.5 \cdot P(\tau_{2c}|I_1)\cdot \left( P(S_{C/C}|Y) + P(S_{T/T}|Y) \right)}
 $$
+
+This is mathematically identical to the authors' equations, but simpler because it avoids the superfluous marginalization over the sub-topologies $(\tau_p, \tau_{1c})$, $(\tau_{1c}, \tau_p)$ and $(\tau_{1c}, \tau_{1c})$.
+
+The posterior probabilities $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and P(S_{T/T}|Y) were generated with the phylodynamic inference software [BEAST](https://beast.community/). Results from rooting the phylogenies at a putative common ancestor (recCA) and from not constraining the root (unconstrained) are shown in [Table 1](https://www.science.org/doi/10.1126/science.abp8337#T1). With these values, the Bayes factors can be written:
+
+$$
+BF_{unconstrained} = \frac{P((\tau_P,\tau_P)|I_2)} 
+{ 1.76 \cdot P(\tau_{1c}|I_1) + 0.24 P(\tau_{2c}|I_1)},
+\quad
+BF_{recCA} = \frac{P((\tau_P,\tau_P)|I_2)} 
+{ 1.72 \cdot P(\tau_{1c}|I_1) + 0.28 P(\tau_{2c}|I_1)}
+$$
+
+The likelihoods P((\tau_P,\tau_P)|I_2)$, $P(\tau_{1c}|I_1)$ and $P(\tau_{2c}|I_1)$ were measured from the frequencies with which successful simulated introductions produced the topologies $\tau_p$, $\tau_{1c}$ and $\tau_{2c}$.
+
+
 
 $P((\tau_P,\tau_P)|I_2)$ is the likelihood of two successful introductions producing two clades where:
 1. there is a polytomy at the root of each clade.
