@@ -56,7 +56,7 @@ $$
 
 This is mathematically identical to the authors' equations, but simpler because it avoids the superfluous marginalization over the sub-topologies $(\tau_p, \tau_{1c})$, $(\tau_{1c}, \tau_p)$ and $(\tau_{1c}, \tau_{1c})$.
 
-The authors inferred the posterior probabilities $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and $P(S_{T/T}|Y)$ using the phylodynamic software [BEAST](https://beast.community/), producing results shown in [Table 1](https://www.science.org/doi/10.1126/science.abp8337#T1). USing the values for the recCA and unconstrained rootings, the equations become:
+The authors inferred the posterior probabilities $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and $P(S_{T/T}|Y)$ using the phylodynamic software [BEAST](https://beast.community/), producing results shown in [Table 1](https://www.science.org/doi/10.1126/science.abp8337#T1). The results for the recCA and unconstrained rootings produce the equations:
 
 $$
 BF_{uncon.} = \frac{P((\tau_P,\tau_P)|I_2)} 
