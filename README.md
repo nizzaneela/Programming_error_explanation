@@ -37,7 +37,7 @@ As noted in #7, the topology $(\tau_p, \tau_p)$ encompasses the sub-topologies $
 - $\tau = \tau_{1c}$ is compatible with $S_{MRCA} \in \{S_{A}, S_{B}\}$
 - $\tau = (\tau_{P}, \tau_{P})$ is compatible with $S_{MRCA} \in \{S_{A}, S_{B}, S_{C/C}, S_{T/T}\}$
 
-Page 13 then describes how the compatbility statements are used define $P(S_{MRCA}|\tau)$:
+Page 13 then describes how the compatbility statements define $P(S_{MRCA}|\tau)$:
 
 ![](renorm.png)
 
@@ -46,7 +46,7 @@ This description is wrong. The renormalization is applied to the vector of multi
 - $P(S_{MRCA}|\tau = \tau_{1c}) = (0.5, 0.5, 0, 0)$
 - $P(S_{MRCA}|\tau = (\tau_p,\tau_p)) = (0.25, 0.25, 0.25, 0.25)$
 
-These allow the equation to be expanded out, with the priors $P(I_2)/P(I_1)$ being cancelled their inverse $P(I_1)/P(I_2)$:
+These allow the equation to be expanded out, with the priors $P(I_2)/P(I_1)$ cancelled by their inverse $P(I_1)/P(I_2)$:
 
 $$
 BF = 
@@ -56,23 +56,23 @@ $$
 
 This is mathematically identical to the authors' equations, but simpler because it avoids the superfluous marginalization over the sub-topologies $(\tau_p, \tau_{1c})$, $(\tau_{1c}, \tau_p)$ and $(\tau_{1c}, \tau_{1c})$.
 
-The authors inferred the posterior probabilities $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and P(S_{T/T}|Y) using the phylodynamic software [BEAST](https://beast.community/). Results from rooting the phylogenies at a putative common ancestor (recCA) and from not constraining the root (unconstrained) are shown in [Table 1](https://www.science.org/doi/10.1126/science.abp8337#T1). With these values, the equations become:
+The authors inferred the posterior probabilities $P(S_A|Y)$, $P(S_B|Y)$, $P(S_{C/C}|Y)$ and $P(S_{T/T}|Y)$ using the phylodynamic software [BEAST](https://beast.community/), producing results shown in [Table 1](https://www.science.org/doi/10.1126/science.abp8337#T1). USing the values for the recCA and unconstrained rootings, the equations become:
 
 $$
-BF_{unconstrained} = \frac{P((\tau_P,\tau_P)|I_2)} 
+BF_{uncon.} = \frac{P((\tau_P,\tau_P)|I_2)} 
 { 1.76 \cdot P(\tau_{1c}|I_1) + 0.24 P(\tau_{2c}|I_1)},
 \quad
 BF_{recCA} = \frac{P((\tau_P,\tau_P)|I_2)} 
 { 1.72 \cdot P(\tau_{1c}|I_1) + 0.28 P(\tau_{2c}|I_1)}
 $$
 
-The authors measured the likelihoods $P(\tau_P|I_1)$, $P(\tau_{1c}|I_1)$ and $P(\tau_{2c}|I_1)$ from the frequencies with which successful simulated introductions produced the topologies $\tau_p$, $\tau_{1c}$ and $\tau_{2c}$. $P((\tau_P,\tau_P)|I_2)$ was then calculated as $P(\tau_P|I_1)^2$
+The authors measured the likelihoods $P(\tau_P|I_1)$, $P(\tau_{1c}|I_1)$ and $P(\tau_{2c}|I_1)$ from the frequencies with which successful simulated introductions produced the topologies $\tau_p$, $\tau_{1c}$ and $\tau_{2c}$. 
 
  $\tau_p$ is defined on page 10:
 
 ![](tau_p.png)
 
-Therefore, $P((\tau_p, \tau_p)|I_2)$ is the likelihood of two successful introductions producing two clades where there is a polytomy at the root of each clade.
+$P((\tau_P,\tau_P)|I_2)$ was then calculated as $P(\tau_P|I_1)^2$. Therefore, $P((\tau_p, \tau_p)|I_2)$ is the likelihood of two successful introductions producing two clades where there is a polytomy at the root of each clade.
 
 $\tau_{1c}$ and  $\tau_{2c}$ are defined on page 11:
 
@@ -163,6 +163,6 @@ Code and instructions for reproducing these results are available at [this branc
 2. Each introduction has a different delay before the first samples due to the different times of first hospitalization. Realistically, the earlier time should apply to both. Therefore, this analysis misses some early samples in the simulation with the later time of first hospitalization. In some cases, missing these samples will drop branch counts below the polytomy threshold, or clade sizes below the relative size threshold, reducing the likelihood of a basal polytomy and satisfying condition 1;
 3. Each introduction has a stable coalescence based on when it reaches 50,000 infections. Assuming the stable coalescence should instead be based on when simulations reach 50,000 combined infections, this analysis removes more basal lineages than it should, increasing the likelihood of basal polytomies.
 
-Overall, the limitations increase the likelihood of two simulations satisfying conditions 1 and 2, so the resulting Bayes factors may be considered a rough upper bound.
+Overall, the limitations increase the likelihood of two simulations producing two basal polytomies and satisfying conditions 1, so the corrected Bayes factors may be considered a rough upper bound.
 
 It is theoretically possible that applying condition 3 to the two introduction likelihoods could increase the Bayes factors. This would require an increase in the likelihood of two introductions producing topologies compatible with the more probable MRCA haplotypes (i.e. A or B). This is considered unlikely, but will be confirmed either way in the next comment.
