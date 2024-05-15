@@ -24,9 +24,12 @@ BF_{recCA} = \frac{ 1.72 \cdot P((\tau_p,\tau_p)\_{1c}|I_2) + 0.28\cdot  P(\tau_
 { 1.72 \cdot P(\tau_{1c}|I_1) + 0.28\cdot  P(\tau_{2c}|I_1)}
 $$
 
-Satisfying the separation constraint depends on the number of mutations between the MRCA and each clade root. This includes mutations between the MRCA and each introduction, and between each introduction and subsequent clade root.
+Satisfying the separation constraint depends on the number of mutations between the MRCA and each clade root ("stable coalescence"). This includes mutations between the MRCA and each introduction, and between each introduction and subsequent clade root.
 
-The avcerage time between n, and mutations between the MRCA and introduction.
+The time between each introduction and subsequent clade root is usually the sum of a small number of Poisson processes. The simulated mutations are also a Poisson process and have a similar expected waiting time (~13 days). Therefore, the number of mutations between each introduction and subsequent clade root should be roughly geometrically distributed, with an expected value around 1. [Results](https://github.com/nizzaneela/multi-introduction/blob/corrected_with_relative_size_and_separation_conditions/notebooks/cladeAnalysis.ipynb) from simulating mutations between each introduction and subsequent clade root in the corrected phylogenies from #11 agree; 50.5% have no mutations, 26.0% have one mutation, 12.4% have two mutations and 11.0% have three or more mutations.
+
+The authors do not mention the number of mutations between the MRCA and each introduction. However, it cannot be assumed that the number of mutations between the MRCA and an introduction always combines with the number of mutations between the introduction and clade root and the number of mutations between the MRCA and the other clade root in a way that somehow ensures two clades always satisfy the two mutation separation constraint. There may be historical information or expert opinion that can inform strong priors for these mutations, but it is not in the paper and beyond the scope of this comment. Absent such information, a model is necessary.  
+
 
 The average time between each introduction and subsequent clade root
 
