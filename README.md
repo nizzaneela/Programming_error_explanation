@@ -1,3 +1,35 @@
+Two successful introductions have a chance of satisfying the two mutation separation constraint ("condition 2" described in #12) with one of two different root shapes:
+- a single clade descending on a two-mutation branch from a basal, ancestral clade (here denoted $(\tau_p,\tau_p)_{1c}$); and
+- two clades descending on one-mutation branches from the MRCA (here denoted $(\tau_p,\tau_p)_{2c}$).
+
+These are the same shapes as, respectively, the single introduction topologies **C** and **B** depicted in [Figure 2](https://www.science.org/doi/10.1126/science.abp8337#F2) (and also denoted as $\tau_{1c}$ and $\tau_{2c}$, respectively). They therefore have corresponding compatibility with MRCA haplotypes:
+- $\tau = \tau_{1c}$ is compatible with $S_{MRCA} \in \{S_{A}, S_{B}\}$
+- $\tau = \tau_{2c}$ is compatible with $S_{MRCA} \in \{S_{C/C}, S_{T/T}\}$
+- $\tau = (\tau_p,\tau_p)\_{1c}$ is compatible with $S_{MRCA} \in \{S_{A}, S_{B}\}$
+- $\tau = (\tau_p,\tau_p)\_{2c}$ is compatible with $S_{MRCA} \in \{S_{C/C}, S_{T/T}\}$
+
+The compatibility vectors $P(S_{MRCA}|\tau)$ for the relevant topologies then become:
+- $P(S_{MRCA}|\tau = \tau_{1c}) = (0.5, 0.5, 0, 0)$
+- $P(S_{MRCA}|\tau = \tau_{2c}) = (0, 0, 0.5, 0.5)$
+- $P(S_{MRCA}|\tau = (\tau_p,\tau_p)\_{1c}) = (0.5, 0.5, 0, 0)$
+- $P(S_{MRCA}|\tau = (\tau_p,\tau_p)\_{2c}) = (0, 0, 0.5, 0.5)$
+
+The Bayes factor equations for the unconstrained and recCA rootings then become:
+
+$$
+BF_{uncon.} = \frac{ 1.76 \cdot P((\tau_p,\tau_p)\_{1c}|I_2) + 0.24\cdot  P(\tau_p,\tau_p)\_{2c}|I_2)}
+{ 1.76 \cdot P(\tau_{1c}|I_1) + 0.24\cdot  P(\tau_{2c}|I_1)},
+\quad
+BF_{recCA} = \frac{ 1.72 \cdot P((\tau_p,\tau_p)\_{1c}|I_2) + 0.28\cdot  P(\tau_p,\tau_p)\_{2c}|I_2)}
+{ 1.72 \cdot P(\tau_{1c}|I_1) + 0.28\cdot  P(\tau_{2c}|I_1)}
+$$
+
+Satisfying the separation constraint depends on the number of mutations between the MRCA and each clade root. This includes mutations between the MRCA and each introduction, and between each introduction and subsequent clade root.
+
+The avcerage time between n, and mutations between the MRCA and introduction.
+
+The average time between each introduction and subsequent clade root
+
 ### recCA - relaxed
 |  |$t_2$ = 0 days | $t_2$ = 1 day | $t_2$ = 2 days | $t_2$ = 4 days | $t_2$ = 7 days | $t_2$ = 14 days | $t_2$ = 28 days |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -46,7 +78,7 @@
 
 
 
-
+The published results look suspicious to me, but not egregious. I'll get p-values for them eventually and doubt they'll be extreme. I assume UCSD investigated the errors that were corrected, and didn't find anything. Maybe FOIA could turn up more, but 
 
 The derivation of the Bayes factors is described over pages 11 to 14 of the [Supplementary Materials](https://www.science.org/doi/suppl/10.1126/science.abp8337/suppl_file/science.abp8337_sm.v2.pdf). The approach is set out on page 11:
 
