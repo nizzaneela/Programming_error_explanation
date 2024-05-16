@@ -1,5 +1,8 @@
+
+
+
 Two successful introductions have a chance of satisfying the two mutation separation constraint as:
-- a single clade descending on a two-mutation branch from a basal, ancestral clade (here denoted $(\tau_p,\tau_p)_{1c}$); and
+- a single clade descending on a two-mutation branch from a basal clade (here denoted $(\tau_p,\tau_p)_{1c}$); and
 - two clades descending on one-mutation branches from the MRCA (here denoted $(\tau_p,\tau_p)_{2c}$).
 
 These correspond, respectively, to the single introduction topologies $\tau_{1c}$ and $\tau_{2c}$, and have the same compatibility:
@@ -24,17 +27,14 @@ BF_{recCA} = \frac{ 1.72 \cdot P((\tau_p,\tau_p)\_{1c}|I_2) + 0.28\cdot  P(\tau_
 { 1.72 \cdot P(\tau_{1c}|I_1) + 0.28\cdot  P(\tau_{2c}|I_1)}
 $$
 
-The likelihoods $P((\tau_p,\tau_p)\_{1c}|I_2)$ and $P(\tau_p,\tau_p)\_{2c}|I_2)$ can be measured by drawing pairs of successful simulations and counting the frequency with which they each have basal polytomies, satisfy the relative size constraint  and conform to the relevant topology.
-
-For two introductions, the topology is determined by the combined mutations between the MRCA and each introduction, and between each introduction and subsequent clade root.
-
-The number of mutations between each introduction and subsequent clade root can be sampled using the molecular clock and the time between each introduction and subsequent clade root, which is provided by the simulations.
-
-The numbers of mutations between the MRCA and each introduction can be sampled using the molecular clock and the times between the MRCA and each introduction, where:
+The likelihoods $P((\tau_p,\tau_p)\_{1c}|I_2)$ and $P(\tau_p,\tau_p)\_{2c}|I_2)$ can be measured by drawing pairs of successful simulations and counting the frequency with which they produce basal polytomies, satisfy the relative size constraint and conform to the relevant topology. The topology is determined by the combined mutations between the MRCA and each introduction, and between each introduction and subsequent clade root. The number of mutations between each introduction and subsequent clade root can be sampled using the molecular clock and the time between each introduction and subsequent clade root, which is provided by the simulations. The numbers of mutations between the MRCA and each introduction can be sampled using the molecular clock and the times between the MRCA and each introduction, where:
 - the time between the MRCA and the first introduction is sampled from an exponential distribution with expected value $t_1$; and
 - the time between the first and second introductions is sampled from an exponential distribution with expected value $t_2$.
 
-This model allows Bayes factors to be computed for a range of the parameters $t_1$ (representing the upstream effective population size) and $t_2$ (representing the introduction intensity).
+This model allows exploration across different values for the parameters $t_1$ (representing the upstream effective population size) and $t_2$ (representing the introduction intensity).
+
+The time between the first and second introductions can also be incorporated into the relative size test.
+
 
 
 
