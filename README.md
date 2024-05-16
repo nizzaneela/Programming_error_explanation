@@ -1,8 +1,8 @@
-Two successful introductions have a chance of satisfying the two mutation separation constraint ("condition 2" described in #12) with one of two different topologies:
+Two successful introductions have a chance of satisfying the two mutation separation constraint as:
 - a single clade descending on a two-mutation branch from a basal, ancestral clade (here denoted $(\tau_p,\tau_p)_{1c}$); and
 - two clades descending on one-mutation branches from the MRCA (here denoted $(\tau_p,\tau_p)_{2c}$).
 
-These are the same shapes as, respectively, the single introduction topologies **C** and **B** depicted in [Figure 2](https://www.science.org/doi/10.1126/science.abp8337#F2) (denoted $\tau_{1c}$ and $\tau_{2c}$, respectively). They have corresponding compatibility with MRCA haplotypes:
+These correspond, respectively, to the single introduction topologies $\tau_{1c}$ and $\tau_{2c}$, and have the same compatibility:
 - $\tau = \tau_{1c}$ is compatible with $S_{MRCA} \in \{S_{A}, S_{B}\}$
 - $\tau = \tau_{2c}$ is compatible with $S_{MRCA} \in \{S_{C/C}, S_{T/T}\}$
 - $\tau = (\tau_p,\tau_p)\_{1c}$ is compatible with $S_{MRCA} \in \{S_{A}, S_{B}\}$
@@ -24,11 +24,23 @@ BF_{recCA} = \frac{ 1.72 \cdot P((\tau_p,\tau_p)\_{1c}|I_2) + 0.28\cdot  P(\tau_
 { 1.72 \cdot P(\tau_{1c}|I_1) + 0.28\cdot  P(\tau_{2c}|I_1)}
 $$
 
-The likelihoods $P((\tau_p,\tau_p)\_{1c}|I_2)$ and $P(\tau_p,\tau_p)\_{2c}|I_2)$ can be measured by drawing pairs of successful simulations and counting the frequency with which they each have basal polytomies, satisfy the relative size constraint ("condition 1" described in #12) and conform to the relevant topology ($(\tau_p,\tau_p)\_{1c}$ or $(\tau_p,\tau_p)\_{2c}$, respectively).
+The likelihoods $P((\tau_p,\tau_p)\_{1c}|I_2)$ and $P(\tau_p,\tau_p)\_{2c}|I_2)$ can be measured by drawing pairs of successful simulations and counting the frequency with which they each have basal polytomies, satisfy the relative size constraint  and conform to the relevant topology.
 
-For two introductions, the topology depends on the combination of mutations between the MRCA and each introduction, and between each introduction and subsequent clade root.
+For two introductions, the topology is determined by the combined mutations between the MRCA and each introduction, and between each introduction and subsequent clade root.
 
-Mutations between each introduction and subsequent clade root can be generated using the corrected phylogenies from #11 and the molecular clock used to simulate mutations over the rest of the phylogenies. The [results](https://github.com/nizzaneela/multi-introduction/blob/corrected_with_relative_size_and_separation_conditions/notebooks/cladeAnalysis.ipynb) are roughly geometrically distributed: 50.5% have no mutations, 26.0% have one mutation, 12.4% have two mutations and 11.0% have three or more mutations.
+The number of mutations between each introduction and subsequent clade root can be sampled using the molecular clock and the time between each introduction and subsequent clade root, which is provided by the simulations.
+
+The numbers of mutations between the MRCA and each introduction can be sampled using the molecular clock and the times between the MRCA and each introduction, where:
+- the time between the MRCA and the first introduction is sampled from an exponential distribution with expected value $t_1$; and
+- the time between the first and second introductions is sampled from an exponential distribution with expected value $t_2$.
+
+This model allows Bayes factors to be computed for a range of the parameters $t_1$ (representing the upstream effective population size) and $t_2$ (representing the introduction intensity).
+
+
+
+
+
+can be generated using the corrected phylogenies from #11 and the molecular clock used to simulate mutations over the rest of the phylogenies. The [results](https://github.com/nizzaneela/multi-introduction/blob/corrected_with_relative_size_and_separation_conditions/notebooks/cladeAnalysis.ipynb) are roughly geometrically distributed: 50.5% have no mutations, 26.0% have one mutation, 12.4% have two mutations and 11.0% have three or more mutations.
 
 Mutations between the MRCA and each introduction are not mentioned by the authors. In particular, there is no information in the paper that could inform a strong prior for these mutations. Absent such information, a model with minimal assumptions at least allow possibilities to be explored across a range of parameters that a physically meaningful.
 
