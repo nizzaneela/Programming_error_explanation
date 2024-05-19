@@ -1,17 +1,17 @@
 
 
 
-Two successful introductions have a chance of satisfying the two mutation separation constraint as:
-- a single clade descending on a two-mutation branch from a basal clade (here denoted $(\tau_p,\tau_p)_{1c}$); and
+Two successful introductions can satisfy the two mutation separation constraint either as:
+- a single clade descending on a two-mutation branch from a basal clade (here denoted $(\tau_p,\tau_p)_{1c}$); or
 - two clades descending on one-mutation branches from the MRCA (here denoted $(\tau_p,\tau_p)_{2c}$).
 
-These correspond, respectively, to the single introduction topologies $\tau_{1c}$ and $\tau_{2c}$, and have the same compatibility:
+These correspond, respectively, to the single introduction topologies $\tau_{1c}$ and $\tau_{2c}$. They have the same compatibility:
 - $\tau = \tau_{1c}$ is compatible with $S_{MRCA} \in \{S_{A}, S_{B}\}$
 - $\tau = \tau_{2c}$ is compatible with $S_{MRCA} \in \{S_{C/C}, S_{T/T}\}$
 - $\tau = (\tau_p,\tau_p)\_{1c}$ is compatible with $S_{MRCA} \in \{S_{A}, S_{B}\}$
 - $\tau = (\tau_p,\tau_p)\_{2c}$ is compatible with $S_{MRCA} \in \{S_{C/C}, S_{T/T}\}$
 
-The compatibility vectors $P(S_{MRCA}|\tau)$ for the relevant topologies then become:
+With these more specific two-introduction topologies, the compatibility vectors $P(S_{MRCA}|\tau)$ become:
 - $P(S_{MRCA}|\tau = \tau_{1c}) = (0.5, 0.5, 0, 0)$
 - $P(S_{MRCA}|\tau = \tau_{2c}) = (0, 0, 0.5, 0.5)$
 - $P(S_{MRCA}|\tau = (\tau_p,\tau_p)\_{1c}) = (0.5, 0.5, 0, 0)$
@@ -27,16 +27,67 @@ BF_{recCA} = \frac{ 1.72 \cdot P((\tau_p,\tau_p)\_{1c}|I_2) + 0.28\cdot  P(\tau_
 { 1.72 \cdot P(\tau_{1c}|I_1) + 0.28\cdot  P(\tau_{2c}|I_1)}
 $$
 
-The likelihoods $P((\tau_p,\tau_p)\_{1c}|I_2)$ and $P(\tau_p,\tau_p)\_{2c}|I_2)$ can be measured by drawing pairs of successful simulations and counting the frequency with which they produce basal polytomies, satisfy the relative size constraint and conform to the relevant topology. The topology is determined by the combined mutations between the MRCA and each introduction, and between each introduction and subsequent clade root. The number of mutations between each introduction and subsequent clade root can be sampled using the molecular clock and the time between each introduction and subsequent clade root, which is provided by the simulations. The numbers of mutations between the MRCA and each introduction can be sampled using the molecular clock and the times between the MRCA and each introduction, where:
-- the time between the MRCA and the first introduction is sampled from an exponential distribution with expected value $t_1$; and
-- the time between the first and second introductions is sampled from an exponential distribution with expected value $t_2$.
-
-This model allows exploration across different values for the parameters $t_1$ (representing the upstream effective population size) and $t_2$ (representing the introduction intensity).
-
-The time between the first and second introductions can also be incorporated into the relative size test.
+The likelihoods $P((\tau_p,\tau_p)\_{1c}|I_2)$ and $P(\tau_p,\tau_p)\_{2c}|I_2)$ can be measured by drawing pairs of successful simulations and counting the frequency with which they satisfy the topology constraints. To determine if the pair has the $(\tau_p,\tau_p)\_{1c}$ or $(\tau_p,\tau_p)\_{2c}$ topology, the numbers of mutations between the MRCA and each clade root can be sampled using the molecular clock and the times between the MRCA and each clade root. Pekar et al.'s  simulations provide the times between each introduction and subsequent clade root. An additional model is required for the time between the MRCA and each introduction, and the time between the first introduction and the second introduction. Absent information on upstream population structures and dynamics, a reasonable model samples the times from exponential distributions with expected values of $t_1$ and $t_2$, respectively. This model allows the range of possibilities to be explored for different values of the parameters $t_1$ (representing the upstream effective population size) and $t_2$ (representing the introduction intensity).
 
 
+The time between the first and second introductions also provides a lag that can be incorporated into the relative size test.
 
+
+There is some ambiguity about how the sepation constraint is evaluated. The paper gives the impression that the two clades must be separated by two mutations. This is more scientifically meaningfully because a larger separation is expected for multiple zoonotic introductions. The script [stableCoalescence_cladeAnalysis.py](https://github.com/niemasd/multi-introduction/blob/main/FAVITES-COVID-Lite/scripts/stableCoalescence_cladeAnalysis.py) requires clades of single introduction topologies to be separated by two or more mutations. This is less scientifically relevant but reduces the imbalance caused by the lack of any separation constraint applied to the two-introduction topologies. For completeness, results for both constraints are presented here.
+
+**two or more mutation separation and recCA rooting:**
+
+| $t_1$ \ $t_2$ | 0 days | 1 day | 2 days | 4 days | 7 days | 14 days | 28 days |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **0 days** |0.21 | 0.22 | 0.23 | 0.23 | 0.23 | 0.21 | 0.16 |
+| **1 day** |0.23 | 0.24 | 0.25 | 0.25 | 0.25 | 0.21 | 0.17 |
+| **2 days** |0.24 | 0.24 | 0.24 | 0.25 | 0.24 | 0.22 | 0.17 |
+| **4 days** |0.25 | 0.26 | 0.25 | 0.26 | 0.26 | 0.22 | 0.16 |
+| **7 days** |0.26 | 0.27 | 0.26 | 0.26 | 0.26 | 0.21 | 0.16 |
+| **14 days** |0.27 | 0.27 | 0.26 | 0.26 | 0.24 | 0.21 | 0.16 |
+| **28 days** |0.24 | 0.24 | 0.24 | 0.24 | 0.23 | 0.19 | 0.14 |
+
+**two or more mutation separation and unconstrained rooting:**
+| $t_1$ \ $t_2$ | 0 days | 1 day | 2 days | 4 days | 7 days | 14 days | 28 days |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **0 days** |0.21 | 0.21 | 0.22 | 0.23 | 0.22 | 0.20 | 0.16 |
+| **1 day** |0.22 | 0.23 | 0.24 | 0.24 | 0.24 | 0.20 | 0.16 |
+| **2 days** |0.23 | 0.23 | 0.23 | 0.24 | 0.23 | 0.21 | 0.16 |
+| **4 days** |0.24 | 0.25 | 0.24 | 0.25 | 0.25 | 0.21 | 0.15 |
+| **7 days** |0.25 | 0.26 | 0.25 | 0.24 | 0.25 | 0.20 | 0.15 |
+| **14 days** |0.25 | 0.25 | 0.24 | 0.24 | 0.22 | 0.19 | 0.14 |
+| **28 days** |0.22 | 0.22 | 0.22 | 0.22 | 0.20 | 0.17 | 0.13 |
+
+**exactly two mutation separation and recCA rooting:**
+| $t_1$ \ $t_2$ | 0 days | 1 day | 2 days | 4 days | 7 days | 14 days | 28 days |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **0 days** |0.16 | 0.16 | 0.17 | 0.17 | 0.16 | 0.13 | 0.10 |
+| **1 day** |0.17 | 0.17 | 0.18 | 0.17 | 0.17 | 0.13 | 0.10 |
+| **2 days** |0.18 | 0.17 | 0.17 | 0.17 | 0.16 | 0.13 | 0.09 |
+| **4 days** |0.17 | 0.17 | 0.17 | 0.17 | 0.16 | 0.13 | 0.08 |
+| **7 days** |0.16 | 0.17 | 0.16 | 0.15 | 0.15 | 0.11 | 0.07 |
+| **14 days** |0.14 | 0.14 | 0.13 | 0.12 | 0.11 | 0.09 | 0.06 |
+| **28 days** |0.09 | 0.09 | 0.09 | 0.09 | 0.08 | 0.06 | 0.04 |
+
+**exactly two mutation separation and unconstrained rooting:**
+| $t_1$ \ $t_2$ | 0 days | 1 day | 2 days | 4 days | 7 days | 14 days | 28 days |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **0 days** |0.16 | 0.16 | 0.16 | 0.16 | 0.15 | 0.13 | 0.09 |
+| **1 day** |0.17 | 0.17 | 0.18 | 0.17 | 0.16 | 0.13 | 0.10 |
+| **2 days** |0.17 | 0.17 | 0.17 | 0.17 | 0.15 | 0.13 | 0.09 |
+| **4 days** |0.17 | 0.17 | 0.16 | 0.17 | 0.16 | 0.13 | 0.08 |
+| **7 days** |0.16 | 0.17 | 0.16 | 0.15 | 0.14 | 0.11 | 0.07 |
+| **14 days** |0.14 | 0.14 | 0.13 | 0.12 | 0.11 | 0.09 | 0.06 |
+| **28 days** |0.09 | 0.09 | 0.09 | 0.08 | 0.07 | 0.06 | 0.04 |
+
+
+
+
+
+
+
+
+Code and instructions for reproducing these results are available at [this branch](https://github.com/nizzaneela/multi-introduction/tree/corrected_with_relative_size_condition) of the authors' repository.
 
 
 
@@ -47,54 +98,6 @@ Mutations between the MRCA and each introduction are not mentioned by the author
 The time between each introduction and subsequent clade root is usually the sum of a small number of Poisson processes. The simulated mutations are also a Poisson process and have a similar expected waiting time (~13 days). Therefore, the number of mutations between each introduction and subsequent clade root should be roughly geometrically distributed, with an expected value around 1. [Results](https://github.com/nizzaneela/multi-introduction/blob/corrected_with_relative_size_and_separation_conditions/notebooks/cladeAnalysis.ipynb) from simulating mutations between each introduction and subsequent clade root in the corrected phylogenies from #11 agree; 50.5% have no mutations, 26.0% have one mutation, 12.4% have two mutations and 11.0% have three or more mutations.
 
 The authors do not mention the number of mutations between the MRCA and each introduction. However, it cannot be assumed that the number of mutations between the MRCA and an introduction always combines with the number of mutations between the introduction and clade root and the number of mutations between the MRCA and the other clade root in a way that somehow ensures two clades always satisfy the two mutation separation constraint. There may be historical information or expert opinion that can inform strong priors for these mutations, but it is not in the paper and beyond the scope of this comment. Absent such information, a model is necessary.  
-
-
-The average time between each introduction and subsequent clade root
-
-### recCA - relaxed
-|  |$t_2$ = 0 days | $t_2$ = 1 day | $t_2$ = 2 days | $t_2$ = 4 days | $t_2$ = 7 days | $t_2$ = 14 days | $t_2$ = 28 days |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| $t_1$ **= 0 days** |0.21 | 0.22 | 0.23 | 0.23 | 0.23 | 0.21 | 0.16 |
-| $t_1$ **= 1 day** |0.23 | 0.24 | 0.25 | 0.25 | 0.25 | 0.21 | 0.17 |
-| $t_1$ **= 2 days** |0.24 | 0.24 | 0.24 | 0.25 | 0.24 | 0.22 | 0.17 |
-| $t_1$ **= 4 days** |0.25 | 0.26 | 0.25 | 0.26 | 0.26 | 0.22 | 0.16 |
-| $t_1$ **= 7 days** |0.26 | 0.27 | 0.26 | 0.26 | 0.26 | 0.21 | 0.16 |
-| $t_1$ **= 14 days** |0.27 | 0.27 | 0.26 | 0.26 | 0.24 | 0.21 | 0.16 |
-| $t_1$ **= 28 days** |0.24 | 0.24 | 0.24 | 0.24 | 0.23 | 0.19 | 0.14 |
-
-### unconstrained - relaxed
-|  |$t_2$ = 0 days | $t_2$ = 1 day | $t_2$ = 2 days | $t_2$ = 4 days | $t_2$ = 7 days | $t_2$ = 14 days | $t_2$ = 28 days |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| $t_1$ **= 0 days** |0.21 | 0.21 | 0.22 | 0.23 | 0.22 | 0.20 | 0.16 |
-| $t_1$ **= 1 day** |0.22 | 0.23 | 0.24 | 0.24 | 0.24 | 0.20 | 0.16 |
-| $t_1$ **= 2 days** |0.23 | 0.23 | 0.23 | 0.24 | 0.23 | 0.21 | 0.16 |
-| $t_1$ **= 4 days** |0.24 | 0.25 | 0.24 | 0.25 | 0.25 | 0.21 | 0.15 |
-| $t_1$ **= 7 days** |0.25 | 0.26 | 0.25 | 0.24 | 0.25 | 0.20 | 0.15 |
-| $t_1$ **= 14 days** |0.25 | 0.25 | 0.24 | 0.24 | 0.22 | 0.19 | 0.14 |
-| $t_1$ **= 28 days** |0.22 | 0.22 | 0.22 | 0.22 | 0.20 | 0.17 | 0.13 |
-
-### recCA - strict
-|  |$t_2$ = 0 days | $t_2$ = 1 day | $t_2$ = 2 days | $t_2$ = 4 days | $t_2$ = 7 days | $t_2$ = 14 days | $t_2$ = 28 days |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| $t_1$ **= 0 days** |0.16 | 0.16 | 0.17 | 0.17 | 0.16 | 0.13 | 0.10 |
-| $t_1$ **= 1 day** |0.17 | 0.17 | 0.18 | 0.17 | 0.17 | 0.13 | 0.10 |
-| $t_1$ **= 2 days** |0.18 | 0.17 | 0.17 | 0.17 | 0.16 | 0.13 | 0.09 |
-| $t_1$ **= 4 days** |0.17 | 0.17 | 0.17 | 0.17 | 0.16 | 0.13 | 0.08 |
-| $t_1$ **= 7 days** |0.16 | 0.17 | 0.16 | 0.15 | 0.15 | 0.11 | 0.07 |
-| $t_1$ **= 14 days** |0.14 | 0.14 | 0.13 | 0.12 | 0.11 | 0.09 | 0.06 |
-| $t_1$ **= 28 days** |0.09 | 0.09 | 0.09 | 0.09 | 0.08 | 0.06 | 0.04 |
-
-### unconstrained - strict
-|  |$t_2$ = 0 days | $t_2$ = 1 day | $t_2$ = 2 days | $t_2$ = 4 days | $t_2$ = 7 days | $t_2$ = 14 days | $t_2$ = 28 days |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| $t_1$ **= 0 days** |0.16 | 0.16 | 0.16 | 0.16 | 0.15 | 0.13 | 0.09 |
-| $t_1$ **= 1 day** |0.17 | 0.17 | 0.18 | 0.17 | 0.16 | 0.13 | 0.10 |
-| $t_1$ **= 2 days** |0.17 | 0.17 | 0.17 | 0.17 | 0.15 | 0.13 | 0.09 |
-| $t_1$ **= 4 days** |0.17 | 0.17 | 0.16 | 0.17 | 0.16 | 0.13 | 0.08 |
-| $t_1$ **= 7 days** |0.16 | 0.17 | 0.16 | 0.15 | 0.14 | 0.11 | 0.07 |
-| $t_1$ **= 14 days** |0.14 | 0.14 | 0.13 | 0.12 | 0.11 | 0.09 | 0.06 |
-| $t_1$ **= 28 days** |0.09 | 0.09 | 0.09 | 0.08 | 0.07 | 0.06 | 0.04 |
-
 
 
 
