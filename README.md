@@ -1,1 +1,3 @@
-You are not comparing the relative size of two clades. You are comparing the relative size of two equally sized subsamples from two clades. These are usaully the same size, except for the rare simulation that ended before filling the subsample.
+You are not comparing the relative size of two clades. You are comparing the relative size of two equally sized subsamples from two clades. Equally sized subsamples are usually the same size, except when a simulation ended before filling the subsample.
+
+There are many other problems with your comments. Please reconsider.
